@@ -107,14 +107,21 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     return;
   }
 
-  table.innerHTML = past.map((r, i) => {
-    const n = String(i + 1).padStart(2, '0');
+  const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  table.innerHTML = past.map((r) => {
+    const [mm, dd] = r.date.split('.');
+    const month = MONTHS[parseInt(mm, 10) - 1];
     const label = r.couples === 1 ? 'COUPLE' : 'COUPLES';
     return `
-      <div class="past__row">
-        <span class="past__num">${n}</span>
-        <span class="past__date">${r.date} <span class="past__day">${r.day}</span></span>
-        <span class="past__couples">&#9829; ${r.couples} ${label}</span>
+      <div class="past__card">
+        <div class="past__card-top">
+          <span class="past__card-heart">&#9829;</span>
+          <span class="past__card-count">${r.couples} ${label}</span>
+        </div>
+        <div class="past__card-bottom">
+          <div class="past__card-day">${dd}</div>
+          <div class="past__card-meta">${month} &middot; ${r.day}</div>
+        </div>
       </div>`;
   }).join('');
 })();

@@ -945,52 +945,62 @@ ul, ol { list-style: none; }
 }
 
 .past__table {
-  max-width: 600px;
-}
-
-.past__row {
   display: flex;
-  align-items: baseline;
-  gap: 1.25rem;
-  padding: 1.15rem 0;
-  border-bottom: 1px solid rgba(17,17,17,0.1);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.past__row:first-child { border-top: 1px solid rgba(17,17,17,0.1); }
+.past__card {
+  width: 148px;
+  border: 1px solid rgba(17,17,17,0.1);
+  overflow: hidden;
+}
 
-.past__num {
+.past__card-top {
+  background: var(--c-accent);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.past__card-heart {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.past__card-count {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.past__card-bottom {
+  background: #ffffff;
+  padding: 1.1rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.past__card-day {
+  font-size: 2.8rem;
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  color: var(--c-dark);
+  line-height: 1;
+}
+
+.past__card-meta {
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  color: rgba(17,17,17,0.22);
-  min-width: 1.5rem;
-  flex-shrink: 0;
-}
-
-.past__date {
-  font-size: 1rem;
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  color: rgba(17,17,17,0.85);
-  flex: 1;
-}
-
-.past__day {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: rgba(17,17,17,0.4);
-  margin-left: 0.4rem;
-}
-
-.past__couples {
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--c-accent);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  flex-shrink: 0;
-  text-align: right;
+  color: rgba(17,17,17,0.35);
 }
 
 .past__empty {
