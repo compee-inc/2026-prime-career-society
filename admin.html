@@ -329,17 +329,14 @@
     <p>관리자 — 편집 후 "GitHub에 저장" 버튼 한 번으로 사이트에 반영됩니다</p>
   </header>
 
-  <!-- PAT -->
-  <div class="card card--pat">
-    <h2 class="card-title">GitHub 연결</h2>
+  <!-- PAT (숨김 — URL에 ?setup 추가시 표시) -->
+  <div class="card card--pat" id="pat-card" style="display:none">
+    <h2 class="card-title">GitHub 연결 설정</h2>
     <div class="pat-row">
       <input type="password" id="pat-input" placeholder="GitHub Personal Access Token (ghp_...)" autocomplete="off" />
       <button class="btn btn--outline btn--sm" id="btn-pat-save">저장</button>
     </div>
-    <p class="pat-hint">
-      한 번 입력하면 이 브라우저에 영구 저장됩니다. 다음에 열어도 자동으로 불러옵니다.<br>
-      발급: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → <b>repo</b> 체크 후 생성
-    </p>
+    <p class="pat-hint">저장 후 이 브라우저에 영구 보관됩니다. URL에서 ?setup을 제거하면 칸이 다시 숨겨집니다.</p>
   </div>
 
   <!-- CONFIG -->
@@ -434,21 +431,24 @@ const DAY_OPTIONS    = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
 
 /* ── PAT 저장/로드 ──────────────────────────── */
 const patInput = document.getElementById('pat-input');
-const saved    = localStorage.getItem('gh_pat');
-if (saved) patInput.value = saved;
 
-patInput.addEventListener('input', () => {
-  const v = patInput.value.trim();
-  if (v) localStorage.setItem('gh_pat', v);
-});
-
-document.getElementById('btn-pat-save').addEventListener('click', () => {
-  const v = patInput.value.trim();
-  if (!v) return;
-  localStorage.setItem('gh_pat', v);
-  showStatus('success', '저장 완료 — 다음부터는 자동으로 불러옵니다.');
-  setTimeout(clearStatus, 2500);
-});
+/* ?setup 파라미터가 있을 때만 PAT 입력 칸 표시 */
+if (location.search.includes('setup')) {
+  document.getElementById('pat-card').style.display = 'block';
+  const saved = localStorage.getItem('gh_pat');
+  if (saved) patInput.value = saved;
+  patInput.addEventListener('input', () => {
+    const v = patInput.value.trim();
+    if (v) localStorage.setItem('gh_pat', v);
+  });
+  document.getElementById('btn-pat-save').addEventListener('click', () => {
+    const v = patInput.value.trim();
+    if (!v) return;
+    localStorage.setItem('gh_pat', v);
+    showStatus('success', '저장 완료! URL에서 ?setup을 제거하면 칸이 숨겨집니다.');
+    setTimeout(clearStatus, 3000);
+  });
+}
 
 function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat') || ''; }
 
