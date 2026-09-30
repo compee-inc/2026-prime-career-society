@@ -73,25 +73,28 @@ function _participantRow(p) {
 }
 
 /* ── 남/여 컬럼 생성 ─────────────────────────────────────── */
-function _colHTML(label, participants, target) {
-  const count   = participants.length;
-  const isEmpty = count === 0;
+function _colHTML(label, participants, target, status) {
+  const count     = participants.length;
+  const remaining = target - count;
+  const isFull    = remaining <= 0 || status === 'FULL' || status === 'CLOSED';
+  const isEmpty   = count === 0;
 
   const rows = isEmpty
     ? `<li class="sc-row sc-row--empty"><span class="sc-occ-empty">모집 준비 중</span></li>`
     : participants.map(_participantRow).join('');
 
+  const seatLabel = isFull
+    ? `<span class="sc-seat-closed">마감</span>`
+    : `<span class="sc-seat-remain">잔여 ${remaining}석</span>`;
+
   return `
 <div class="sc-col">
-  <h3 class="sc-col-title">${label}</h3>
+  <h3 class="sc-col-title">${label} <span class="sc-col-max">MAX ${target}</span></h3>
   <div class="sc-col-labels" aria-hidden="true">
     <span>직업 / 직군</span><span>나이</span>
   </div>
   <ul class="sc-participants" aria-label="${label} 참가자 목록">${rows}</ul>
-  <div class="sc-total">
-    <span class="sc-total-label">TOTAL</span>
-    <span class="sc-total-count">${String(count).padStart(2,'0')} / ${String(target).padStart(2,'0')}</span>
-  </div>
+  <div class="sc-total">${seatLabel}</div>
 </div>`;
 }
 
@@ -102,9 +105,9 @@ function _buildCard(s) {
   const columnsHTML = isSoon
     ? `<div class="sc-empty-state"><p>모집 준비 중입니다.</p><p>일정이 확정되면 공개됩니다.</p></div>`
     : `<div class="sc-columns">
-        ${_colHTML('MEN',   s.men,   s.targetMen)}
+        ${_colHTML('MEN',   s.men,   s.targetMen,   s.status)}
         <div class="sc-col-sep" aria-hidden="true"></div>
-        ${_colHTML('WOMEN', s.women, s.targetWomen)}
+        ${_colHTML('WOMEN', s.women, s.targetWomen, s.status)}
        </div>`;
 
   return `

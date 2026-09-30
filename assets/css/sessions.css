@@ -205,6 +205,16 @@
   background: var(--sc-gold);
   padding: 0.45rem 0.75rem;
   margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sc-col-max {
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  opacity: 0.75;
 }
 
 /* 직업/나이 라벨 행 — 연한 골드 배경 */
@@ -266,30 +276,26 @@
   font-style: italic;
 }
 
-/* ── TOTAL 행 — 골드 배경 ────────────────────────────────── */
+/* ── 잔여석 행 ───────────────────────────────────────────── */
 .sc-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 0.5rem 0.75rem;
   background: var(--sc-gold);
-  margin-top: 0;
+  text-align: right;
 }
 
-.sc-total-label {
-  font-size: 0.55rem;
+.sc-seat-remain {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+}
+
+.sc-seat-closed {
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #fff;
-}
-
-.sc-total-count {
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: #fff;
-  font-variant-numeric: tabular-nums;
+  color: rgba(255,255,255,0.55);
 }
 
 /* ── 빈 상태 (SOON) ──────────────────────────────────────── */
