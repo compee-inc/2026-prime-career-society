@@ -12,8 +12,16 @@ const CONFIG = {
   stats: {
     reapply: 12,
     pastSessions: [
-      { date: '09.07', day: 'SUN', couples: 2 },
-      { date: '09.21', day: 'SUN', couples: 1 },
+        {
+            "date": "09.07",
+            "day": "SUN",
+            "couples": 2
+        },
+        {
+            "date": "09.21",
+            "day": "SAT",
+            "couples": 1
+        }
     ],
   },
 };
