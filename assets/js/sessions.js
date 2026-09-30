@@ -14,18 +14,48 @@ const SESSION_DATA = [
     "targetMen": 8,
     "targetWomen": 8,
     "men": [
-      { "occupation": "금융투자", "age": 30 },
-      { "occupation": "대기업",   "age": 33 },
-      { "occupation": "SK계열사", "age": 34 },
-      { "occupation": "현대계열사", "age": 34 },
-      { "occupation": "은행",     "age": 32 }
+      {
+        "occupation": "금융투자",
+        "age": 30
+      },
+      {
+        "occupation": "대기업",
+        "age": 33
+      },
+      {
+        "occupation": "SK계열사",
+        "age": 34
+      },
+      {
+        "occupation": "현대계열사",
+        "age": 34
+      },
+      {
+        "occupation": "은행",
+        "age": 32
+      }
     ],
     "women": [
-      { "occupation": "사업",   "age": 37 },
-      { "occupation": "약사",   "age": 37 },
-      { "occupation": "대기업", "age": 36 },
-      { "occupation": "공무원", "age": 34 },
-      { "occupation": "의료직", "age": 33 }
+      {
+        "occupation": "사업",
+        "age": 37
+      },
+      {
+        "occupation": "약사",
+        "age": 37
+      },
+      {
+        "occupation": "대기업",
+        "age": 36
+      },
+      {
+        "occupation": "공무원",
+        "age": 34
+      },
+      {
+        "occupation": "의료직",
+        "age": 33
+      }
     ]
   },
   {
