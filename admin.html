@@ -644,7 +644,16 @@ document.getElementById('btn-preview').addEventListener('click', () => {
 
 /* ── GitHub API ────────────────────────────── */
 function toBase64(str) {
-  return btoa(unescape(encodeURIComponent(str)));
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+
+function fromBase64(b64) {
+  const binary = atob(b64.replace(/\n/g, ''));
+  const bytes  = Uint8Array.from(binary, c => c.charCodeAt(0));
+  return new TextDecoder('utf-8').decode(bytes);
 }
 
 async function ghFetch(token, path, options = {}) {
@@ -666,7 +675,7 @@ async function ghFetch(token, path, options = {}) {
 
 async function getFileSHA(token, path) {
   const data = await ghFetch(token, `${path}?ref=${BRANCH}`);
-  return { sha: data.sha, content: atob(data.content.replace(/\n/g, '')) };
+  return { sha: data.sha, content: fromBase64(data.content) };
 }
 
 async function updateFile(token, path, newContent, sha, commitMsg) {
