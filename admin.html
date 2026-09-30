@@ -441,6 +441,13 @@
       </div>
       <button class="btn btn--gold btn--sm" id="ac-detail-save" style="margin-top:1rem">적용</button>
     </div>
+
+    <!-- 완료 세션 결과 목록 -->
+    <div style="margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+      <div style="font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">완료된 세션 결과 (달력에 ♥ 표시)</div>
+      <div id="past-editor"></div>
+      <button class="btn btn--outline btn--full" id="btn-add-past" style="margin-top:0.5rem">+ 완료 세션 추가</button>
+    </div>
   </div>
 
   <!-- SESSIONS -->
@@ -550,7 +557,7 @@ function renderAdminCalendar() {
   if (!wrap) return;
   const today   = new Date(); today.setHours(0,0,0,0);
   const pastMap = {};
-  calPastSessions.forEach(r => { pastMap[r.date] = r; });
+  collectPastSessionsFromDOM().forEach(r => { pastMap[r.date] = r; });
   const soonSet = new Set(calSoonDates);
   const sesMap  = {};
   if (typeof SESSION_DATA !== 'undefined') {
@@ -609,7 +616,7 @@ function acClick(el) {
   const dayName   = AC_DAYS[dateObj.getDay()];
   document.getElementById('ac-detail-title').textContent = `${key}  (${dayName})`;
   if (isPast) {
-    const existing = calPastSessions.find(r => r.date === key);
+    const existing = collectPastSessionsFromDOM().find(r => r.date === key);
     document.getElementById('ac-couple-input').value = existing ? existing.couples : 0;
     document.getElementById('ac-panel-past').style.display   = 'block';
     document.getElementById('ac-panel-future').style.display = 'none';
@@ -630,8 +637,11 @@ document.getElementById('ac-detail-save').addEventListener('click', () => {
   const dayName  = AC_DAYS[dateObj.getDay()];
   if (acSelectedIsPast) {
     const couples = parseInt(document.getElementById('ac-couple-input').value) || 0;
-    calPastSessions = calPastSessions.filter(r => r.date !== acSelectedKey);
-    if (couples > 0) calPastSessions.push({ date: acSelectedKey, day: dayName, couples });
+    const peditor = document.getElementById('past-editor');
+    Array.from(peditor.querySelectorAll('.participant-row'))
+      .filter(row => row.querySelector('.pr-date').value.trim() === acSelectedKey)
+      .forEach(row => row.remove());
+    if (couples > 0) appendPastRow({ date: acSelectedKey, day: dayName, couples });
   } else {
     calSoonDates = calSoonDates.filter(d => d !== acSelectedKey);
     if (document.getElementById('ac-soon-check').checked) calSoonDates.push(acSelectedKey);
@@ -650,6 +660,7 @@ function init() {
     document.getElementById('cfg-threads').value   = CONFIG.sns?.threads   || '';
     calPastSessions = [...(CONFIG.stats?.pastSessions || [])];
     calSoonDates    = [...(CONFIG.stats?.soonDates    || [])];
+    calPastSessions.forEach(r => appendPastRow(r));
   }
   if (typeof SESSION_DATA !== 'undefined') {
     SESSION_DATA.forEach(s => appendSessionBlock(s));
@@ -781,6 +792,16 @@ function appendPastRow(r) {
   editor.appendChild(row);
 }
 
+function collectPastSessionsFromDOM() {
+  return Array.from(document.querySelectorAll('#past-editor .participant-row'))
+    .map(row => ({
+      date:    row.querySelector('.pr-date').value.trim(),
+      day:     row.querySelector('.pr-day').value,
+      couples: parseInt(row.querySelector('.pr-couples').value) || 0,
+    }))
+    .filter(r => r.date && r.couples > 0);
+}
+
 document.getElementById('btn-add-past').addEventListener('click', () => {
   appendPastRow(null);
   document.getElementById('past-editor').lastElementChild.querySelector('.pr-date').focus();
@@ -792,7 +813,7 @@ function collectConfig() {
     formUrl:      document.getElementById('cfg-formUrl').value.trim(),
     instagram:    document.getElementById('cfg-instagram').value.trim(),
     threads:      document.getElementById('cfg-threads').value.trim(),
-    pastSessions: calPastSessions,
+    pastSessions: collectPastSessionsFromDOM(),
     soonDates:    calSoonDates,
   };
 }
