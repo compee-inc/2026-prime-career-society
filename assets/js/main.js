@@ -107,23 +107,55 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     return;
   }
 
-  const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  table.innerHTML = past.map((r) => {
-    const [mm, dd] = r.date.split('.');
-    const month = MONTHS[parseInt(mm, 10) - 1];
-    const label = r.couples === 1 ? 'COUPLE' : 'COUPLES';
+  const MON_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const DOW_NAMES = ['S','M','T','W','T','F','S'];
+
+  const pastMap = {};
+  past.forEach(r => { pastMap[r.date] = r; });
+
+  const sessions = (typeof SESSION_DATA !== 'undefined') ? SESSION_DATA : [];
+  const upcomingMap = {};
+  sessions.forEach(s => { upcomingMap[s.date] = s; });
+
+  function renderMonth(year, month) {
+    const firstDay = new Date(year, month - 1, 1).getDay();
+    const totalDays = new Date(year, month, 0).getDate();
+    const mm = String(month).padStart(2, '0');
+    let cells = '';
+
+    for (let i = 0; i < firstDay; i++) {
+      cells += '<div class="cal__cell cal__cell--empty"></div>';
+    }
+    for (let d = 1; d <= totalDays; d++) {
+      const key = `${mm}.${String(d).padStart(2, '0')}`;
+      let cls = 'cal__cell';
+      let badge = '';
+
+      if (pastMap[key]) {
+        const c = pastMap[key].couples;
+        cls += ' cal__cell--past';
+        badge = `<span class="cal__badge">&#9829; ${c}</span>`;
+      } else if (upcomingMap[key]) {
+        const st = upcomingMap[key].status;
+        const lbl = st === 'RECRUITING' ? 'OPEN' : st === 'CLOSED' ? 'END' : 'SOON';
+        cls += ` cal__cell--${st.toLowerCase()}`;
+        badge = `<span class="cal__badge">${lbl}</span>`;
+      }
+
+      cells += `<div class="${cls}">${badge}<span class="cal__day">${d}</span></div>`;
+    }
+
     return `
-      <div class="past__card">
-        <div class="past__card-top">
-          <span class="past__card-heart">&#9829;</span>
-          <span class="past__card-count">${r.couples} ${label}</span>
-        </div>
-        <div class="past__card-bottom">
-          <div class="past__card-day">${dd}</div>
-          <div class="past__card-meta">${month} &middot; ${r.day}</div>
+      <div class="cal__month">
+        <div class="cal__month-name">${MON_NAMES[month - 1]}</div>
+        <div class="cal__grid">
+          ${DOW_NAMES.map(d => `<div class="cal__dow">${d}</div>`).join('')}
+          ${cells}
         </div>
       </div>`;
-  }).join('');
+  }
+
+  table.innerHTML = `<div class="cal__wrap">${[10, 11, 12].map(m => renderMonth(2026, m)).join('')}</div>`;
 })();
 
 /* ── FAQ ─────────────────────────────────────────────────── */
