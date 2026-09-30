@@ -57,6 +57,7 @@
       padding: 1.5rem;
       margin-bottom: 1.25rem;
     }
+    .card--pat { border-color: rgba(201,163,91,0.4); }
     .card-title {
       font-size: 0.62rem;
       font-weight: 600;
@@ -76,11 +77,7 @@
       gap: 0.5rem 1rem;
       margin-bottom: 0.7rem;
     }
-    label {
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
+    label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
     .field-group label {
       display: block;
       font-size: 0.62rem;
@@ -92,6 +89,7 @@
 
     input[type="text"],
     input[type="number"],
+    input[type="password"],
     select {
       background: #0c0c0c;
       border: 1px solid rgba(201,163,91,0.22);
@@ -106,11 +104,22 @@
     input:focus, select:focus { border-color: var(--gold); }
     select option { background: #161616; }
 
-    /* Session blocks */
-    .session-block {
-      border: 1px solid var(--border);
-      margin-bottom: 0.85rem;
+    .pat-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem;
+      align-items: center;
     }
+    .pat-hint {
+      font-size: 0.63rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+    .pat-hint a { color: var(--gold); }
+
+    /* Session blocks */
+    .session-block { border: 1px solid var(--border); margin-bottom: 0.85rem; }
     .session-block-header {
       display: flex;
       justify-content: space-between;
@@ -126,10 +135,7 @@
       color: var(--gold);
       letter-spacing: 0.08em;
     }
-    .session-block-body {
-      padding: 1.25rem;
-      display: none;
-    }
+    .session-block-body { padding: 1.25rem; display: none; }
     .session-block.is-open .session-block-body { display: block; }
 
     .session-meta-grid {
@@ -180,67 +186,52 @@
       font-family: inherit;
       transition: opacity 0.15s;
     }
-    .btn:hover { opacity: 0.75; }
+    .btn:hover:not(:disabled) { opacity: 0.75; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn--gold    { background: var(--gold); color: #0c0c0c; }
     .btn--outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-    .btn--red     { background: transparent; border: 1px solid rgba(201,97,91,0.35); color: var(--red); font-size: 0.65rem; padding: 0.3rem 0.65rem; letter-spacing: 0.08em; }
-    .btn--green   { background: transparent; border: 1px solid rgba(97,201,122,0.35); color: var(--green); }
-    .btn--icon    { padding: 0.2rem 0.5rem; font-size: 1rem; font-weight: 400; color: var(--muted); border: none; background: transparent; }
+    .btn--red     { background: transparent; border: 1px solid rgba(201,97,91,0.35); color: var(--red);
+                    font-size: 0.65rem; padding: 0.3rem 0.65rem; letter-spacing: 0.08em; }
+    .btn--icon    { padding: 0.2rem 0.5rem; font-size: 1rem; font-weight: 400;
+                    color: var(--muted); border: none; background: transparent; }
     .btn--sm      { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
     .btn--full    { width: 100%; padding: 0.7rem; }
     .btn--add-p   { width: 100%; margin-top: 0.4rem; padding: 0.35rem; font-size: 0.65rem; }
 
-    /* Generate bar */
-    .generate-bar {
+    /* Action bar */
+    .action-bar {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 1rem;
+      gap: 0.75rem;
       margin-bottom: 1.25rem;
     }
-    .copy-toast {
-      font-size: 0.65rem;
-      color: var(--green);
-      letter-spacing: 0.1em;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .copy-toast.show { opacity: 1; }
 
-    /* Output */
-    .out-block { margin-top: 1.25rem; }
-    .out-label {
-      display: flex;
-      justify-content: space-between;
+    /* Status */
+    .status-bar {
+      display: none;
       align-items: center;
-      font-size: 0.62rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
-    }
-    .out-label span { color: var(--gold); }
-    textarea.code {
-      width: 100%;
-      background: #0c0c0c;
-      border: 1px solid rgba(201,163,91,0.15);
-      color: #a8b8cc;
-      font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
-      font-size: 0.72rem;
-      line-height: 1.55;
-      padding: 0.75rem 1rem;
-      height: 200px;
-      resize: vertical;
-      outline: none;
-    }
-    .out-note {
-      font-size: 0.63rem;
-      color: var(--muted);
+      gap: 0.6rem;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.75rem;
       letter-spacing: 0.04em;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      line-height: 1.8;
+      border: 1px solid;
     }
+    .status-bar.show { display: flex; }
+    .status-bar--loading { border-color: rgba(201,163,91,0.3); color: var(--gold); background: rgba(201,163,91,0.05); }
+    .status-bar--success { border-color: rgba(97,201,122,0.35); color: var(--green); background: rgba(97,201,122,0.05); }
+    .status-bar--error   { border-color: rgba(201,97,91,0.35);  color: var(--red);   background: rgba(201,97,91,0.05); }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(201,163,91,0.3);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 620px) {
       .session-meta-grid { grid-template-columns: 1fr 1fr; }
@@ -257,8 +248,21 @@
 
   <header class="page-header">
     <h1>2026 PRIVATE DATING</h1>
-    <p>관리자 — 데이터 편집 후 코드 생성 → GitHub에 붙여넣기</p>
+    <p>관리자 — 편집 후 "GitHub에 저장" 버튼 한 번으로 사이트에 반영됩니다</p>
   </header>
+
+  <!-- PAT -->
+  <div class="card card--pat">
+    <h2 class="card-title">GitHub 연결</h2>
+    <div class="pat-row">
+      <input type="password" id="pat-input" placeholder="GitHub Personal Access Token (ghp_...)" autocomplete="off" />
+      <button class="btn btn--outline btn--sm" id="btn-pat-save">저장</button>
+    </div>
+    <p class="pat-hint">
+      발급: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) →
+      <b>repo</b> 권한 체크 후 생성. 토큰은 이 브라우저에만 저장됩니다.
+    </p>
+  </div>
 
   <!-- CONFIG -->
   <div class="card">
@@ -288,53 +292,57 @@
     <button class="btn btn--outline btn--full" id="btn-add-session">+ 세션 추가</button>
   </div>
 
-  <!-- Generate -->
-  <div class="generate-bar">
-    <span class="copy-toast" id="copy-toast">복사 완료!</span>
-    <button class="btn btn--gold" id="btn-generate">코드 생성하기</button>
+  <!-- Status & Action -->
+  <div class="status-bar" id="status-bar">
+    <div class="spinner" id="status-spinner"></div>
+    <span id="status-text"></span>
   </div>
 
-  <!-- Output -->
-  <div class="card" id="output-section" style="display:none">
-    <h2 class="card-title">생성된 코드</h2>
+  <div class="action-bar">
+    <button class="btn btn--outline" id="btn-preview">미리보기 (코드 확인)</button>
+    <button class="btn btn--gold" id="btn-push">GitHub에 저장</button>
+  </div>
 
-    <div class="out-block">
-      <div class="out-label">
-        <span>assets/js/data.js</span>
-        <button class="btn btn--sm btn--outline" onclick="copyCode('out-data')">복사</button>
-      </div>
-      <textarea class="code" id="out-data" readonly></textarea>
-    </div>
-
-    <div class="out-block">
-      <div class="out-label">
-        <span>assets/js/sessions.js — SESSION_DATA 부분만 교체</span>
-        <button class="btn btn--sm btn--outline" onclick="copyCode('out-sessions')">복사</button>
-      </div>
-      <textarea class="code" id="out-sessions" readonly></textarea>
-    </div>
-
-    <p class="out-note">
-      1. 각 코드 우측 <b>복사</b> 버튼 클릭<br>
-      2. GitHub에서 해당 파일 열기 → 연필 아이콘(편집)<br>
-      3. data.js는 전체 교체 / sessions.js는 <b>const SESSION_DATA = [...]</b> 부분만 교체<br>
-      4. Commit changes 저장
-    </p>
+  <!-- Preview (optional) -->
+  <div class="card" id="preview-section" style="display:none">
+    <h2 class="card-title">코드 미리보기</h2>
+    <div style="margin-bottom:0.4rem;font-size:0.62rem;color:var(--gold);letter-spacing:0.1em">assets/js/data.js</div>
+    <textarea class="code" id="out-data" readonly style="width:100%;background:#0c0c0c;border:1px solid rgba(201,163,91,0.15);color:#a8b8cc;font-family:monospace;font-size:0.72rem;line-height:1.55;padding:0.75rem 1rem;height:140px;resize:vertical;outline:none;"></textarea>
+    <div style="margin:1rem 0 0.4rem;font-size:0.62rem;color:var(--gold);letter-spacing:0.1em">assets/js/sessions.js — SESSION_DATA 부분</div>
+    <textarea class="code" id="out-sessions" readonly style="width:100%;background:#0c0c0c;border:1px solid rgba(201,163,91,0.15);color:#a8b8cc;font-family:monospace;font-size:0.72rem;line-height:1.55;padding:0.75rem 1rem;height:200px;resize:vertical;outline:none;"></textarea>
   </div>
 
 </div>
 
 <script>
+/* ── 상수 ───────────────────────────────────── */
+const REPO   = 'compee-inc/2026-private-dating';
+const BRANCH = 'main';
 const STATUS_OPTIONS = ['RECRUITING','ALMOST_FULL','FULL','CLOSED','SOON'];
 const DAY_OPTIONS    = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+
+/* ── PAT 저장/로드 ──────────────────────────── */
+const patInput = document.getElementById('pat-input');
+const saved    = localStorage.getItem('gh_pat');
+if (saved) patInput.value = saved;
+
+document.getElementById('btn-pat-save').addEventListener('click', () => {
+  const v = patInput.value.trim();
+  if (!v) return;
+  localStorage.setItem('gh_pat', v);
+  showStatus('success', 'PAT 저장 완료');
+  setTimeout(clearStatus, 2000);
+});
+
+function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat') || ''; }
 
 /* ── 초기값 로드 ──────────────────────────── */
 function init() {
   if (typeof CONFIG !== 'undefined') {
-    document.getElementById('cfg-applyUrl').value  = CONFIG.applyUrl        || '';
-    document.getElementById('cfg-formUrl').value   = CONFIG.formUrl         || '';
-    document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram  || '';
-    document.getElementById('cfg-threads').value   = CONFIG.sns?.threads    || '';
+    document.getElementById('cfg-applyUrl').value  = CONFIG.applyUrl       || '';
+    document.getElementById('cfg-formUrl').value   = CONFIG.formUrl        || '';
+    document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram || '';
+    document.getElementById('cfg-threads').value   = CONFIG.sns?.threads   || '';
   }
   if (typeof SESSION_DATA !== 'undefined') {
     SESSION_DATA.forEach(s => appendSessionBlock(s));
@@ -356,8 +364,7 @@ function appendSessionBlock(s) {
       <div class="session-meta-grid">
         <div class="field-group">
           <label>날짜 (MM.DD)</label>
-          <input type="text" data-field="date" value="${s.date || ''}" placeholder="10.05"
-            oninput="updateTitle(this)" />
+          <input type="text" data-field="date" value="${s.date||''}" placeholder="10.05" oninput="updateTitle(this)" />
         </div>
         <div class="field-group">
           <label>요일</label>
@@ -367,11 +374,11 @@ function appendSessionBlock(s) {
         </div>
         <div class="field-group">
           <label>시간</label>
-          <input type="text" data-field="time" value="${s.time || ''}" placeholder="19:00" />
+          <input type="text" data-field="time" value="${s.time||''}" placeholder="19:00" />
         </div>
         <div class="field-group">
           <label>장소</label>
-          <input type="text" data-field="location" value="${s.location || ''}" placeholder="서울 강남" />
+          <input type="text" data-field="location" value="${s.location||''}" placeholder="서울 강남" />
         </div>
         <div class="field-group">
           <label>상태</label>
@@ -382,25 +389,20 @@ function appendSessionBlock(s) {
         <div class="field-group">
           <label>목표 인원 (남 / 여)</label>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem">
-            <input type="number" data-field="targetMen"   value="${s.targetMen   ?? 8}" min="1" />
-            <input type="number" data-field="targetWomen" value="${s.targetWomen ?? 8}" min="1" />
+            <input type="number" data-field="targetMen"   value="${s.targetMen??8}"   min="1" />
+            <input type="number" data-field="targetWomen" value="${s.targetWomen??8}" min="1" />
           </div>
         </div>
       </div>
-
       <div class="participants-wrap">
         <div>
           <div class="col-label">MEN</div>
-          <div class="p-list" data-gender="men">
-            ${(s.men||[]).map(p => pRowHTML(p)).join('')}
-          </div>
+          <div class="p-list" data-gender="men">${(s.men||[]).map(p=>pRowHTML(p)).join('')}</div>
           <button class="btn btn--outline btn--add-p" onclick="addParticipant(this,'men')">+ 남성 추가</button>
         </div>
         <div>
           <div class="col-label">WOMEN</div>
-          <div class="p-list" data-gender="women">
-            ${(s.women||[]).map(p => pRowHTML(p)).join('')}
-          </div>
+          <div class="p-list" data-gender="women">${(s.women||[]).map(p=>pRowHTML(p)).join('')}</div>
           <button class="btn btn--outline btn--add-p" onclick="addParticipant(this,'women')">+ 여성 추가</button>
         </div>
       </div>
@@ -411,25 +413,23 @@ function appendSessionBlock(s) {
     if (e.target.closest('.btn--red')) return;
     block.classList.toggle('is-open');
   });
-
   editor.appendChild(block);
 }
 
 function pRowHTML(p) {
   return `<div class="participant-row">
-    <input type="text"   class="p-occ" placeholder="직업/직군"  value="${(p.occupation||'').replace(/"/g,'&quot;')}" />
-    <input type="number" class="p-age" placeholder="나이"        value="${p.age ?? ''}" min="20" max="65" />
-    <button class="btn btn--icon" onclick="this.closest('.participant-row').remove()" title="삭제">×</button>
+    <input type="text"   class="p-occ" placeholder="직업/직군" value="${(p.occupation||'').replace(/"/g,'&quot;')}" />
+    <input type="number" class="p-age" placeholder="나이"       value="${p.age??''}" min="20" max="65" />
+    <button class="btn btn--icon" onclick="this.closest('.participant-row').remove()">×</button>
   </div>`;
 }
 
-/* ── 헤더 타이틀 실시간 업데이트 ─────────── */
 function updateTitle(el) {
-  const block  = el.closest('.session-block');
-  const date   = block.querySelector('[data-field="date"]').value   || '새 세션';
-  const day    = block.querySelector('[data-field="day"]').value    || '';
-  const status = block.querySelector('[data-field="status"]').value || '';
-  block.querySelector('.session-block-title').textContent = `${date} (${day}) · ${status}`;
+  const block = el.closest('.session-block');
+  const date  = block.querySelector('[data-field="date"]').value   || '새 세션';
+  const day   = block.querySelector('[data-field="day"]').value    || '';
+  const st    = block.querySelector('[data-field="status"]').value || '';
+  block.querySelector('.session-block-title').textContent = `${date} (${day}) · ${st}`;
 }
 
 /* ── 세션 추가 / 삭제 ──────────────────────── */
@@ -444,12 +444,10 @@ document.getElementById('btn-add-session').addEventListener('click', () => {
 
 function deleteSession(btn) {
   const block = btn.closest('.session-block');
-  const title = block.querySelector('.session-block-title').textContent;
-  if (!confirm(`"${title}" 세션을 삭제할까요?`)) return;
+  if (!confirm(`"${block.querySelector('.session-block-title').textContent}" 세션을 삭제할까요?`)) return;
   block.remove();
 }
 
-/* ── 참가자 추가 ────────────────────────────── */
 function addParticipant(btn, gender) {
   const list = btn.previousElementSibling;
   const div  = document.createElement('div');
@@ -470,7 +468,7 @@ function collectConfig() {
 
 function collectSessions() {
   return Array.from(document.querySelectorAll('.session-block')).map((block, i) => {
-    const g = f => block.querySelector(`[data-field="${f}"]`)?.value ?? '';
+    const g    = f => block.querySelector(`[data-field="${f}"]`)?.value ?? '';
     const date = g('date');
     return {
       id:          date ? `2026-${date.replace('.', '-')}` : `session-${i+1}`,
@@ -497,11 +495,8 @@ function collectParticipants(block, gender) {
 }
 
 /* ── 코드 생성 ─────────────────────────────── */
-document.getElementById('btn-generate').addEventListener('click', () => {
-  const cfg = collectConfig();
-  const ses = collectSessions();
-
-  const dataJS = `/* ============================================================
+function buildDataJS(cfg) {
+  return `/* ============================================================
    data.js — 사이트 기본 설정
    ============================================================ */
 
@@ -514,24 +509,112 @@ const CONFIG = {
   },
 };
 `;
+}
 
-  const sessionsDataJS = `const SESSION_DATA = ${JSON.stringify(ses, null, 2)};`;
+function buildSessionDataStr(ses) {
+  return `const SESSION_DATA = ${JSON.stringify(ses, null, 2)};`;
+}
 
-  document.getElementById('out-data').value     = dataJS;
-  document.getElementById('out-sessions').value = sessionsDataJS;
-
-  const outSection = document.getElementById('output-section');
-  outSection.style.display = 'block';
-  outSection.scrollIntoView({ behavior:'smooth', block:'start' });
+/* ── 미리보기 버튼 ─────────────────────────── */
+document.getElementById('btn-preview').addEventListener('click', () => {
+  const cfg = collectConfig();
+  const ses = collectSessions();
+  document.getElementById('out-data').value     = buildDataJS(cfg);
+  document.getElementById('out-sessions').value = buildSessionDataStr(ses);
+  const sec = document.getElementById('preview-section');
+  sec.style.display = 'block';
+  sec.scrollIntoView({ behavior:'smooth', block:'start' });
 });
 
-/* ── 복사 ──────────────────────────────────── */
-function copyCode(id) {
-  navigator.clipboard.writeText(document.getElementById(id).value).then(() => {
-    const toast = document.getElementById('copy-toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
+/* ── GitHub API ────────────────────────────── */
+function toBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+async function ghFetch(token, path, options = {}) {
+  const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
   });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function getFileSHA(token, path) {
+  const data = await ghFetch(token, `${path}?ref=${BRANCH}`);
+  return { sha: data.sha, content: atob(data.content.replace(/\n/g, '')) };
+}
+
+async function updateFile(token, path, newContent, sha, commitMsg) {
+  await ghFetch(token, path, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: commitMsg,
+      content: toBase64(newContent),
+      sha,
+      branch: BRANCH,
+    }),
+  });
+}
+
+/* ── GitHub에 저장 ─────────────────────────── */
+document.getElementById('btn-push').addEventListener('click', async () => {
+  const token = getPAT();
+  if (!token) {
+    showStatus('error', 'GitHub PAT를 먼저 입력하고 저장하세요.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-push');
+  btn.disabled = true;
+  showStatus('loading', 'GitHub에 저장 중...');
+
+  try {
+    const cfg = collectConfig();
+    const ses = collectSessions();
+
+    /* data.js 전체 교체 */
+    showStatus('loading', 'data.js 업데이트 중...');
+    const { sha: dataSHA } = await getFileSHA(token, 'assets/js/data.js');
+    await updateFile(token, 'assets/js/data.js', buildDataJS(cfg), dataSHA, 'update data.js via admin');
+
+    /* sessions.js — SESSION_DATA 부분만 교체 */
+    showStatus('loading', 'sessions.js 업데이트 중...');
+    const { sha: sesSHA, content: sesContent } = await getFileSHA(token, 'assets/js/sessions.js');
+    const newSesContent = sesContent.replace(
+      /const SESSION_DATA = \[[\s\S]*?\n\];/,
+      buildSessionDataStr(ses)
+    );
+    await updateFile(token, 'assets/js/sessions.js', newSesContent, sesSHA, 'update SESSION_DATA via admin');
+
+    showStatus('success', '저장 완료! GitHub Pages 반영까지 약 1분 소요됩니다.');
+  } catch (e) {
+    showStatus('error', `오류: ${e.message}`);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ── 상태 표시 ─────────────────────────────── */
+function showStatus(type, msg) {
+  const bar     = document.getElementById('status-bar');
+  const spinner = document.getElementById('status-spinner');
+  const text    = document.getElementById('status-text');
+  bar.className = `status-bar show status-bar--${type}`;
+  spinner.style.display = type === 'loading' ? 'block' : 'none';
+  text.textContent = msg;
+}
+
+function clearStatus() {
+  document.getElementById('status-bar').className = 'status-bar';
 }
 
 /* ── 시작 ──────────────────────────────────── */
