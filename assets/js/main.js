@@ -88,6 +88,16 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* Sessions 렌더링은 sessions.js 에서 처리합니다 */
 
+/* ── Stats ───────────────────────────────────────────────── */
+(function () {
+  const s = CONFIG.stats;
+  if (!s) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('stat-couples',  s.couples);
+  set('stat-reapply',  s.reapply);
+  set('stat-sessions', s.sessions);
+})();
+
 /* ── FAQ ─────────────────────────────────────────────────── */
 (function () {
   $$('.faq__q').forEach(trigger => {

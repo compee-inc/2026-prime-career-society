@@ -360,6 +360,23 @@
     </div>
   </div>
 
+  <!-- STATS -->
+  <div class="card">
+    <h2 class="card-title">성과 통계</h2>
+    <div class="field-row">
+      <label for="cfg-couples">커플 탄생</label>
+      <input type="number" id="cfg-couples" min="0" placeholder="0" />
+    </div>
+    <div class="field-row">
+      <label for="cfg-reapply">재신청</label>
+      <input type="number" id="cfg-reapply" min="0" placeholder="0" />
+    </div>
+    <div class="field-row">
+      <label for="cfg-sessions-done">완료 회차</label>
+      <input type="number" id="cfg-sessions-done" min="0" placeholder="0" />
+    </div>
+  </div>
+
   <!-- SESSIONS -->
   <div class="card">
     <h2 class="card-title">세션 관리 (sessions.js)</h2>
@@ -455,10 +472,13 @@ function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat
 /* ── 초기값 로드 ──────────────────────────── */
 function init() {
   if (typeof CONFIG !== 'undefined') {
-    document.getElementById('cfg-applyUrl').value  = CONFIG.applyUrl       || '';
-    document.getElementById('cfg-formUrl').value   = CONFIG.formUrl        || '';
-    document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram || '';
-    document.getElementById('cfg-threads').value   = CONFIG.sns?.threads   || '';
+    document.getElementById('cfg-applyUrl').value      = CONFIG.applyUrl         || '';
+    document.getElementById('cfg-formUrl').value       = CONFIG.formUrl          || '';
+    document.getElementById('cfg-instagram').value     = CONFIG.sns?.instagram   || '';
+    document.getElementById('cfg-threads').value       = CONFIG.sns?.threads     || '';
+    document.getElementById('cfg-couples').value       = CONFIG.stats?.couples   ?? 0;
+    document.getElementById('cfg-reapply').value       = CONFIG.stats?.reapply   ?? 0;
+    document.getElementById('cfg-sessions-done').value = CONFIG.stats?.sessions  ?? 0;
   }
   if (typeof SESSION_DATA !== 'undefined') {
     SESSION_DATA.forEach(s => appendSessionBlock(s));
@@ -579,6 +599,9 @@ function collectConfig() {
     formUrl:   document.getElementById('cfg-formUrl').value.trim(),
     instagram: document.getElementById('cfg-instagram').value.trim(),
     threads:   document.getElementById('cfg-threads').value.trim(),
+    couples:   parseInt(document.getElementById('cfg-couples').value)       || 0,
+    reapply:   parseInt(document.getElementById('cfg-reapply').value)       || 0,
+    sessions:  parseInt(document.getElementById('cfg-sessions-done').value) || 0,
   };
 }
 
@@ -622,6 +645,11 @@ const CONFIG = {
   sns: {
     instagram: '${cfg.instagram}',
     threads:   '${cfg.threads}',
+  },
+  stats: {
+    couples:  ${cfg.couples},
+    reapply:  ${cfg.reapply},
+    sessions: ${cfg.sessions},
   },
 };
 `;
