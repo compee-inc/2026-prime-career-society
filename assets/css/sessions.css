@@ -1,0 +1,356 @@
+/* ============================================================
+   sessions.css — 세션 모집현황 프리미엄 카드
+   ============================================================ */
+
+:root {
+  --sc-black:   #0A0A0A;
+  --sc-dark:    #121212;
+  --sc-gold:    #C9A35B;
+  --sc-gold-lt: #E5C77A;
+  --sc-ivory:   #F3EEE4;
+  --sc-muted:   #9C988F;
+  --sc-border:  rgba(201, 163, 91, 0.18);
+  --sc-sep:     rgba(201, 163, 91, 0.1);
+  --sc-dur:     0.22s;
+  --sc-ease:    cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ── 탭 래퍼 ─────────────────────────────────────────────── */
+.st-tabs-wrap {
+  margin-bottom: 1.75rem;
+}
+
+.st-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px; /* 스크롤바 숨김용 여백 */
+}
+
+.st-tabs::-webkit-scrollbar { display: none; }
+
+/* ── 탭 버튼 ─────────────────────────────────────────────── */
+.st-tab {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+  background: transparent;
+  border: 1px solid rgba(201,163,91,0.15);
+  cursor: pointer;
+  transition: color var(--sc-dur) var(--sc-ease),
+              border-color var(--sc-dur) var(--sc-ease),
+              background var(--sc-dur) var(--sc-ease);
+}
+
+.st-tab-day {
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+.st-tab:hover:not(.is-active) {
+  color: rgba(201,163,91,0.75);
+  border-color: rgba(201,163,91,0.35);
+}
+
+.st-tab.is-active {
+  color: var(--sc-gold);
+  border-color: var(--sc-gold);
+  background: rgba(201,163,91,0.06);
+}
+
+/* ── 카드 래퍼 & 트랜지션 ────────────────────────────────── */
+#session-card {
+  transition: opacity var(--sc-dur) var(--sc-ease),
+              transform var(--sc-dur) var(--sc-ease);
+}
+
+#session-card.st-fading {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* ── 프리미엄 카드 외곽 ──────────────────────────────────── */
+.sc-premium {
+  position: relative;
+  background: var(--sc-black);
+  border: 1px solid var(--sc-border);
+  padding: 2.25rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* 외부 미세 테두리 효과 */
+.sc-premium::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(201,163,91,0.07);
+  pointer-events: none;
+}
+
+/* ── 코너 장식 ───────────────────────────────────────────── */
+.sc-corner {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  border-style: solid;
+  border-color: var(--sc-gold);
+  border-width: 0;
+  pointer-events: none;
+}
+
+.sc-corner--tl { top: 8px;  left: 8px;  border-top-width: 1.5px; border-left-width: 1.5px; }
+.sc-corner--tr { top: 8px;  right: 8px; border-top-width: 1.5px; border-right-width: 1.5px; }
+.sc-corner--bl { bottom: 8px; left: 8px;  border-bottom-width: 1.5px; border-left-width: 1.5px; }
+.sc-corner--br { bottom: 8px; right: 8px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+/* ── 카드 바디 ───────────────────────────────────────────── */
+.sc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── 헤더 ────────────────────────────────────────────────── */
+.sc-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.sc-brand-name {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sc-gold);
+}
+
+.sc-gold-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sc-gold), transparent);
+  margin: 0.35rem auto;
+}
+
+.sc-datetime {
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--sc-ivory);
+}
+
+.sc-location {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--sc-muted);
+}
+
+.sc-status-text {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+/* 상태별 색상 */
+.sc-status--recruiting  .sc-status-text { color: var(--sc-gold-lt); }
+.sc-status--almost_full .sc-status-text { color: #D4956A; }
+.sc-status--full        .sc-status-text { color: var(--sc-muted); }
+.sc-status--closed      .sc-status-text { color: rgba(156,152,143,0.5); }
+.sc-status--soon        .sc-status-text { color: rgba(201,163,91,0.45); }
+
+/* ── 컬럼 레이아웃 ───────────────────────────────────────── */
+.sc-columns {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0 1.5rem;
+  align-items: start;
+}
+
+.sc-col-sep {
+  background: linear-gradient(to bottom, transparent, var(--sc-gold), transparent);
+  opacity: 0.25;
+  align-self: stretch;
+}
+
+/* ── 컬럼 내부 ───────────────────────────────────────────── */
+.sc-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sc-col-title {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sc-gold);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sc-sep);
+}
+
+.sc-col-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(156,152,143,0.55);
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgba(201,163,91,0.06);
+}
+
+/* ── 참가자 목록 ─────────────────────────────────────────── */
+.sc-participants {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+}
+
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.42rem 0;
+  border-bottom: 1px solid rgba(201,163,91,0.05);
+  transition: background var(--sc-dur) var(--sc-ease);
+}
+
+.sc-row:last-child { border-bottom: none; }
+
+.sc-row:hover { background: rgba(201,163,91,0.03); }
+
+.sc-occ {
+  font-size: 0.77rem;
+  font-weight: 400;
+  color: rgba(243,238,228,0.75);
+  letter-spacing: 0.02em;
+}
+
+.sc-age {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--sc-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 빈 상태 */
+.sc-row--empty { justify-content: flex-start; padding: 0.65rem 0; }
+
+.sc-occ-empty {
+  font-size: 0.7rem;
+  color: rgba(156,152,143,0.4);
+  letter-spacing: 0.05em;
+  font-style: italic;
+}
+
+/* ── TOTAL 행 ────────────────────────────────────────────── */
+.sc-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.65rem;
+  margin-top: 0.15rem;
+  border-top: 1px solid var(--sc-sep);
+}
+
+.sc-total-label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sc-muted);
+}
+
+.sc-total-count {
+  font-size: 0.82rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--sc-gold-lt);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 빈 상태 (SOON) ──────────────────────────────────────── */
+.sc-empty-state {
+  text-align: center;
+  padding: 2rem 0 1rem;
+}
+
+.sc-empty-state p {
+  font-size: 0.78rem;
+  color: rgba(156,152,143,0.5);
+  letter-spacing: 0.06em;
+  line-height: 1.85;
+}
+
+.sc-empty-state p:first-child {
+  font-size: 0.82rem;
+  color: rgba(201,163,91,0.45);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+/* ── 푸터 ────────────────────────────────────────────────── */
+.sc-footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sc-footer-text {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(201,163,91,0.35);
+}
+
+/* ── 모바일 ──────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .sc-premium { padding: 1.75rem 1.25rem; }
+
+  .sc-columns {
+    grid-template-columns: 1fr;
+    gap: 1.5rem 0;
+  }
+
+  .sc-col-sep { display: none; }
+
+  .sc-col:last-child::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,163,91,0.2), transparent);
+    margin-bottom: 1.5rem;
+  }
+
+  .sc-corner { width: 10px; height: 10px; }
+}
+
+@media (max-width: 399px) {
+  .sc-premium { padding: 1.5rem 1rem; }
+  .sc-premium::before { inset: 2px; }
+}

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — 2026 PRIVATE DATING</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0c0c0c;
+      --surface: #161616;
+      --border:  rgba(201,163,91,0.2);
+      --gold:    #C9A35B;
+      --muted:   #9C988F;
+      --ivory:   #F3EEE4;
+      --red:     #c96161;
+      --green:   #61c97a;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ivory);
+      font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .wrap { max-width: 900px; margin: 0 auto; }
+
+    /* Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .page-header p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .card-title {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Fields */
+    .field-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      align-items: center;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.7rem;
+    }
+    label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .field-group label {
+      display: block;
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      background: #0c0c0c;
+      border: 1px solid rgba(201,163,91,0.22);
+      color: var(--ivory);
+      font-size: 0.8rem;
+      padding: 0.45rem 0.7rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus { border-color: var(--gold); }
+    select option { background: #161616; }
+
+    /* Session blocks */
+    .session-block {
+      border: 1px solid var(--border);
+      margin-bottom: 0.85rem;
+    }
+    .session-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem 1rem;
+      background: rgba(201,163,91,0.04);
+      cursor: pointer;
+      user-select: none;
+    }
+    .session-block-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+    }
+    .session-block-body {
+      padding: 1.25rem;
+      display: none;
+    }
+    .session-block.is-open .session-block-body { display: block; }
+
+    .session-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Participants */
+    .participants-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .col-label {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(201,163,91,0.1);
+    }
+    .participant-row {
+      display: grid;
+      grid-template-columns: 1fr 70px 28px;
+      gap: 0.35rem;
+      margin-bottom: 0.35rem;
+      align-items: center;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.75; }
+    .btn--gold    { background: var(--gold); color: #0c0c0c; }
+    .btn--outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+    .btn--red     { background: transparent; border: 1px solid rgba(201,97,91,0.35); color: var(--red); font-size: 0.65rem; padding: 0.3rem 0.65rem; letter-spacing: 0.08em; }
+    .btn--green   { background: transparent; border: 1px solid rgba(97,201,122,0.35); color: var(--green); }
+    .btn--icon    { padding: 0.2rem 0.5rem; font-size: 1rem; font-weight: 400; color: var(--muted); border: none; background: transparent; }
+    .btn--sm      { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
+    .btn--full    { width: 100%; padding: 0.7rem; }
+    .btn--add-p   { width: 100%; margin-top: 0.4rem; padding: 0.35rem; font-size: 0.65rem; }
+
+    /* Generate bar */
+    .generate-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .copy-toast {
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .copy-toast.show { opacity: 1; }
+
+    /* Output */
+    .out-block { margin-top: 1.25rem; }
+    .out-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.62rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+    .out-label span { color: var(--gold); }
+    textarea.code {
+      width: 100%;
+      background: #0c0c0c;
+      border: 1px solid rgba(201,163,91,0.15);
+      color: #a8b8cc;
+      font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
+      font-size: 0.72rem;
+      line-height: 1.55;
+      padding: 0.75rem 1rem;
+      height: 200px;
+      resize: vertical;
+      outline: none;
+    }
+    .out-note {
+      font-size: 0.63rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.8;
+    }
+
+    @media (max-width: 620px) {
+      .session-meta-grid { grid-template-columns: 1fr 1fr; }
+      .participants-wrap  { grid-template-columns: 1fr; }
+      .field-row          { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<script src="./assets/js/data.js"></script>
+<script src="./assets/js/sessions.js"></script>
+
+<div class="wrap">
+
+  <header class="page-header">
+    <h1>2026 PRIVATE DATING</h1>
+    <p>관리자 — 데이터 편집 후 코드 생성 → GitHub에 붙여넣기</p>
+  </header>
+
+  <!-- CONFIG -->
+  <div class="card">
+    <h2 class="card-title">기본 설정 (data.js)</h2>
+    <div class="field-row">
+      <label for="cfg-applyUrl">참가 신청 URL</label>
+      <input type="text" id="cfg-applyUrl" placeholder="https://" />
+    </div>
+    <div class="field-row">
+      <label for="cfg-formUrl">구글폼 URL</label>
+      <input type="text" id="cfg-formUrl" placeholder="https://docs.google.com/forms/..." />
+    </div>
+    <div class="field-row">
+      <label for="cfg-instagram">Instagram URL</label>
+      <input type="text" id="cfg-instagram" placeholder="https://instagram.com/..." />
+    </div>
+    <div class="field-row">
+      <label for="cfg-threads">Threads URL</label>
+      <input type="text" id="cfg-threads" placeholder="https://threads.net/..." />
+    </div>
+  </div>
+
+  <!-- SESSIONS -->
+  <div class="card">
+    <h2 class="card-title">세션 관리 (sessions.js)</h2>
+    <div id="sessions-editor"></div>
+    <button class="btn btn--outline btn--full" id="btn-add-session">+ 세션 추가</button>
+  </div>
+
+  <!-- Generate -->
+  <div class="generate-bar">
+    <span class="copy-toast" id="copy-toast">복사 완료!</span>
+    <button class="btn btn--gold" id="btn-generate">코드 생성하기</button>
+  </div>
+
+  <!-- Output -->
+  <div class="card" id="output-section" style="display:none">
+    <h2 class="card-title">생성된 코드</h2>
+
+    <div class="out-block">
+      <div class="out-label">
+        <span>assets/js/data.js</span>
+        <button class="btn btn--sm btn--outline" onclick="copyCode('out-data')">복사</button>
+      </div>
+      <textarea class="code" id="out-data" readonly></textarea>
+    </div>
+
+    <div class="out-block">
+      <div class="out-label">
+        <span>assets/js/sessions.js — SESSION_DATA 부분만 교체</span>
+        <button class="btn btn--sm btn--outline" onclick="copyCode('out-sessions')">복사</button>
+      </div>
+      <textarea class="code" id="out-sessions" readonly></textarea>
+    </div>
+
+    <p class="out-note">
+      1. 각 코드 우측 <b>복사</b> 버튼 클릭<br>
+      2. GitHub에서 해당 파일 열기 → 연필 아이콘(편집)<br>
+      3. data.js는 전체 교체 / sessions.js는 <b>const SESSION_DATA = [...]</b> 부분만 교체<br>
+      4. Commit changes 저장
+    </p>
+  </div>
+
+</div>
+
+<script>
+const STATUS_OPTIONS = ['RECRUITING','ALMOST_FULL','FULL','CLOSED','SOON'];
+const DAY_OPTIONS    = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+
+/* ── 초기값 로드 ──────────────────────────── */
+function init() {
+  if (typeof CONFIG !== 'undefined') {
+    document.getElementById('cfg-applyUrl').value  = CONFIG.applyUrl        || '';
+    document.getElementById('cfg-formUrl').value   = CONFIG.formUrl         || '';
+    document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram  || '';
+    document.getElementById('cfg-threads').value   = CONFIG.sns?.threads    || '';
+  }
+  if (typeof SESSION_DATA !== 'undefined') {
+    SESSION_DATA.forEach(s => appendSessionBlock(s));
+  }
+}
+
+/* ── 세션 블록 생성 ───────────────────────── */
+function appendSessionBlock(s) {
+  const editor = document.getElementById('sessions-editor');
+  const block  = document.createElement('div');
+  block.className = 'session-block is-open';
+
+  block.innerHTML = `
+    <div class="session-block-header">
+      <span class="session-block-title">${s.date || '새 세션'} (${s.day || ''}) · ${s.status || ''}</span>
+      <button class="btn btn--red" onclick="deleteSession(this)">삭제</button>
+    </div>
+    <div class="session-block-body">
+      <div class="session-meta-grid">
+        <div class="field-group">
+          <label>날짜 (MM.DD)</label>
+          <input type="text" data-field="date" value="${s.date || ''}" placeholder="10.05"
+            oninput="updateTitle(this)" />
+        </div>
+        <div class="field-group">
+          <label>요일</label>
+          <select data-field="day" onchange="updateTitle(this)">
+            ${DAY_OPTIONS.map(d => `<option${d===s.day?' selected':''}>${d}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field-group">
+          <label>시간</label>
+          <input type="text" data-field="time" value="${s.time || ''}" placeholder="19:00" />
+        </div>
+        <div class="field-group">
+          <label>장소</label>
+          <input type="text" data-field="location" value="${s.location || ''}" placeholder="서울 강남" />
+        </div>
+        <div class="field-group">
+          <label>상태</label>
+          <select data-field="status" onchange="updateTitle(this)">
+            ${STATUS_OPTIONS.map(st => `<option${st===s.status?' selected':''}>${st}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field-group">
+          <label>목표 인원 (남 / 여)</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem">
+            <input type="number" data-field="targetMen"   value="${s.targetMen   ?? 8}" min="1" />
+            <input type="number" data-field="targetWomen" value="${s.targetWomen ?? 8}" min="1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="participants-wrap">
+        <div>
+          <div class="col-label">MEN</div>
+          <div class="p-list" data-gender="men">
+            ${(s.men||[]).map(p => pRowHTML(p)).join('')}
+          </div>
+          <button class="btn btn--outline btn--add-p" onclick="addParticipant(this,'men')">+ 남성 추가</button>
+        </div>
+        <div>
+          <div class="col-label">WOMEN</div>
+          <div class="p-list" data-gender="women">
+            ${(s.women||[]).map(p => pRowHTML(p)).join('')}
+          </div>
+          <button class="btn btn--outline btn--add-p" onclick="addParticipant(this,'women')">+ 여성 추가</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  block.querySelector('.session-block-header').addEventListener('click', function(e) {
+    if (e.target.closest('.btn--red')) return;
+    block.classList.toggle('is-open');
+  });
+
+  editor.appendChild(block);
+}
+
+function pRowHTML(p) {
+  return `<div class="participant-row">
+    <input type="text"   class="p-occ" placeholder="직업/직군"  value="${(p.occupation||'').replace(/"/g,'&quot;')}" />
+    <input type="number" class="p-age" placeholder="나이"        value="${p.age ?? ''}" min="20" max="65" />
+    <button class="btn btn--icon" onclick="this.closest('.participant-row').remove()" title="삭제">×</button>
+  </div>`;
+}
+
+/* ── 헤더 타이틀 실시간 업데이트 ─────────── */
+function updateTitle(el) {
+  const block  = el.closest('.session-block');
+  const date   = block.querySelector('[data-field="date"]').value   || '새 세션';
+  const day    = block.querySelector('[data-field="day"]').value    || '';
+  const status = block.querySelector('[data-field="status"]').value || '';
+  block.querySelector('.session-block-title').textContent = `${date} (${day}) · ${status}`;
+}
+
+/* ── 세션 추가 / 삭제 ──────────────────────── */
+document.getElementById('btn-add-session').addEventListener('click', () => {
+  appendSessionBlock({ id:'', date:'', day:'SUN', time:'19:00', location:'', status:'SOON', targetMen:8, targetWomen:8, men:[], women:[] });
+  const blocks = document.querySelectorAll('.session-block');
+  blocks.forEach(b => b.classList.remove('is-open'));
+  const last = blocks[blocks.length - 1];
+  last.classList.add('is-open');
+  last.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+function deleteSession(btn) {
+  const block = btn.closest('.session-block');
+  const title = block.querySelector('.session-block-title').textContent;
+  if (!confirm(`"${title}" 세션을 삭제할까요?`)) return;
+  block.remove();
+}
+
+/* ── 참가자 추가 ────────────────────────────── */
+function addParticipant(btn, gender) {
+  const list = btn.previousElementSibling;
+  const div  = document.createElement('div');
+  div.innerHTML = pRowHTML({ occupation:'', age:'' });
+  list.appendChild(div.firstElementChild);
+  list.lastElementChild.querySelector('.p-occ').focus();
+}
+
+/* ── 데이터 수집 ────────────────────────────── */
+function collectConfig() {
+  return {
+    applyUrl:  document.getElementById('cfg-applyUrl').value.trim(),
+    formUrl:   document.getElementById('cfg-formUrl').value.trim(),
+    instagram: document.getElementById('cfg-instagram').value.trim(),
+    threads:   document.getElementById('cfg-threads').value.trim(),
+  };
+}
+
+function collectSessions() {
+  return Array.from(document.querySelectorAll('.session-block')).map((block, i) => {
+    const g = f => block.querySelector(`[data-field="${f}"]`)?.value ?? '';
+    const date = g('date');
+    return {
+      id:          date ? `2026-${date.replace('.', '-')}` : `session-${i+1}`,
+      date,
+      day:         g('day'),
+      time:        g('time'),
+      location:    g('location'),
+      status:      g('status'),
+      targetMen:   parseInt(block.querySelector('[data-field="targetMen"]')?.value)   || 8,
+      targetWomen: parseInt(block.querySelector('[data-field="targetWomen"]')?.value) || 8,
+      men:   collectParticipants(block, 'men'),
+      women: collectParticipants(block, 'women'),
+    };
+  });
+}
+
+function collectParticipants(block, gender) {
+  return Array.from(block.querySelectorAll(`.p-list[data-gender="${gender}"] .participant-row`))
+    .map(row => ({
+      occupation: row.querySelector('.p-occ').value.trim(),
+      age:        parseInt(row.querySelector('.p-age').value) || null,
+    }))
+    .filter(p => p.occupation);
+}
+
+/* ── 코드 생성 ─────────────────────────────── */
+document.getElementById('btn-generate').addEventListener('click', () => {
+  const cfg = collectConfig();
+  const ses = collectSessions();
+
+  const dataJS = `/* ============================================================
+   data.js — 사이트 기본 설정
+   ============================================================ */
+
+const CONFIG = {
+  applyUrl: '${cfg.applyUrl}',
+  formUrl:  '${cfg.formUrl}',
+  sns: {
+    instagram: '${cfg.instagram}',
+    threads:   '${cfg.threads}',
+  },
+};
+`;
+
+  const sessionsDataJS = `const SESSION_DATA = ${JSON.stringify(ses, null, 2)};`;
+
+  document.getElementById('out-data').value     = dataJS;
+  document.getElementById('out-sessions').value = sessionsDataJS;
+
+  const outSection = document.getElementById('output-section');
+  outSection.style.display = 'block';
+  outSection.scrollIntoView({ behavior:'smooth', block:'start' });
+});
+
+/* ── 복사 ──────────────────────────────────── */
+function copyCode(id) {
+  navigator.clipboard.writeText(document.getElementById(id).value).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+}
+
+/* ── 시작 ──────────────────────────────────── */
+init();
+</script>
+</body>
+</html>
