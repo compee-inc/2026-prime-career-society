@@ -7,6 +7,71 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── 비밀번호 잠금 화면 ── */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: #0c0c0c;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      z-index: 999;
+    }
+    #lock-screen h1 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #C9A35B;
+    }
+    #lock-screen p {
+      font-size: 0.68rem;
+      color: #9C988F;
+      letter-spacing: 0.08em;
+    }
+    #lock-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 260px;
+    }
+    #lock-input {
+      width: 100%;
+      background: #161616;
+      border: 1px solid rgba(201,163,91,0.3);
+      color: #F3EEE4;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-align: center;
+      padding: 0.65rem 1rem;
+      outline: none;
+      font-family: inherit;
+    }
+    #lock-input:focus { border-color: #C9A35B; }
+    #lock-error {
+      font-size: 0.65rem;
+      color: #c96161;
+      letter-spacing: 0.08em;
+      min-height: 1em;
+    }
+    #lock-btn {
+      width: 100%;
+      background: #C9A35B;
+      color: #0c0c0c;
+      border: none;
+      padding: 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    #lock-btn:hover { opacity: 0.85; }
+
     :root {
       --bg:      #0c0c0c;
       --surface: #161616;
@@ -241,6 +306,19 @@
   </style>
 </head>
 <body>
+<!-- 비밀번호 잠금 화면 -->
+<div id="lock-screen">
+  <h1>2026 PRIVATE DATING</h1>
+  <p>관리자 전용 페이지</p>
+  <div id="lock-form">
+    <input type="password" id="lock-input" placeholder="비밀번호" autocomplete="off" />
+    <div id="lock-error"></div>
+    <button id="lock-btn">입장</button>
+  </div>
+</div>
+
+<!-- 관리자 콘텐츠 (잠금 해제 후 표시) -->
+<div id="admin-content" style="display:none">
 <script src="./assets/js/data.js"></script>
 <script src="./assets/js/sessions.js"></script>
 
@@ -313,8 +391,41 @@
   </div>
 
 </div>
+</div> <!-- /admin-content -->
 
 <script>
+/* ── 비밀번호 잠금 ──────────────────────────── */
+const ADMIN_PW = '55090076';
+
+(function () {
+  if (sessionStorage.getItem('admin_auth') === '1') {
+    unlock();
+    return;
+  }
+  const input = document.getElementById('lock-input');
+  const btn   = document.getElementById('lock-btn');
+  const err   = document.getElementById('lock-error');
+
+  function tryUnlock() {
+    if (input.value === ADMIN_PW) {
+      sessionStorage.setItem('admin_auth', '1');
+      unlock();
+    } else {
+      err.textContent = '비밀번호가 올바르지 않습니다.';
+      input.value = '';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+  input.focus();
+})();
+
+function unlock() {
+  document.getElementById('lock-screen').style.display  = 'none';
+  document.getElementById('admin-content').style.display = 'block';
+}
+
 /* ── 상수 ───────────────────────────────────── */
 const REPO   = 'compee-inc/2026-private-dating';
 const BRANCH = 'main';
