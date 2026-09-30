@@ -107,21 +107,16 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     return;
   }
 
-  table.innerHTML = `
-    <div class="past__header">
-      <span>NO.</span><span>DATE</span><span>커플 탄생</span>
-    </div>
-    ${past.map((r, i) => `
+  table.innerHTML = past.map((r, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    const label = r.couples === 1 ? 'COUPLE' : 'COUPLES';
+    return `
       <div class="past__row">
-        <span class="past__num">0${i + 1}</span>
-        <span class="past__date">${r.date}<span class="past__day">${r.day}</span></span>
-        <span class="past__couples">
-          <span class="past__hearts">${'♥ '.repeat(r.couples).trim()}</span>
-          <span class="past__couple-count">${r.couples}커플</span>
-        </span>
-      </div>
-    `).join('')}
-  `;
+        <span class="past__num">${n}</span>
+        <span class="past__date">${r.date} <span class="past__day">${r.day}</span></span>
+        <span class="past__couples">&#9829; ${r.couples} ${label}</span>
+      </div>`;
+  }).join('');
 })();
 
 /* ── FAQ ─────────────────────────────────────────────────── */
