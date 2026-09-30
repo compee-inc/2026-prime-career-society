@@ -303,6 +303,64 @@
       .participants-wrap  { grid-template-columns: 1fr; }
       .field-row          { grid-template-columns: 1fr; }
     }
+
+    /* ── Admin Calendar ── */
+    .ac-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .ac-month { padding: 0 1.1rem; }
+    .ac-month:first-child { padding-left: 0; }
+    .ac-month:last-child  { padding-right: 0; }
+    .ac-month:not(:last-child) { border-right: 1px solid rgba(201,163,91,0.15); }
+    .ac-month-name {
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      padding-bottom: 0.6rem; margin-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(201,163,91,0.15);
+    }
+    .ac-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .ac-dow {
+      font-size: 0.42rem; font-weight: 600; color: rgba(156,152,143,0.55);
+      text-align: center; padding: 0.3rem 0 0.45rem;
+    }
+    .ac-cell {
+      aspect-ratio: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1px;
+      border-radius: 2px; cursor: pointer; transition: background 0.1s;
+    }
+    .ac-cell--empty { cursor: default; pointer-events: none; }
+    .ac-cell:not(.ac-cell--empty):not(.ac-cell--session):hover { background: rgba(201,163,91,0.12); }
+    .ac-day { font-size: 0.65rem; font-weight: 300; color: rgba(243,238,228,0.55); line-height: 1; }
+    .ac-badge { font-size: 0.34rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; }
+    .ac-cell--faded .ac-day { color: rgba(243,238,228,0.25); }
+    .ac-cell--past-result { background: rgba(201,163,91,0.2); }
+    .ac-cell--past-result .ac-day  { color: var(--gold); font-weight: 600; }
+    .ac-cell--past-result .ac-badge { color: var(--gold); }
+    .ac-cell--soon-marked { border: 1px solid rgba(201,163,91,0.35); }
+    .ac-cell--soon-marked .ac-day  { color: rgba(243,238,228,0.75); }
+    .ac-cell--soon-marked .ac-badge { color: rgba(201,163,91,0.7); }
+    .ac-cell--session { cursor: default; opacity: 0.6; }
+    .ac-cell--session.ac-cell--recruiting { background: rgba(243,238,228,0.07); }
+    .ac-cell--session.ac-cell--recruiting .ac-day { color: var(--ivory); }
+    .ac-cell--session.ac-cell--recruiting .ac-badge { color: var(--gold); }
+    .ac-cell--session.ac-cell--soon .ac-day { color: rgba(243,238,228,0.6); }
+    .ac-cell--session.ac-cell--closed .ac-day { color: rgba(243,238,228,0.2); }
+    .ac-detail {
+      margin-top: 1.25rem; padding: 1.1rem;
+      border: 1px solid rgba(201,163,91,0.25);
+      background: rgba(201,163,91,0.04);
+    }
+    .ac-detail-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+      color: var(--gold); margin-bottom: 0.9rem;
+    }
+    .ac-hint { font-size: 0.62rem; color: var(--muted); margin-top: 0.35rem; }
+    @media (max-width: 620px) {
+      .ac-wrap { grid-template-columns: 1fr; gap: 1.25rem; }
+      .ac-month { padding: 0; border-right: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -360,16 +418,29 @@
     </div>
   </div>
 
-  <!-- STATS -->
+  <!-- SESSION CALENDAR -->
   <div class="card">
-    <h2 class="card-title">지난 세션 & 통계</h2>
-    <div class="field-row" style="margin-bottom:1.25rem">
-      <label for="cfg-reapply">재신청 수</label>
-      <input type="number" id="cfg-reapply" min="0" placeholder="0" />
+    <h2 class="card-title">03 SESSION CALENDAR</h2>
+    <p style="font-size:0.68rem;color:var(--muted);margin-bottom:1.25rem;letter-spacing:0.03em">날짜를 클릭해 결과(커플 수) 또는 SOON 예정을 설정합니다. 세션 관리 탭의 날짜는 회색으로 표시됩니다.</p>
+    <div class="ac-wrap" id="ac-wrap"></div>
+    <div class="ac-detail" id="ac-detail" style="display:none">
+      <div class="ac-detail-title" id="ac-detail-title"></div>
+      <div id="ac-panel-past" style="display:none">
+        <label style="font-size:0.62rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:0.4rem">커플 탄생 수</label>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <input type="number" id="ac-couple-input" min="0" max="8" placeholder="0" style="width:72px" />
+          <span class="ac-hint">0이면 세션 없음으로 처리</span>
+        </div>
+      </div>
+      <div id="ac-panel-future" style="display:none">
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.75rem;color:var(--ivory)">
+          <input type="checkbox" id="ac-soon-check" />
+          SOON으로 표시
+        </label>
+        <p class="ac-hint" style="margin-top:0.35rem">체크 해제 시 해당 날짜 표시 제거</p>
+      </div>
+      <button class="btn btn--gold btn--sm" id="ac-detail-save" style="margin-top:1rem">적용</button>
     </div>
-    <div style="font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">지난 세션</div>
-    <div id="past-editor"></div>
-    <button class="btn btn--outline btn--full" id="btn-add-past" style="margin-top:0.5rem">+ 지난 세션 추가</button>
   </div>
 
   <!-- SESSIONS -->
@@ -464,6 +535,112 @@ if (location.search.includes('setup')) {
 
 function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat') || ''; }
 
+/* ── 캘린더 상태 ────────────────────────────── */
+let calPastSessions = [];
+let calSoonDates    = [];
+let acSelectedKey   = null;
+let acSelectedIsPast = false;
+
+const AC_MON  = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const AC_DOWS = ['S','M','T','W','T','F','S'];
+const AC_DAYS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+function renderAdminCalendar() {
+  const wrap = document.getElementById('ac-wrap');
+  if (!wrap) return;
+  const today   = new Date(); today.setHours(0,0,0,0);
+  const pastMap = {};
+  calPastSessions.forEach(r => { pastMap[r.date] = r; });
+  const soonSet = new Set(calSoonDates);
+  const sesMap  = {};
+  if (typeof SESSION_DATA !== 'undefined') {
+    SESSION_DATA.forEach(s => { sesMap[s.date] = s.status; });
+  }
+
+  wrap.innerHTML = [10, 11, 12].map(month => {
+    const mm = String(month).padStart(2,'0');
+    const firstDay  = new Date(2026, month-1, 1).getDay();
+    const totalDays = new Date(2026, month, 0).getDate();
+    let cells = '';
+    for (let i = 0; i < firstDay; i++) cells += '<div class="ac-cell ac-cell--empty"></div>';
+    for (let d = 1; d <= totalDays; d++) {
+      const dd  = String(d).padStart(2,'0');
+      const key = `${mm}.${dd}`;
+      const dateObj = new Date(2026, month-1, d);
+      const isPast  = dateObj < today;
+      let cls = 'ac-cell';
+      let badge = '';
+      if (sesMap[key]) {
+        const st  = sesMap[key];
+        const lbl = st === 'RECRUITING' ? 'OPEN' : st === 'CLOSED' ? 'END' : st;
+        cls += ` ac-cell--session ac-cell--${st.toLowerCase()}`;
+        badge = `<span class="ac-badge">${lbl}</span>`;
+        cells += `<div class="${cls}" title="세션 관리 탭에서 수정">${badge}<span class="ac-day">${d}</span></div>`;
+      } else if (pastMap[key] && pastMap[key].couples > 0) {
+        cls += ' ac-cell--past-result';
+        badge = `<span class="ac-badge">&#9829; ${pastMap[key].couples}</span>`;
+        cells += `<div class="${cls}" data-key="${key}" data-past="${isPast}" onclick="acClick(this)">${badge}<span class="ac-day">${d}</span></div>`;
+      } else if (soonSet.has(key)) {
+        cls += ' ac-cell--soon-marked';
+        badge = `<span class="ac-badge">SOON</span>`;
+        cells += `<div class="${cls}" data-key="${key}" data-past="${isPast}" onclick="acClick(this)">${badge}<span class="ac-day">${d}</span></div>`;
+      } else {
+        if (isPast) cls += ' ac-cell--faded';
+        cells += `<div class="${cls}" data-key="${key}" data-past="${isPast}" onclick="acClick(this)"><span class="ac-day">${d}</span></div>`;
+      }
+    }
+    return `<div class="ac-month">
+      <div class="ac-month-name">${AC_MON[month-1]}</div>
+      <div class="ac-grid">
+        ${AC_DOWS.map(d=>`<div class="ac-dow">${d}</div>`).join('')}
+        ${cells}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function acClick(el) {
+  const key    = el.dataset.key;
+  const isPast = el.dataset.past === 'true';
+  acSelectedKey    = key;
+  acSelectedIsPast = isPast;
+  const [mm, dd] = key.split('.');
+  const dateObj   = new Date(2026, parseInt(mm)-1, parseInt(dd));
+  const dayName   = AC_DAYS[dateObj.getDay()];
+  document.getElementById('ac-detail-title').textContent = `${key}  (${dayName})`;
+  if (isPast) {
+    const existing = calPastSessions.find(r => r.date === key);
+    document.getElementById('ac-couple-input').value = existing ? existing.couples : 0;
+    document.getElementById('ac-panel-past').style.display   = 'block';
+    document.getElementById('ac-panel-future').style.display = 'none';
+  } else {
+    document.getElementById('ac-soon-check').checked = calSoonDates.includes(key);
+    document.getElementById('ac-panel-past').style.display   = 'none';
+    document.getElementById('ac-panel-future').style.display = 'block';
+  }
+  const detail = document.getElementById('ac-detail');
+  detail.style.display = 'block';
+  detail.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+document.getElementById('ac-detail-save').addEventListener('click', () => {
+  if (!acSelectedKey) return;
+  const [mm, dd] = acSelectedKey.split('.');
+  const dateObj  = new Date(2026, parseInt(mm)-1, parseInt(dd));
+  const dayName  = AC_DAYS[dateObj.getDay()];
+  if (acSelectedIsPast) {
+    const couples = parseInt(document.getElementById('ac-couple-input').value) || 0;
+    calPastSessions = calPastSessions.filter(r => r.date !== acSelectedKey);
+    if (couples > 0) calPastSessions.push({ date: acSelectedKey, day: dayName, couples });
+  } else {
+    calSoonDates = calSoonDates.filter(d => d !== acSelectedKey);
+    if (document.getElementById('ac-soon-check').checked) calSoonDates.push(acSelectedKey);
+  }
+  document.getElementById('ac-detail').style.display = 'none';
+  acSelectedKey = null;
+  renderAdminCalendar();
+});
+
 /* ── 초기값 로드 ──────────────────────────── */
 function init() {
   if (typeof CONFIG !== 'undefined') {
@@ -471,12 +648,13 @@ function init() {
     document.getElementById('cfg-formUrl').value   = CONFIG.formUrl        || '';
     document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram || '';
     document.getElementById('cfg-threads').value   = CONFIG.sns?.threads   || '';
-    document.getElementById('cfg-reapply').value   = CONFIG.stats?.reapply ?? 0;
-    (CONFIG.stats?.pastSessions || []).forEach(r => appendPastRow(r));
+    calPastSessions = [...(CONFIG.stats?.pastSessions || [])];
+    calSoonDates    = [...(CONFIG.stats?.soonDates    || [])];
   }
   if (typeof SESSION_DATA !== 'undefined') {
     SESSION_DATA.forEach(s => appendSessionBlock(s));
   }
+  renderAdminCalendar();
 }
 
 /* ── 세션 블록 생성 ───────────────────────── */
@@ -609,21 +787,13 @@ document.getElementById('btn-add-past').addEventListener('click', () => {
 });
 
 function collectConfig() {
-  const pastRows = Array.from(document.querySelectorAll('#past-editor .participant-row'))
-    .map(row => ({
-      date:    row.querySelector('.pr-date').value.trim(),
-      day:     row.querySelector('.pr-day').value,
-      couples: parseInt(row.querySelector('.pr-couples').value) || 0,
-    }))
-    .filter(r => r.date);
-
   return {
     applyUrl:     document.getElementById('cfg-applyUrl').value.trim(),
     formUrl:      document.getElementById('cfg-formUrl').value.trim(),
     instagram:    document.getElementById('cfg-instagram').value.trim(),
     threads:      document.getElementById('cfg-threads').value.trim(),
-    reapply:      parseInt(document.getElementById('cfg-reapply').value) || 0,
-    pastSessions: pastRows,
+    pastSessions: calPastSessions,
+    soonDates:    calSoonDates,
   };
 }
 
@@ -659,6 +829,7 @@ function collectParticipants(block, gender) {
 function buildDataJS(cfg) {
   const pastJSON = JSON.stringify(cfg.pastSessions, null, 4)
     .split('\n').map((l,i) => i===0 ? l : '    '+l).join('\n');
+  const soonJSON = JSON.stringify(cfg.soonDates);
   return `/* ============================================================
    data.js — 사이트 기본 설정
    ============================================================ */
@@ -671,8 +842,8 @@ const CONFIG = {
     threads:   '${cfg.threads}',
   },
   stats: {
-    reapply: ${cfg.reapply},
     pastSessions: ${pastJSON},
+    soonDates:    ${soonJSON},
   },
 };
 `;

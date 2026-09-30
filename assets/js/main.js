@@ -88,37 +88,26 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* Sessions 렌더링은 sessions.js 에서 처리합니다 */
 
-/* ── Stats & Past Sessions ───────────────────────────────── */
+/* ── Session Calendar ────────────────────────────────────── */
 (function () {
-  const s = CONFIG.stats;
-  if (!s) return;
-
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  const past = s.pastSessions || [];
-
-  set('stat-done',    past.length);
-  set('stat-reapply', s.reapply || 0);
-
   const table = document.getElementById('past-table');
   if (!table) return;
 
-  if (!past.length) {
-    table.innerHTML = '<p class="past__empty">지난 세션 기록이 없습니다.</p>';
-    return;
-  }
-
-  const MON_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const DOW_NAMES = ['S','M','T','W','T','F','S'];
+  const s    = CONFIG.stats || {};
+  const MON  = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const DOWS = ['S','M','T','W','T','F','S'];
 
   const pastMap = {};
-  past.forEach(r => { pastMap[r.date] = r; });
+  (s.pastSessions || []).forEach(r => { pastMap[r.date] = r; });
+
+  const soonSet = new Set(s.soonDates || []);
 
   const sessions = (typeof SESSION_DATA !== 'undefined') ? SESSION_DATA : [];
   const upcomingMap = {};
-  sessions.forEach(s => { upcomingMap[s.date] = s; });
+  sessions.forEach(sv => { upcomingMap[sv.date] = sv; });
 
   function renderMonth(year, month) {
-    const firstDay = new Date(year, month - 1, 1).getDay();
+    const firstDay  = new Date(year, month - 1, 1).getDay();
     const totalDays = new Date(year, month, 0).getDate();
     const mm = String(month).padStart(2, '0');
     let cells = '';
@@ -136,10 +125,13 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
         cls += ' cal__cell--past';
         badge = `<span class="cal__badge">&#9829; ${c}</span>`;
       } else if (upcomingMap[key]) {
-        const st = upcomingMap[key].status;
+        const st  = upcomingMap[key].status;
         const lbl = st === 'RECRUITING' ? 'OPEN' : st === 'CLOSED' ? 'END' : 'SOON';
         cls += ` cal__cell--${st.toLowerCase()}`;
         badge = `<span class="cal__badge">${lbl}</span>`;
+      } else if (soonSet.has(key)) {
+        cls += ' cal__cell--soon';
+        badge = `<span class="cal__badge">SOON</span>`;
       }
 
       cells += `<div class="${cls}">${badge}<span class="cal__day">${d}</span></div>`;
@@ -147,9 +139,9 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
     return `
       <div class="cal__month">
-        <div class="cal__month-name">${MON_NAMES[month - 1]}</div>
+        <div class="cal__month-name">${MON[month - 1]}</div>
         <div class="cal__grid">
-          ${DOW_NAMES.map(d => `<div class="cal__dow">${d}</div>`).join('')}
+          ${DOWS.map(d => `<div class="cal__dow">${d}</div>`).join('')}
           ${cells}
         </div>
       </div>`;

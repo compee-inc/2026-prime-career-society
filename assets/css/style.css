@@ -890,39 +890,6 @@ ul, ol { list-style: none; }
   margin: 0 auto;
 }
 
-/* ── HERO CORNER STATS ───────────────────────────────────── */
-.hero__corner-stats {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 2.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.hero__corner-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.hero__corner-num {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  font-weight: 300;
-  letter-spacing: 0.02em;
-  color: var(--c-accent);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.hero__corner-label {
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(243,238,228,0.35);
-}
-
 /* ── PAST SESSIONS ───────────────────────────────────────── */
 .past.section { background: #FBF5E9; }
 
