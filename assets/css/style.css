@@ -894,24 +894,44 @@ ul, ol { list-style: none; }
   margin: 0 auto;
 }
 
-/* ── HERO MINI STATS ─────────────────────────────────────── */
-.hero__mini-stats {
+/* ── HERO CORNER STATS ───────────────────────────────────── */
+.hero__corner-stats {
+  position: absolute;
+  top: 50%;
+  left: 2.5rem;
+  transform: translateY(-50%);
+  z-index: 2;
   display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: rgba(243,238,228,0.45);
-  margin-top: 0.25rem;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
-.hero__mini-stats strong {
-  color: var(--c-accent-lt);
+.hero__corner-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hero__corner-num {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--c-accent);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__corner-label {
+  font-size: 0.58rem;
   font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(243,238,228,0.35);
 }
 
-.hero__mini-dot { opacity: 0.4; }
+@media (max-width: 600px) {
+  .hero__corner-stats { display: none; }
+}
 
 /* ── PAST SESSIONS ───────────────────────────────────────── */
 .past.section { background: var(--c-dark); }
