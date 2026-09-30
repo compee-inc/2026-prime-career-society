@@ -6,326 +6,264 @@
   <title>2026 PRIVATE DATING | Private Rotation Dating</title>
   <meta name="description" content="8:8 Selected Members Private Rotation Dating. 2026 Limited Season." />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="2026 PRIVATE DATING | Private Rotation Dating" />
   <meta property="og:description" content="8:8 Selected Members Private Rotation Dating. 2026 Limited Season." />
   <meta property="og:image" content="./assets/images/og.jpg" />
   <meta property="og:url" content="" />
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="2026 PRIVATE DATING" />
-  <meta name="twitter:description" content="8:8 Selected Members Private Rotation Dating. 2026 Limited Season." />
 
-  <link rel="canonical" href="" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav" role="navigation" aria-label="메인 네비게이션">
-    <div class="nav__inner">
-      <a href="#hero" class="nav__logo" aria-label="2026 PRIVATE DATING 홈">2026 PRIVATE DATING</a>
-      <ul class="nav__menu" role="list">
-        <li><a href="#about">ABOUT</a></li>
-        <li><a href="#how">HOW IT WORKS</a></li>
-        <li><a href="#priority">ONE PRIORITY</a></li>
-        <li><a href="#sessions">SESSIONS</a></li>
-        <li><a href="#founder">FOUNDER</a></li>
-        <li><a href="#faq">FAQ</a></li>
-      </ul>
-      <a href="#apply" class="btn btn--nav js-apply">APPLY</a>
-      <button class="nav__hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-menu">
+  <!-- ── HEADER NAV ──────────────────────────────────────── -->
+  <header class="site-nav" id="site-nav">
+    <a href="#" class="site-nav__logo" aria-label="홈">2026 PRIVATE DATING</a>
+    <div class="site-nav__right">
+      <span class="slide-counter" aria-live="polite">
+        <span id="cur-num">01</span><span class="sep">/</span><span id="tot-num">10</span>
+      </span>
+      <button class="hamburger" id="hamburger" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobile-menu">
         <span></span><span></span><span></span>
       </button>
     </div>
-    <!-- Mobile Menu -->
-    <div class="nav__mobile" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="모바일 메뉴">
-      <ul role="list">
-        <li><a href="#about" class="nav__mobile-link">ABOUT</a></li>
-        <li><a href="#how" class="nav__mobile-link">HOW IT WORKS</a></li>
-        <li><a href="#priority" class="nav__mobile-link">ONE PRIORITY</a></li>
-        <li><a href="#sessions" class="nav__mobile-link">SESSIONS</a></li>
-        <li><a href="#founder" class="nav__mobile-link">FOUNDER</a></li>
-        <li><a href="#faq" class="nav__mobile-link">FAQ</a></li>
-        <li><a href="#apply" class="nav__mobile-link nav__mobile-apply js-apply">APPLY</a></li>
-      </ul>
-    </div>
-  </nav>
+  </header>
 
-  <main>
+  <!-- ── SLIDE DOT NAV (desktop, right side) ─────────────── -->
+  <nav class="dot-nav" id="dot-nav" aria-label="슬라이드 이동"></nav>
+
+  <!-- ── ARROW NAV ──────────────────────────────────────── -->
+  <div class="arrow-nav" id="arrow-nav">
+    <button id="prev-btn" aria-label="이전 슬라이드" disabled>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M6 10L6 2M6 2L2 6M6 2L10 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button id="next-btn" aria-label="다음 슬라이드">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M6 2L6 10M6 10L10 6M6 10L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- ── MOBILE MENU ────────────────────────────────────── -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="모바일 메뉴">
+      <a data-goto="0" class="mm-link">HERO</a>
+      <a data-goto="1" class="mm-link">ABOUT</a>
+      <a data-goto="2" class="mm-link">WHY PRIVATE</a>
+      <a data-goto="3" class="mm-link">HOW IT WORKS</a>
+      <a data-goto="4" class="mm-link">ONE PRIORITY</a>
+      <a data-goto="5" class="mm-link">MEMBERS</a>
+      <a data-goto="6" class="mm-link">SESSIONS</a>
+      <a data-goto="7" class="mm-link">FOUNDER</a>
+      <a data-goto="8" class="mm-link">FAQ</a>
+      <a data-goto="9" class="mm-link js-apply">APPLY</a>
+    </nav>
+  </div>
+
+  <!-- ── SLIDES ─────────────────────────────────────────── -->
+  <main class="slides" id="slides" aria-label="페이지 콘텐츠">
 
     <!-- 01. HERO -->
-    <section class="hero" id="hero" aria-label="히어로">
-      <div class="hero__bg" aria-hidden="true">
-        <img
-          src="./assets/images/hero.jpg"
-          alt=""
-          class="hero__bg-img"
-          loading="eager"
-          onerror="this.style.display='none'"
-        />
+    <section class="slide slide--dark is-active" id="s0" data-index="0" aria-label="히어로">
+      <div class="slide__bg" aria-hidden="true">
+        <img src="./assets/images/hero.jpg" alt="" loading="eager" onerror="this.style.display='none'" />
       </div>
-      <div class="hero__content reveal">
-        <p class="hero__eyebrow">8 : 8 PRIVATE ROTATION DATING</p>
-        <h1 class="hero__title">2026<br>PRIVATE<br>DATING</h1>
-        <p class="hero__sub">
-          좋은 사람을 만나는 기회를,<br>
-          조금 더 신중하게.
-        </p>
-        <p class="hero__meta">SELECTED MEMBERS · LIMITED SESSIONS</p>
-        <a href="#apply" class="btn btn--primary js-apply">참가 신청하기</a>
-      </div>
-      <div class="hero__scroll" aria-hidden="true">
-        <span class="hero__scroll-line"></span>
-        <span class="hero__scroll-text">SCROLL</span>
+      <div class="slide__inner slide__inner--center">
+        <p class="eyebrow">8 : 8 PRIVATE ROTATION DATING</p>
+        <h1 class="hero-title">2026<br>PRIVATE<br>DATING</h1>
+        <p class="hero-sub">좋은 사람을 만나는 기회를,<br>조금 더 신중하게.</p>
+        <p class="hero-meta">SELECTED MEMBERS · LIMITED SESSIONS</p>
+        <div class="btn-group">
+          <a href="#" class="btn btn--light js-apply">참가 신청하기</a>
+        </div>
       </div>
     </section>
 
     <!-- 02. ABOUT -->
-    <section class="about section" id="about" aria-label="어바웃">
-      <div class="container">
-        <div class="about__inner">
-          <div class="about__label reveal">02 ABOUT</div>
-          <h2 class="about__title reveal">NOT ANOTHER<br>DATING EVENT.</h2>
-          <div class="about__body reveal">
-            <p>
-              많이 모집하는 소개팅이 아니라<br>
-              내가 직접 소개해주고 싶은 사람들만 모으는<br>
-              소개팅을 만들고 싶었습니다.
-            </p>
-            <p>
-              신청한다고 모두 참가할 수 있는 것은 아닙니다.
-            </p>
-            <p>
-              기본 프로필과 참가 기준을 확인하고,<br>
-              각 회차의 참가자 구성을 직접 검토합니다.
-            </p>
+    <section class="slide slide--light" id="s1" data-index="1" aria-label="어바웃">
+      <div class="slide__inner">
+        <div class="split">
+          <div class="split__left">
+            <span class="s-label">02 ABOUT</span>
+            <h2 class="s-title">NOT ANOTHER<br>DATING<br>EVENT.</h2>
+          </div>
+          <div class="split__right">
+            <p>많이 모집하는 소개팅이 아니라<br>내가 직접 소개해주고 싶은 사람들만 모으는<br>소개팅을 만들고 싶었습니다.</p>
+            <p>신청한다고 모두 참가할 수 있는 것은 아닙니다.</p>
+            <p>기본 프로필과 참가 기준을 확인하고,<br>각 회차의 참가자 구성을 직접 검토합니다.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 03. WHY PRIVATE -->
-    <section class="why section" id="why" aria-label="왜 프라이빗인가">
-      <div class="container">
-        <div class="why__label reveal">03 WHY PRIVATE</div>
-        <div class="why__grid">
-          <article class="why__item reveal">
-            <span class="why__num">01</span>
-            <h3 class="why__kw">SELECTED</h3>
+    <section class="slide slide--dark" id="s2" data-index="2" aria-label="왜 프라이빗인가">
+      <div class="slide__inner">
+        <span class="s-label">03 WHY PRIVATE</span>
+        <div class="why-grid">
+          <div class="why-item">
+            <span class="why-num">01</span>
+            <h3 class="why-kw">SELECTED</h3>
             <p>신청자 전원이 아닌, 기준에 맞는 참가자를 선정합니다.</p>
-          </article>
-          <article class="why__item reveal">
-            <span class="why__num">02</span>
-            <h3 class="why__kw">LIMITED</h3>
+          </div>
+          <div class="why-item">
+            <span class="why-num">02</span>
+            <h3 class="why-kw">LIMITED</h3>
             <p>한 회차 최대 16명.</p>
-          </article>
-          <article class="why__item reveal">
-            <span class="why__num">03</span>
-            <h3 class="why__kw">CURATED</h3>
+          </div>
+          <div class="why-item">
+            <span class="why-num">03</span>
+            <h3 class="why-kw">CURATED</h3>
             <p>회차별 참가자 구성을 직접 검토합니다.</p>
-          </article>
-          <article class="why__item reveal">
-            <span class="why__num">04</span>
-            <h3 class="why__kw">PRIVATE</h3>
+          </div>
+          <div class="why-item">
+            <span class="why-num">04</span>
+            <h3 class="why-kw">PRIVATE</h3>
             <p>참가자의 개인정보와 프라이버시를 중요하게 생각합니다.</p>
-          </article>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- 04. HOW IT WORKS -->
-    <section class="how section" id="how" aria-label="진행 방식">
-      <div class="container">
-        <div class="how__label reveal">04 HOW IT WORKS</div>
-        <h2 class="how__title reveal">THE PROCESS</h2>
-        <ol class="how__steps" role="list">
-          <li class="how__step reveal">
-            <span class="how__step-num">01</span>
-            <div class="how__step-content">
-              <h3>APPLY</h3>
-              <p>신청서 작성</p>
-            </div>
+    <section class="slide slide--light" id="s3" data-index="3" aria-label="진행 방식">
+      <div class="slide__inner">
+        <span class="s-label">04 HOW IT WORKS</span>
+        <h2 class="s-title s-title--sm">THE PROCESS</h2>
+        <ol class="how-grid" role="list">
+          <li class="how-item">
+            <span class="how-num">01</span>
+            <h3>APPLY</h3>
+            <p>신청서 작성</p>
           </li>
-          <li class="how__step reveal">
-            <span class="how__step-num">02</span>
-            <div class="how__step-content">
-              <h3>PROFILE REVIEW</h3>
-              <p>기본 프로필 및 참가 기준 검토</p>
-            </div>
+          <li class="how-item">
+            <span class="how-num">02</span>
+            <h3>PROFILE REVIEW</h3>
+            <p>기본 프로필 및 참가 기준 검토</p>
           </li>
-          <li class="how__step reveal">
-            <span class="how__step-num">03</span>
-            <div class="how__step-content">
-              <h3>ONE PRIORITY</h3>
-              <p>가장 중요한 단 하나의 기준 확인</p>
-            </div>
+          <li class="how-item">
+            <span class="how-num">03</span>
+            <h3>ONE PRIORITY</h3>
+            <p>가장 중요한 단 하나의 기준 확인</p>
           </li>
-          <li class="how__step reveal">
-            <span class="how__step-num">04</span>
-            <div class="how__step-content">
-              <h3>SELECTED</h3>
-              <p>회차별 참가자 구성 및 참가 확정</p>
-            </div>
+          <li class="how-item">
+            <span class="how-num">04</span>
+            <h3>SELECTED</h3>
+            <p>회차별 참가자 구성 및 참가 확정</p>
           </li>
-          <li class="how__step reveal">
-            <span class="how__step-num">05</span>
-            <div class="how__step-content">
-              <h3>8 : 8 ROTATION</h3>
-              <p>약 10분씩 1:1 대화</p>
-            </div>
+          <li class="how-item">
+            <span class="how-num">05</span>
+            <h3>8 : 8 ROTATION</h3>
+            <p>약 10분씩 1:1 대화</p>
           </li>
-          <li class="how__step reveal">
-            <span class="how__step-num">06</span>
-            <div class="how__step-content">
-              <h3>MUTUAL MATCH</h3>
-              <p>서로 선택한 경우에만 연락처 전달</p>
-            </div>
+          <li class="how-item">
+            <span class="how-num">06</span>
+            <h3>MUTUAL MATCH</h3>
+            <p>서로 선택한 경우에만 연락처 전달</p>
           </li>
         </ol>
       </div>
     </section>
 
     <!-- 05. ONE PRIORITY -->
-    <section class="priority section" id="priority" aria-label="원 프라이오리티">
-      <div class="container">
-        <div class="priority__label reveal">05 ONE PRIORITY</div>
-        <h2 class="priority__title reveal">ONE<br>PRIORITY</h2>
-        <p class="priority__question reveal">
-          이성을 볼 때,<br>딱 하나만 고른다면 무엇인가요?
-        </p>
-        <div class="priority__desc reveal">
-          <p>
-            사람마다 좋은 사람을 판단하는 기준은 다릅니다.
-          </p>
-          <p>
-            우리는 이상형 조건을 길게 묻는 대신,<br>
-            가장 중요한 단 하나의 기준을 확인합니다.
-          </p>
-          <p>
-            그리고 그 기준을 실제 회차 구성에 반영합니다.
-          </p>
-        </div>
-        <ul class="priority__list" role="list" aria-label="우선순위 선택지">
-          <li class="priority__item reveal" data-desc="경제력 / 재력이 가장 중요한 기준입니다." tabindex="0" role="button" aria-label="ECONOMIC POWER - 경제력/재력">
-            <span class="priority__item-en">ECONOMIC POWER</span>
-            <span class="priority__item-kr">경제력 / 재력</span>
-            <span class="priority__item-desc" aria-hidden="true">경제력 / 재력이 가장 중요한 기준입니다.</span>
+    <section class="slide slide--dark" id="s4" data-index="4" aria-label="원 프라이오리티">
+      <div class="slide__inner">
+        <span class="s-label">05 ONE PRIORITY</span>
+        <h2 class="s-title">ONE PRIORITY</h2>
+        <p class="s-desc">이성을 볼 때, 딱 하나만 고른다면 무엇인가요?</p>
+        <ul class="priority-list" aria-label="우선순위 선택지">
+          <li class="priority-item" tabindex="0" role="button" data-desc="경제력 / 재력이 가장 중요한 기준입니다.">
+            <span class="pi-en">ECONOMIC POWER</span><span class="pi-kr">경제력 / 재력</span>
           </li>
-          <li class="priority__item reveal" data-desc="직업과 커리어를 가장 중요하게 생각합니다." tabindex="0" role="button" aria-label="CAREER - 직업/커리어">
-            <span class="priority__item-en">CAREER</span>
-            <span class="priority__item-kr">직업 / 커리어</span>
-            <span class="priority__item-desc" aria-hidden="true">직업과 커리어를 가장 중요하게 생각합니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="직업과 커리어를 가장 중요하게 생각합니다.">
+            <span class="pi-en">CAREER</span><span class="pi-kr">직업 / 커리어</span>
           </li>
-          <li class="priority__item reveal" data-desc="학력을 가장 중요한 기준으로 봅니다." tabindex="0" role="button" aria-label="EDUCATION - 학력">
-            <span class="priority__item-en">EDUCATION</span>
-            <span class="priority__item-kr">학력</span>
-            <span class="priority__item-desc" aria-hidden="true">학력을 가장 중요한 기준으로 봅니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="학력을 가장 중요한 기준으로 봅니다.">
+            <span class="pi-en">EDUCATION</span><span class="pi-kr">학력</span>
           </li>
-          <li class="priority__item reveal" data-desc="외모가 첫 번째 기준입니다." tabindex="0" role="button" aria-label="APPEARANCE - 외모">
-            <span class="priority__item-en">APPEARANCE</span>
-            <span class="priority__item-kr">외모</span>
-            <span class="priority__item-desc" aria-hidden="true">외모가 첫 번째 기준입니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="외모가 첫 번째 기준입니다.">
+            <span class="pi-en">APPEARANCE</span><span class="pi-kr">외모</span>
           </li>
-          <li class="priority__item reveal" data-desc="키를 중요한 기준으로 생각합니다." tabindex="0" role="button" aria-label="HEIGHT - 키">
-            <span class="priority__item-en">HEIGHT</span>
-            <span class="priority__item-kr">키</span>
-            <span class="priority__item-desc" aria-hidden="true">키를 중요한 기준으로 생각합니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="키를 중요한 기준으로 생각합니다.">
+            <span class="pi-en">HEIGHT</span><span class="pi-kr">키</span>
           </li>
-          <li class="priority__item reveal" data-desc="성격과 가치관이 가장 중요한 기준입니다." tabindex="0" role="button" aria-label="VALUES - 성격/가치관">
-            <span class="priority__item-en">VALUES</span>
-            <span class="priority__item-kr">성격 / 가치관</span>
-            <span class="priority__item-desc" aria-hidden="true">성격과 가치관이 가장 중요한 기준입니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="성격과 가치관이 가장 중요한 기준입니다.">
+            <span class="pi-en">VALUES</span><span class="pi-kr">성격 / 가치관</span>
           </li>
-          <li class="priority__item reveal" data-desc="위의 항목 외 본인만의 기준이 있습니다." tabindex="0" role="button" aria-label="OTHER - 기타">
-            <span class="priority__item-en">OTHER</span>
-            <span class="priority__item-kr">기타</span>
-            <span class="priority__item-desc" aria-hidden="true">위의 항목 외 본인만의 기준이 있습니다.</span>
+          <li class="priority-item" tabindex="0" role="button" data-desc="위의 항목 외 본인만의 기준이 있습니다.">
+            <span class="pi-en">OTHER</span><span class="pi-kr">기타</span>
           </li>
         </ul>
       </div>
     </section>
 
     <!-- 06. SELECTED MEMBERS -->
-    <section class="members section" id="members" aria-label="참가자 선정">
-      <div class="container">
-        <div class="members__label reveal">06 SELECTED MEMBERS</div>
-        <h2 class="members__title reveal">SELECTED<br>MEMBERS</h2>
-        <div class="members__body reveal">
-          <p>
-            참가자는 신청 순서대로 확정되지 않습니다.
-          </p>
-          <p>
-            기본 조건, 프로필, ONE PRIORITY 등을 확인한 후<br>
-            각 회차의 참가자 구성을 검토합니다.
-          </p>
+    <section class="slide slide--light" id="s5" data-index="5" aria-label="참가자 선정">
+      <div class="slide__inner">
+        <div class="split">
+          <div class="split__left">
+            <span class="s-label">06 SELECTED MEMBERS</span>
+            <h2 class="s-title">SELECTED<br>MEMBERS</h2>
+          </div>
+          <div class="split__right">
+            <p>참가자는 신청 순서대로 확정되지 않습니다.</p>
+            <p>기본 조건, 프로필, ONE PRIORITY 등을 확인한 후<br>각 회차의 참가자 구성을 검토합니다.</p>
+            <ul class="criteria-list" aria-label="검토 항목">
+              <li>AGE</li>
+              <li>PROFESSION</li>
+              <li>EDUCATION</li>
+              <li>INCOME</li>
+              <li>PROFILE</li>
+              <li>ONE PRIORITY</li>
+            </ul>
+            <p class="note">다른 참가자의 개인정보는 공개되지 않습니다.</p>
+          </div>
         </div>
-        <ul class="members__criteria reveal" role="list" aria-label="검토 항목">
-          <li>AGE</li>
-          <li>PROFESSION</li>
-          <li>EDUCATION</li>
-          <li>INCOME</li>
-          <li>PROFILE</li>
-          <li>ONE PRIORITY</li>
-        </ul>
-        <p class="members__note reveal">
-          다른 참가자의 개인정보는 공개되지 않습니다.
-        </p>
       </div>
     </section>
 
     <!-- 07. UPCOMING SESSIONS -->
-    <section class="sessions section" id="sessions" aria-label="예정 회차">
-      <div class="container">
-        <div class="sessions__label reveal">07 UPCOMING SESSIONS</div>
-        <h2 class="sessions__title reveal">UPCOMING<br>SESSIONS</h2>
-        <div class="sessions__grid" id="sessions-grid" aria-live="polite">
-          <!-- JS로 렌더링 -->
+    <section class="slide slide--white" id="s6" data-index="6" aria-label="예정 회차">
+      <div class="slide__inner">
+        <span class="s-label">07 UPCOMING SESSIONS</span>
+        <h2 class="s-title s-title--sm">UPCOMING SESSIONS</h2>
+        <div class="sessions-grid" id="sessions-grid" aria-live="polite">
+          <!-- JS 렌더링 -->
         </div>
       </div>
     </section>
 
     <!-- 08. FOUNDER -->
-    <section class="founder section" id="founder" aria-label="파운더">
-      <div class="container">
-        <div class="founder__inner">
-          <div class="founder__img-wrap reveal">
-            <img
-              src="./assets/images/founder.jpg"
-              alt="파운더 프로필 사진"
-              class="founder__img"
-              loading="lazy"
-              onerror="this.closest('.founder__img-wrap').classList.add('founder__img-wrap--empty')"
-            />
+    <section class="slide slide--light" id="s7" data-index="7" aria-label="파운더">
+      <div class="slide__inner">
+        <div class="split split--founder">
+          <div class="split__left">
+            <div class="founder-img-wrap">
+              <img
+                src="./assets/images/founder.jpg"
+                alt="파운더 프로필 사진"
+                loading="lazy"
+                onerror="this.closest('.founder-img-wrap').classList.add('founder-img-wrap--empty')"
+              />
+            </div>
           </div>
-          <div class="founder__content">
-            <div class="founder__label reveal">08 FOUNDER</div>
-            <h2 class="founder__title reveal">FOUNDER</h2>
-            <div class="founder__body reveal">
-              <p>
-                항공사에서 개발자로 일하고 있습니다.
-              </p>
-              <p>
-                소개팅을 운영하는 사람이 본업은 아니지만,<br>
-                주변에서 좋은 사람을 소개해달라는 이야기를<br>
-                종종 들었습니다.
-              </p>
-              <p>
-                그래서 직접 만들기로 했습니다.
-              </p>
-              <p>
-                내가 자신 있게 소개할 수 있는 사람들만 만나게 하고,<br>
-                그 자리를 직접 책임지고 싶었습니다.
-              </p>
-              <p class="founder__etc">Previously worked as a model.</p>
+          <div class="split__right">
+            <span class="s-label">08 FOUNDER</span>
+            <h2 class="s-title s-title--sm">FOUNDER</h2>
+            <div class="founder-body">
+              <p>항공사에서 개발자로 일하고 있습니다.</p>
+              <p>소개팅을 운영하는 사람이 본업은 아니지만,<br>주변에서 좋은 사람을 소개해달라는 이야기를<br>종종 들었습니다.</p>
+              <p>그래서 직접 만들기로 했습니다.</p>
+              <p>내가 자신 있게 소개할 수 있는 사람들만 만나게 하고,<br>그 자리를 직접 책임지고 싶었습니다.</p>
+              <p class="founder-etc">Previously worked as a model.</p>
             </div>
           </div>
         </div>
@@ -333,124 +271,88 @@
     </section>
 
     <!-- 09. FAQ -->
-    <section class="faq section" id="faq" aria-label="자주 묻는 질문">
-      <div class="container">
-        <div class="faq__label reveal">09 FAQ</div>
-        <h2 class="faq__title reveal">FAQ</h2>
-        <dl class="faq__list" id="faq-list">
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              신청하면 모두 참가할 수 있나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+    <section class="slide slide--white" id="s8" data-index="8" aria-label="자주 묻는 질문">
+      <div class="slide__inner">
+        <span class="s-label">09 FAQ</span>
+        <h2 class="s-title s-title--sm">FAQ</h2>
+        <dl class="faq-list">
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              신청하면 모두 참가할 수 있나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              아니요. 기본 조건과 프로필을 검토한 후 회차별 참가자를 선정합니다.
-            </dd>
+            <dd class="faq-a">아니요. 기본 조건과 프로필을 검토한 후 회차별 참가자를 선정합니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              몇 명이 참가하나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              몇 명이 참가하나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              남성 8명, 여성 8명으로 총 16명이 기본 구성입니다.
-            </dd>
+            <dd class="faq-a">남성 8명, 여성 8명으로 총 16명이 기본 구성입니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              참가비는 얼마인가요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              참가비는 얼마인가요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              1인 50,000원입니다.
-            </dd>
+            <dd class="faq-a">1인 50,000원입니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              어떤 기준으로 참가자를 선정하나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              어떤 기준으로 참가자를 선정하나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              나이, 직업, 학력, 소득, 프로필 및 ONE PRIORITY 등을 종합적으로 검토합니다.
-            </dd>
+            <dd class="faq-a">나이, 직업, 학력, 소득, 프로필 및 ONE PRIORITY 등을 종합적으로 검토합니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              ONE PRIORITY가 무엇인가요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              연락처는 행사에서 바로 교환하나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              이성을 볼 때 가장 중요하게 생각하는 단 하나의 기준입니다.
-            </dd>
+            <dd class="faq-a">아니요. 행사 종료 후 서로 선택한 경우에만 운영자가 연락처를 전달합니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              연락처는 행사에서 바로 교환하나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              참가 신청 후 참가가 확정되나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              아니요. 행사 종료 후 서로 선택한 경우에만 운영자가 연락처를 전달합니다.
-            </dd>
+            <dd class="faq-a">신청은 참가 확정을 의미하지 않습니다. 프로필 검토 후 별도로 참가 확정 안내를 드립니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              인원이 충분하지 않으면 어떻게 되나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              인원이 충분하지 않으면 어떻게 되나요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              적정한 참가자 구성이 어렵다고 판단되는 경우 해당 회차를 진행하지 않을 수 있으며, 이 경우 참가비를 환불합니다.
-            </dd>
+            <dd class="faq-a">참가자 구성이 어렵다고 판단되는 경우 해당 회차를 진행하지 않을 수 있으며, 이 경우 참가비를 환불합니다.</dd>
           </div>
-          <div class="faq__item reveal">
-            <dt class="faq__q" tabindex="0" role="button" aria-expanded="false">
-              참가 신청 후 참가가 확정되나요?
-              <span class="faq__arrow" aria-hidden="true"></span>
+          <div class="faq-item">
+            <dt class="faq-q" tabindex="0" role="button" aria-expanded="false">
+              ONE PRIORITY가 무엇인가요? <span class="faq-icon" aria-hidden="true"></span>
             </dt>
-            <dd class="faq__a">
-              신청은 참가 확정을 의미하지 않습니다. 프로필 검토 후 별도로 참가 확정 안내를 드립니다.
-            </dd>
+            <dd class="faq-a">이성을 볼 때 가장 중요하게 생각하는 단 하나의 기준입니다.</dd>
           </div>
         </dl>
       </div>
     </section>
 
     <!-- 10. APPLY -->
-    <section class="apply section" id="apply" aria-label="참가 신청">
-      <div class="container">
-        <div class="apply__inner reveal">
-          <h2 class="apply__title">MEET<br>SELECTED<br>PEOPLE.</h2>
-          <p class="apply__desc">
-            참가 신청서를 작성해주세요.<br>
-            신청 내용을 확인한 후 회차별 참가 여부를 안내드립니다.
-          </p>
-          <a href="#" class="btn btn--primary btn--large js-apply" target="_blank" rel="noopener noreferrer">
-            참가 신청하기
-          </a>
+    <section class="slide slide--dark" id="s9" data-index="9" aria-label="참가 신청">
+      <div class="slide__inner slide__inner--center">
+        <p class="eyebrow">10 APPLY</p>
+        <h2 class="apply-title">MEET<br>SELECTED<br>PEOPLE.</h2>
+        <p class="apply-desc">
+          참가 신청서를 작성해주세요.<br>
+          신청 내용을 확인한 후 회차별 참가 여부를 안내드립니다.
+        </p>
+        <div class="btn-group">
+          <a href="#" class="btn btn--light js-apply">참가 신청하기</a>
+          <a href="#" class="btn btn--outline-light js-form">구글폼 작성하기</a>
+        </div>
+        <div class="footer-line">
+          <span class="footer-brand">2026 PRIVATE DATING</span>
+          <div class="footer-sns">
+            <a href="#" class="js-instagram" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="#" class="js-threads" target="_blank" rel="noopener noreferrer">Threads</a>
+          </div>
+          <span class="footer-copy">&copy; 2026 2026 PRIVATE DATING</span>
         </div>
       </div>
     </section>
 
   </main>
-
-  <!-- 11. FOOTER -->
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <div class="footer__top">
-        <p class="footer__brand">2026 PRIVATE DATING</p>
-        <p class="footer__tagline">Private Rotation Dating<br>8 : 8 · Selected Members · Limited Sessions</p>
-        <nav class="footer__sns" aria-label="SNS 링크">
-          <a href="#" class="footer__sns-link js-instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
-          <a href="#" class="footer__sns-link js-threads" target="_blank" rel="noopener noreferrer" aria-label="Threads">Threads</a>
-        </nav>
-      </div>
-      <div class="footer__biz">
-        <!-- 사업자 정보 확정 후 입력 -->
-      </div>
-      <div class="footer__bottom">
-        <p>&copy; 2026 2026 PRIVATE DATING</p>
-      </div>
-    </div>
-  </footer>
 
   <script src="./assets/js/main.js"></script>
 </body>

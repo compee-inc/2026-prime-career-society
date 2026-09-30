@@ -1,16 +1,17 @@
 /* ============================================================
-   2026 PRIVATE DATING — main.js
+   2026 PRIVATE DATING — main.js (slide layout)
    ============================================================ */
 
 /* ── CONFIG ─────────────────────────────────────────────────
-   운영 설정. applyUrl, sns, sessions 만 수정하면 됩니다.
+   운영 설정: applyUrl, formUrl, sns, sessions 만 수정
    ─────────────────────────────────────────────────────────── */
 const CONFIG = {
-  applyUrl: 'https://forms.gle/YOUR_GOOGLE_FORM_URL',  // ← 구글 폼 URL로 교체
+  applyUrl: '',   // 참가 신청 URL (비워두면 알림 표시)
+  formUrl:  '',   // 구글폼 URL (비워두면 알림 표시)
 
   sns: {
-    instagram: 'https://instagram.com/2026privatedating',  // ← 교체
-    threads:   'https://threads.net/@2026privatedating',   // ← 교체
+    instagram: 'https://instagram.com/2026privatedating',
+    threads:   'https://threads.net/@2026privatedating',
   },
 
   sessions: [
@@ -48,24 +49,134 @@ const CONFIG = {
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-/* ── Nav scroll ──────────────────────────────────────────── */
-(function initNav() {
-  const nav = $('.nav');
-  if (!nav) return;
+/* ── Slide Engine ────────────────────────────────────────── */
+const slides    = $$('.slide');
+const totalSlides = slides.length;
+let current = 0;
+let isAnimating = false;
 
-  let ticking = false;
-  const onScroll = () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        nav.classList.toggle('nav--scrolled', window.scrollY > 40);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  };
+const nav      = $('#site-nav');
+const dotNav   = $('#dot-nav');
+const arrowNav = $('#arrow-nav');
+const curEl    = $('#cur-num');
+const totEl    = $('#tot-num');
+const prevBtn  = $('#prev-btn');
+const nextBtn  = $('#next-btn');
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+// light-theme slides (change nav/dots color accordingly)
+const LIGHT_SLIDES = new Set([1, 3, 5, 7]);
+const WHITE_SLIDES = new Set([6, 8]);
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function updateUI(idx) {
+  curEl.textContent = pad(idx + 1);
+
+  // nav theme
+  const isLight = LIGHT_SLIDES.has(idx) || WHITE_SLIDES.has(idx);
+  nav.classList.toggle('site-nav--light', isLight);
+  dotNav.classList.toggle('dot-nav--light', isLight);
+  arrowNav.classList.toggle('arrow-nav--light', isLight);
+
+  // dots
+  $$('.dot', dotNav).forEach((d, i) => d.classList.toggle('is-active', i === idx));
+
+  // arrows
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === totalSlides - 1;
+}
+
+function goTo(n, direction = 1) {
+  if (n === current || isAnimating) return;
+  if (n < 0 || n >= totalSlides) return;
+
+  isAnimating = true;
+
+  const prevSlide = slides[current];
+  const nextSlide = slides[n];
+
+  // animate out
+  prevSlide.classList.add('is-prev');
+  prevSlide.classList.remove('is-active');
+
+  // set enter direction before adding active
+  nextSlide.style.transform = `translateY(${direction > 0 ? '20px' : '-20px'})`;
+  nextSlide.style.opacity = '0';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      nextSlide.style.transform = '';
+      nextSlide.style.opacity = '';
+      nextSlide.classList.add('is-active');
+
+      current = n;
+      updateUI(n);
+
+      setTimeout(() => {
+        prevSlide.classList.remove('is-prev');
+        isAnimating = false;
+      }, 520);
+    });
+  });
+}
+
+function goNext() { goTo(current + 1, 1); }
+function goPrev() { goTo(current - 1, -1); }
+
+/* ── Build dot nav ───────────────────────────────────────── */
+(function buildDots() {
+  totEl.textContent = pad(totalSlides);
+
+  slides.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'dot' + (i === 0 ? ' is-active' : '');
+    btn.setAttribute('aria-label', `${pad(i + 1)}번 슬라이드`);
+    btn.addEventListener('click', () => goTo(i, i > current ? 1 : -1));
+    dotNav.appendChild(btn);
+  });
+})();
+
+/* ── Arrow buttons ───────────────────────────────────────── */
+nextBtn?.addEventListener('click', goNext);
+prevBtn?.addEventListener('click', goPrev);
+
+/* ── Keyboard navigation ─────────────────────────────────── */
+document.addEventListener('keydown', e => {
+  if ($('.mobile-menu.is-open') || $('.faq-list:focus-within')) return;
+
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goNext(); }
+  if (e.key === 'ArrowUp'   || e.key === 'PageUp')   { e.preventDefault(); goPrev(); }
+});
+
+/* ── Touch / swipe ───────────────────────────────────────── */
+(function initSwipe() {
+  let startY = 0;
+  let startX = 0;
+
+  document.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    const dy = startY - e.changedTouches[0].clientY;
+    const dx = startX - e.changedTouches[0].clientX;
+    if (Math.abs(dy) < 40 || Math.abs(dy) < Math.abs(dx)) return;
+    dy > 0 ? goNext() : goPrev();
+  }, { passive: true });
+})();
+
+/* ── Wheel navigation ────────────────────────────────────── */
+(function initWheel() {
+  let lastWheel = 0;
+
+  document.addEventListener('wheel', e => {
+    const now = Date.now();
+    if (now - lastWheel < 800) return;
+    if (Math.abs(e.deltaY) < 20) return;
+    lastWheel = now;
+    e.deltaY > 0 ? goNext() : goPrev();
+  }, { passive: true });
 })();
 
 /* ── Hamburger / Mobile menu ─────────────────────────────── */
@@ -79,7 +190,6 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     menu.classList.remove('is-open');
     btn.setAttribute('aria-expanded', 'false');
     menu.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
   };
 
   btn.addEventListener('click', () => {
@@ -87,22 +197,27 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     menu.classList.toggle('is-open', open);
     btn.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-hidden', String(!open));
-    document.body.style.overflow = open ? 'hidden' : '';
   });
 
-  $$('.nav__mobile-link', menu).forEach(el => el.addEventListener('click', close));
+  $$('.mm-link', menu).forEach(link => {
+    link.addEventListener('click', () => {
+      const idx = parseInt(link.dataset.goto, 10);
+      if (!isNaN(idx)) goTo(idx, idx > current ? 1 : -1);
+      close();
+    });
+  });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && menu.classList.contains('is-open')) close();
   });
 })();
 
-/* ── Apply URL binding ───────────────────────────────────── */
-(function bindApplyLinks() {
+/* ── Apply button binding ────────────────────────────────── */
+(function bindApply() {
   $$('.js-apply').forEach(el => {
     el.addEventListener('click', e => {
       e.preventDefault();
-      if (CONFIG.applyUrl && !CONFIG.applyUrl.includes('YOUR_')) {
+      if (CONFIG.applyUrl) {
         window.open(CONFIG.applyUrl, '_blank', 'noopener,noreferrer');
       } else {
         alert('신청 페이지를 준비 중입니다.\n인스타그램 DM으로 문의해 주세요.');
@@ -111,8 +226,22 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   });
 })();
 
+/* ── Google Form button binding ──────────────────────────── */
+(function bindForm() {
+  $$('.js-form').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      if (CONFIG.formUrl) {
+        window.open(CONFIG.formUrl, '_blank', 'noopener,noreferrer');
+      } else {
+        alert('구글폼 링크를 준비 중입니다.\n인스타그램 DM으로 문의해 주세요.');
+      }
+    });
+  });
+})();
+
 /* ── SNS URL binding ─────────────────────────────────────── */
-(function bindSnsLinks() {
+(function bindSns() {
   $$('.js-instagram').forEach(el => el.setAttribute('href', CONFIG.sns.instagram));
   $$('.js-threads').forEach(el => el.setAttribute('href', CONFIG.sns.threads));
 })();
@@ -122,7 +251,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   const grid = $('#sessions-grid');
   if (!grid) return;
 
-  if (!CONFIG.sessions || CONFIG.sessions.length === 0) {
+  if (!CONFIG.sessions?.length) {
     grid.innerHTML = '<p class="sessions__empty">곧 세션 일정이 공개됩니다.</p>';
     return;
   }
@@ -136,11 +265,11 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
     const countLbl  = isOpen ? '잔여' : (s.status === 'closed' ? '마감' : '준비 중');
 
     return `
-<article class="session-card reveal">
-  <div class="session-card__info">
+<article class="session-card">
+  <div>
     <span class="session-card__badge session-card__badge--${s.status}">${LABELS[s.status] ?? s.status}</span>
     <h3 class="session-card__name">${s.name}</h3>
-    <p class="session-card__meta">${s.date} &nbsp;·&nbsp; ${s.venue}<br><em>${s.theme}</em></p>
+    <p class="session-card__meta">${s.date} · ${s.venue}<br>${s.theme}</p>
   </div>
   <div class="session-card__count">
     <span class="session-card__count-num">${countNum}</span>
@@ -148,26 +277,16 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   </div>
 </article>`.trim();
   }).join('');
-
-  // trigger reveal for dynamically inserted cards
-  requestAnimationFrame(() => {
-    const cards = $$('.reveal', grid);
-    cards.forEach((el, i) => { el.style.transitionDelay = `${i * 0.09}s`; });
-    observeReveal(cards);
-  });
 })();
 
 /* ── Priority item accordion ─────────────────────────────── */
 (function initPriority() {
-  const items = $$('.priority__item');
-
-  items.forEach(item => {
+  $$('.priority-item').forEach(item => {
     const activate = () => {
       const isActive = item.classList.contains('is-active');
-      items.forEach(el => el.classList.remove('is-active'));
+      $$('.priority-item.is-active').forEach(el => el.classList.remove('is-active'));
       if (!isActive) item.classList.add('is-active');
     };
-
     item.addEventListener('click', activate);
     item.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
@@ -177,14 +296,14 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* ── FAQ accordion ───────────────────────────────────────── */
 (function initFaq() {
-  $$('.faq__q').forEach(trigger => {
+  $$('.faq-q').forEach(trigger => {
     trigger.addEventListener('click', () => {
-      const item   = trigger.closest('.faq__item');
+      const item   = trigger.closest('.faq-item');
       const isOpen = item.classList.contains('is-open');
 
-      $$('.faq__item.is-open').forEach(el => {
+      $$('.faq-item.is-open').forEach(el => {
         el.classList.remove('is-open');
-        el.querySelector('.faq__q')?.setAttribute('aria-expanded', 'false');
+        el.querySelector('.faq-q')?.setAttribute('aria-expanded', 'false');
       });
 
       if (!isOpen) {
@@ -197,44 +316,12 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger.click(); }
     });
   });
-})();
 
-/* ── Scroll reveal ───────────────────────────────────────── */
-function observeReveal(targets) {
-  if (!('IntersectionObserver' in window)) {
-    targets.forEach(el => el.classList.add('is-visible'));
-    return;
+  // FAQ 슬라이드 내에서 스크롤 시 슬라이드 전환 방지
+  const faqList = $('.faq-list');
+  if (faqList) {
+    faqList.addEventListener('wheel', e => e.stopPropagation(), { passive: true });
+    faqList.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
+    faqList.addEventListener('touchend', e => e.stopPropagation(), { passive: true });
   }
-
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-
-  targets.forEach(el => io.observe(el));
-}
-
-(function initReveal() {
-  observeReveal($$('.reveal'));
-})();
-
-/* ── Smooth scroll ───────────────────────────────────────── */
-(function initSmoothScroll() {
-  $$('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const id = a.getAttribute('href').slice(1);
-      if (!id) return;
-      const target = document.getElementById(id);
-      if (!target) return;
-
-      e.preventDefault();
-      const navH = $('.nav')?.offsetHeight ?? 64;
-      const top  = target.getBoundingClientRect().top + window.scrollY - navH - 8;
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
-  });
 })();
