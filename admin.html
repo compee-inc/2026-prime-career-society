@@ -362,19 +362,14 @@
 
   <!-- STATS -->
   <div class="card">
-    <h2 class="card-title">성과 통계</h2>
-    <div class="field-row">
-      <label for="cfg-couples">커플 탄생</label>
-      <input type="number" id="cfg-couples" min="0" placeholder="0" />
-    </div>
-    <div class="field-row">
-      <label for="cfg-reapply">재신청</label>
+    <h2 class="card-title">지난 세션 & 통계</h2>
+    <div class="field-row" style="margin-bottom:1.25rem">
+      <label for="cfg-reapply">재신청 수</label>
       <input type="number" id="cfg-reapply" min="0" placeholder="0" />
     </div>
-    <div class="field-row">
-      <label for="cfg-sessions-done">완료 회차</label>
-      <input type="number" id="cfg-sessions-done" min="0" placeholder="0" />
-    </div>
+    <div style="font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;">지난 세션</div>
+    <div id="past-editor"></div>
+    <button class="btn btn--outline btn--full" id="btn-add-past" style="margin-top:0.5rem">+ 지난 세션 추가</button>
   </div>
 
   <!-- SESSIONS -->
@@ -472,13 +467,12 @@ function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat
 /* ── 초기값 로드 ──────────────────────────── */
 function init() {
   if (typeof CONFIG !== 'undefined') {
-    document.getElementById('cfg-applyUrl').value      = CONFIG.applyUrl         || '';
-    document.getElementById('cfg-formUrl').value       = CONFIG.formUrl          || '';
-    document.getElementById('cfg-instagram').value     = CONFIG.sns?.instagram   || '';
-    document.getElementById('cfg-threads').value       = CONFIG.sns?.threads     || '';
-    document.getElementById('cfg-couples').value       = CONFIG.stats?.couples   ?? 0;
-    document.getElementById('cfg-reapply').value       = CONFIG.stats?.reapply   ?? 0;
-    document.getElementById('cfg-sessions-done').value = CONFIG.stats?.sessions  ?? 0;
+    document.getElementById('cfg-applyUrl').value  = CONFIG.applyUrl       || '';
+    document.getElementById('cfg-formUrl').value   = CONFIG.formUrl        || '';
+    document.getElementById('cfg-instagram').value = CONFIG.sns?.instagram || '';
+    document.getElementById('cfg-threads').value   = CONFIG.sns?.threads   || '';
+    document.getElementById('cfg-reapply').value   = CONFIG.stats?.reapply ?? 0;
+    (CONFIG.stats?.pastSessions || []).forEach(r => appendPastRow(r));
   }
   if (typeof SESSION_DATA !== 'undefined') {
     SESSION_DATA.forEach(s => appendSessionBlock(s));
@@ -593,15 +587,43 @@ function addParticipant(btn, gender) {
 }
 
 /* ── 데이터 수집 ────────────────────────────── */
+function appendPastRow(r) {
+  const editor = document.getElementById('past-editor');
+  const row = document.createElement('div');
+  row.className = 'participant-row';
+  row.style.cssText = 'grid-template-columns:1fr 80px 60px 28px;margin-bottom:0.4rem';
+  row.innerHTML = `
+    <input type="text"   class="pr-date"    placeholder="09.07" value="${r?.date||''}" />
+    <select class="pr-day">
+      ${DAY_OPTIONS.map(d=>`<option${d===(r?.day||'SUN')?' selected':''}>${d}</option>`).join('')}
+    </select>
+    <input type="number" class="pr-couples" placeholder="커플" value="${r?.couples??''}" min="0" max="8" />
+    <button class="btn btn--icon" onclick="this.closest('.participant-row').remove()">×</button>
+  `;
+  editor.appendChild(row);
+}
+
+document.getElementById('btn-add-past').addEventListener('click', () => {
+  appendPastRow(null);
+  document.getElementById('past-editor').lastElementChild.querySelector('.pr-date').focus();
+});
+
 function collectConfig() {
+  const pastRows = Array.from(document.querySelectorAll('#past-editor .participant-row'))
+    .map(row => ({
+      date:    row.querySelector('.pr-date').value.trim(),
+      day:     row.querySelector('.pr-day').value,
+      couples: parseInt(row.querySelector('.pr-couples').value) || 0,
+    }))
+    .filter(r => r.date);
+
   return {
-    applyUrl:  document.getElementById('cfg-applyUrl').value.trim(),
-    formUrl:   document.getElementById('cfg-formUrl').value.trim(),
-    instagram: document.getElementById('cfg-instagram').value.trim(),
-    threads:   document.getElementById('cfg-threads').value.trim(),
-    couples:   parseInt(document.getElementById('cfg-couples').value)       || 0,
-    reapply:   parseInt(document.getElementById('cfg-reapply').value)       || 0,
-    sessions:  parseInt(document.getElementById('cfg-sessions-done').value) || 0,
+    applyUrl:     document.getElementById('cfg-applyUrl').value.trim(),
+    formUrl:      document.getElementById('cfg-formUrl').value.trim(),
+    instagram:    document.getElementById('cfg-instagram').value.trim(),
+    threads:      document.getElementById('cfg-threads').value.trim(),
+    reapply:      parseInt(document.getElementById('cfg-reapply').value) || 0,
+    pastSessions: pastRows,
   };
 }
 
@@ -635,6 +657,8 @@ function collectParticipants(block, gender) {
 
 /* ── 코드 생성 ─────────────────────────────── */
 function buildDataJS(cfg) {
+  const pastJSON = JSON.stringify(cfg.pastSessions, null, 4)
+    .split('\n').map((l,i) => i===0 ? l : '    '+l).join('\n');
   return `/* ============================================================
    data.js — 사이트 기본 설정
    ============================================================ */
@@ -647,9 +671,8 @@ const CONFIG = {
     threads:   '${cfg.threads}',
   },
   stats: {
-    couples:  ${cfg.couples},
-    reapply:  ${cfg.reapply},
-    sessions: ${cfg.sessions},
+    reapply: ${cfg.reapply},
+    pastSessions: ${pastJSON},
   },
 };
 `;

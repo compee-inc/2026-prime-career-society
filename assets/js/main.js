@@ -88,14 +88,40 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* Sessions 렌더링은 sessions.js 에서 처리합니다 */
 
-/* ── Stats ───────────────────────────────────────────────── */
+/* ── Stats & Past Sessions ───────────────────────────────── */
 (function () {
   const s = CONFIG.stats;
   if (!s) return;
+
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('stat-couples',  s.couples);
-  set('stat-reapply',  s.reapply);
-  set('stat-sessions', s.sessions);
+  const past = s.pastSessions || [];
+
+  set('stat-done',    past.length);
+  set('stat-reapply', s.reapply || 0);
+
+  const table = document.getElementById('past-table');
+  if (!table) return;
+
+  if (!past.length) {
+    table.innerHTML = '<p class="past__empty">지난 세션 기록이 없습니다.</p>';
+    return;
+  }
+
+  table.innerHTML = `
+    <div class="past__header">
+      <span>NO.</span><span>DATE</span><span>커플 탄생</span>
+    </div>
+    ${past.map((r, i) => `
+      <div class="past__row">
+        <span class="past__num">0${i + 1}</span>
+        <span class="past__date">${r.date}<span class="past__day">${r.day}</span></span>
+        <span class="past__couples">
+          <span class="past__hearts">${'♥ '.repeat(r.couples).trim()}</span>
+          <span class="past__couple-count">${r.couples}커플</span>
+        </span>
+      </div>
+    `).join('')}
+  `;
 })();
 
 /* ── FAQ ─────────────────────────────────────────────────── */

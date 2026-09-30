@@ -10,8 +10,10 @@ const CONFIG = {
     threads:   'https://threads.net/@2026privatedating',
   },
   stats: {
-    couples:  3,
-    reapply:  12,
-    sessions: 2,
+    reapply: 12,
+    pastSessions: [
+      { date: '09.07', day: 'SUN', couples: 2 },
+      { date: '09.21', day: 'SUN', couples: 1 },
+    ],
   },
 };
