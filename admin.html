@@ -708,8 +708,8 @@ function appendSessionBlock(s) {
         <div class="field-group">
           <label>목표 인원 (남 / 여)</label>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem">
-            <input type="number" data-field="targetMen"   value="${s.targetMen??8}"   min="1" />
-            <input type="number" data-field="targetWomen" value="${s.targetWomen??8}" min="1" />
+            <input type="number" data-field="targetMen"   value="${s.targetMen??7}"   min="1" />
+            <input type="number" data-field="targetWomen" value="${s.targetWomen??7}" min="1" />
           </div>
         </div>
       </div>
@@ -753,7 +753,7 @@ function updateTitle(el) {
 
 /* ── 세션 추가 / 삭제 ──────────────────────── */
 document.getElementById('btn-add-session').addEventListener('click', () => {
-  appendSessionBlock({ id:'', date:'', day:'SUN', time:'19:00', location:'', status:'SOON', targetMen:8, targetWomen:8, men:[], women:[] });
+  appendSessionBlock({ id:'', date:'', day:'SUN', time:'19:00', location:'', status:'SOON', targetMen:7, targetWomen:7, men:[], women:[] });
   const blocks = document.querySelectorAll('.session-block');
   blocks.forEach(b => b.classList.remove('is-open'));
   const last = blocks[blocks.length - 1];
@@ -829,8 +829,8 @@ function collectSessions() {
       time:        g('time'),
       location:    g('location'),
       status:      g('status'),
-      targetMen:   parseInt(block.querySelector('[data-field="targetMen"]')?.value)   || 8,
-      targetWomen: parseInt(block.querySelector('[data-field="targetWomen"]')?.value) || 8,
+      targetMen:   parseInt(block.querySelector('[data-field="targetMen"]')?.value)   || 7,
+      targetWomen: parseInt(block.querySelector('[data-field="targetWomen"]')?.value) || 7,
       men:   collectParticipants(block, 'men'),
       women: collectParticipants(block, 'women'),
     };

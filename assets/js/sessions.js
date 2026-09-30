@@ -11,8 +11,8 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "공덕역 인근",
     "status": "RECRUITING",
-    "targetMen": 8,
-    "targetWomen": 8,
+    "targetMen": 7,
+    "targetWomen": 7,
     "men": [
       {
         "occupation": "금융투자",
@@ -65,8 +65,8 @@ const SESSION_DATA = [
     "time": "19:30",
     "location": "공덕역 인근",
     "status": "SOON",
-    "targetMen": 8,
-    "targetWomen": 8,
+    "targetMen": 7,
+    "targetWomen": 7,
     "men": [],
     "women": []
   },
@@ -77,8 +77,8 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "공덕역 인근",
     "status": "SOON",
-    "targetMen": 8,
-    "targetWomen": 8,
+    "targetMen": 7,
+    "targetWomen": 7,
     "men": [],
     "women": []
   }
