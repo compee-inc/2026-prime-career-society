@@ -337,8 +337,8 @@
       <button class="btn btn--outline btn--sm" id="btn-pat-save">저장</button>
     </div>
     <p class="pat-hint">
-      발급: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) →
-      <b>repo</b> 권한 체크 후 생성. 토큰은 이 브라우저에만 저장됩니다.
+      한 번 입력하면 이 브라우저에 영구 저장됩니다. 다음에 열어도 자동으로 불러옵니다.<br>
+      발급: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → <b>repo</b> 체크 후 생성
     </p>
   </div>
 
@@ -437,12 +437,17 @@ const patInput = document.getElementById('pat-input');
 const saved    = localStorage.getItem('gh_pat');
 if (saved) patInput.value = saved;
 
+patInput.addEventListener('input', () => {
+  const v = patInput.value.trim();
+  if (v) localStorage.setItem('gh_pat', v);
+});
+
 document.getElementById('btn-pat-save').addEventListener('click', () => {
   const v = patInput.value.trim();
   if (!v) return;
   localStorage.setItem('gh_pat', v);
-  showStatus('success', 'PAT 저장 완료');
-  setTimeout(clearStatus, 2000);
+  showStatus('success', '저장 완료 — 다음부터는 자동으로 불러옵니다.');
+  setTimeout(clearStatus, 2500);
 });
 
 function getPAT() { return patInput.value.trim() || localStorage.getItem('gh_pat') || ''; }
