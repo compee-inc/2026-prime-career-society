@@ -88,66 +88,30 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
 /* Sessions 렌더링은 sessions.js 에서 처리합니다 */
 
-/* ── Session Calendar ────────────────────────────────────── */
+/* ── Past Sessions ───────────────────────────────────────── */
 (function () {
-  const table = document.getElementById('past-table');
-  if (!table) return;
+  const totalEl = document.getElementById('past-total');
+  const listEl  = document.getElementById('past-list');
+  if (!totalEl || !listEl) return;
 
-  const s    = CONFIG.stats || {};
-  const MON  = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  const DOWS = ['S','M','T','W','T','F','S'];
+  const sessions = (CONFIG.stats?.pastSessions || []);
+  const total    = sessions.reduce((sum, r) => sum + (r.couples || 0), 0);
 
-  const pastMap = {};
-  (s.pastSessions || []).forEach(r => { pastMap[r.date] = r; });
+  totalEl.innerHTML = `<span class="past__total-num">${total}</span><span class="past__total-label">TOTAL COUPLES</span>`;
 
-  const soonSet = new Set(s.soonDates || []);
-
-  const sessions = (typeof SESSION_DATA !== 'undefined') ? SESSION_DATA : [];
-  const upcomingMap = {};
-  sessions.forEach(sv => { upcomingMap[sv.date] = sv; });
-
-  function renderMonth(year, month) {
-    const firstDay  = new Date(year, month - 1, 1).getDay();
-    const totalDays = new Date(year, month, 0).getDate();
-    const mm = String(month).padStart(2, '0');
-    let cells = '';
-
-    for (let i = 0; i < firstDay; i++) {
-      cells += '<div class="cal__cell cal__cell--empty"></div>';
-    }
-    for (let d = 1; d <= totalDays; d++) {
-      const key = `${mm}.${String(d).padStart(2, '0')}`;
-      let cls = 'cal__cell';
-      let badge = '';
-
-      if (pastMap[key]) {
-        const c = pastMap[key].couples;
-        cls += ' cal__cell--past';
-        badge = `<span class="cal__badge">&#9829; ${c}</span>`;
-      } else if (upcomingMap[key]) {
-        const st  = upcomingMap[key].status;
-        const lbl = st === 'RECRUITING' ? 'OPEN' : st === 'CLOSED' ? 'END' : 'SOON';
-        cls += ` cal__cell--${st.toLowerCase()}`;
-        badge = `<span class="cal__badge">${lbl}</span>`;
-      } else if (soonSet.has(key)) {
-        cls += ' cal__cell--soon';
-        badge = `<span class="cal__badge">SOON</span>`;
-      }
-
-      cells += `<div class="${cls}">${badge}<span class="cal__day">${d}</span></div>`;
-    }
-
-    return `
-      <div class="cal__month">
-        <div class="cal__month-name">${MON[month - 1]}</div>
-        <div class="cal__grid">
-          ${DOWS.map(d => `<div class="cal__dow">${d}</div>`).join('')}
-          ${cells}
-        </div>
-      </div>`;
+  if (sessions.length === 0) {
+    listEl.innerHTML = '<p class="past__empty">아직 진행된 세션이 없습니다.</p>';
+    return;
   }
 
-  table.innerHTML = `<div class="cal__wrap">${[10, 11, 12].map(m => renderMonth(2026, m)).join('')}</div>`;
+  listEl.innerHTML = sessions.map((r, i) =>
+    `<div class="past__row">
+      <span class="past__row-no">${String(i + 1).padStart(2, '0')}</span>
+      <span class="past__row-date">${r.date}</span>
+      <span class="past__row-day">${r.day}</span>
+      <span class="past__row-couples">&#9829; ${r.couples} COUPLE${r.couples !== 1 ? 'S' : ''}</span>
+    </div>`
+  ).join('');
 })();
 
 /* ── FAQ ─────────────────────────────────────────────────── */
