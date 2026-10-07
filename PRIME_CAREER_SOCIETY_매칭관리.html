@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIME CAREER SOCIETY — 7:7 Matching</title>
+<style>
+:root {
+  --ivory:     #FFFFF0;
+  --ivory-s:   #FDFDF5;
+  --ivory-in:  #FFFEF2;
+  --black:     #1A1A1A;
+  --ch:        #2C2C2C;
+  --ch-mid:    #484848;
+  --ch-lt:     #7A7A7A;
+  --gold:      #C9A84C;
+  --gold-dk:   #8C6D1F;
+  --gold-lt:   #F5E6C8;
+  --gold-vlt:  #FBF3E4;
+  --green:     #E8F5E9;
+  --green-d:   #A5D6A7;
+  --green-dk:  #2E7D32;
+  --red-l:     #FFEBEE;
+  --red-dk:    #C62828;
+  --pending:   #FFF9E6;
+  --shared:    #E3F2FD;
+  --calc:      #F5F5F5;
+  --warn:      #FFF3E0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',Calibri,sans-serif;background:var(--ivory);color:var(--black);min-height:100vh;font-size:13px}
+
+/* ── 헤더 ── */
+.hd{background:var(--ch);padding:18px 36px 15px;border-bottom:3px solid var(--gold);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hd-left h1{font-size:20px;font-weight:800;color:var(--gold);letter-spacing:2.5px}
+.hd-left p{font-size:11px;color:var(--gold-lt);margin-top:3px;letter-spacing:1px;opacity:.8}
+.hd-right{display:flex;align-items:center;gap:8px}
+.autosave{font-size:11px;color:#888}
+.btn{padding:6px 14px;border:none;cursor:pointer;font-size:12px;font-weight:600;border-radius:3px;transition:all .15s;letter-spacing:.3px}
+.btn-gold{background:var(--gold);color:var(--ch)}
+.btn-gold:hover{background:var(--gold-dk);color:#fff}
+.btn-outline{background:transparent;border:1px solid #555;color:#aaa}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-danger{background:transparent;border:1px solid #EF9A9A;color:#EF9A9A}
+.btn-danger:hover{background:var(--red-l);color:var(--red-dk);border-color:var(--red-dk)}
+
+/* ── 탭 ── */
+.tabs{display:flex;background:#222;padding:0 36px;gap:1px;border-bottom:1px solid #333}
+.tab{padding:11px 20px;background:transparent;border:none;color:#777;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;font-weight:500;letter-spacing:.5px}
+.tab:hover{color:var(--gold-lt)}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+
+/* ── 패널 ── */
+.panel{display:none;padding:28px 36px;max-width:1280px}
+.panel.on{display:block}
+
+/* ── 섹션 제목 ── */
+.stitle{font-size:13px;font-weight:700;color:var(--ch);background:var(--gold-lt);padding:9px 14px;border-left:3px solid var(--gold);margin:22px 0 10px}
+
+/* ── 테이블 ── */
+table{width:100%;border-collapse:collapse}
+th{background:var(--ch-mid);color:#fff;padding:9px 10px;text-align:center;font-weight:600;font-size:11px;white-space:nowrap}
+td{padding:8px 10px;border:1px solid #e0e0e0;text-align:center;vertical-align:middle}
+tr:hover td{background:rgba(201,168,76,.04)}
+
+/* ── 입력 ── */
+input[type=text],input[type=number],select{background:var(--ivory-in);border:1px solid #ddd;border-radius:2px;padding:5px 8px;font-size:12px;width:100%;color:var(--black)}
+input:focus,select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.18)}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ── 뱃지 ── */
+.badge{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-green{background:var(--green-d);color:#1B5E20}
+.b-gray{background:#E0E0E0;color:#777}
+.b-gold{background:var(--gold-lt);color:var(--gold-dk)}
+.b-pend{background:var(--pending);border:1px solid #FFE082;color:#5D4037}
+.b-shared{background:var(--shared);color:#0D47A1}
+.b-red{background:var(--red-l);color:var(--red-dk)}
+.b-match{background:#1B5E20;color:#fff}
+
+/* ── 토글 버튼 ── */
+.tgl{padding:5px 13px;border-radius:3px;border:1px solid #ccc;background:#fafafa;cursor:pointer;font-size:11px;font-weight:700;transition:all .12s;min-width:58px}
+.tgl.yes{background:var(--green-d);border-color:#81C784;color:#1B5E20}
+.tgl.no{background:var(--red-l);border-color:#EF9A9A;color:var(--red-dk)}
+.tgl:hover{opacity:.85}
+
+/* ── 통계 카드 ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.sc{background:var(--ivory-s);border:1px solid var(--gold-lt);padding:14px 12px;text-align:center}
+.sc .n{font-size:26px;font-weight:800;color:var(--gold-dk)}
+.sc .l{font-size:11px;color:var(--ch-lt);margin-top:3px}
+
+/* ── 매칭 카드 ── */
+.mc{display:flex;align-items:center;gap:14px;background:var(--green);border:1px solid var(--green-d);border-left:4px solid #4CAF50;padding:12px 16px;border-radius:3px;margin-bottom:7px}
+.mc.hi{background:var(--green-d);border-left-color:#1B5E20}
+.mc-names{font-size:16px;font-weight:800;color:var(--ch);letter-spacing:.5px}
+.mc-detail{font-size:11px;color:var(--ch-lt);margin-top:3px}
+.mc-score{margin-left:auto;font-size:24px;font-weight:800;color:var(--green-dk)}
+
+/* ── 참가자 카드 그리드 ── */
+.pg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:8px 0}
+.pc{background:var(--ivory-s);border:1px solid #e0e0e0;padding:10px 6px;text-align:center;border-radius:3px}
+.pc .pid{font-size:13px;font-weight:800;color:var(--ch)}
+.pc .pn{font-size:10px;color:var(--ch-lt);margin-top:2px;min-height:14px}
+.pc .pcnt{font-size:20px;font-weight:800;margin:5px 0 2px}
+.pc .pp{font-size:10px;color:var(--ch-mid)}
+.pc.c2{background:var(--green-d);border-color:#81C784}
+.pc.c1{background:var(--green);border-color:#C8E6C9}
+.pc.c0{background:var(--calc);border-color:#e0e0e0}
+
+/* START */
+.hero{background:var(--ch);padding:36px;border-bottom:3px solid var(--gold);margin:-28px -36px 24px}
+.hero h2{font-size:26px;font-weight:800;color:var(--gold);letter-spacing:3px}
+.hero p{font-size:12px;color:var(--gold-lt);margin-top:5px;letter-spacing:1px;opacity:.8}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.ic{background:var(--ivory-s);border:1px solid var(--gold-lt);border-left:3px solid var(--gold);padding:14px 16px}
+.ic h4{font-size:11px;color:var(--gold-dk);font-weight:800;margin-bottom:6px;letter-spacing:.5px}
+.ic p{font-size:12px;color:var(--ch-mid);line-height:1.8}
+.steps{counter-reset:s;margin-top:10px}
+.steps li{counter-increment:s;display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid #eee;font-size:13px}
+.steps li::before{content:counter(s);min-width:22px;height:22px;background:var(--gold);color:var(--ch);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;margin-top:1px}
+
+/* 섹션 구분 헤더 */
+.sec-hd{background:var(--ch);color:var(--gold-lt);padding:9px 14px;font-size:12px;font-weight:700;letter-spacing:.5px;margin-bottom:0}
+
+/* 상태 범례 */
+.sl{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.sl-item{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--ivory-s);border:1px solid #e0e0e0;border-radius:3px;font-size:11px}
+.sl-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* 경고 */
+.warn{background:var(--warn);border:1px solid #FFB74D;border-left:3px solid #FF9800;padding:9px 14px;font-size:11px;color:var(--ch-mid);margin-bottom:14px}
+.ok-txt{color:var(--green-dk);font-size:11px}
+.err-txt{color:var(--red-dk);font-size:11px}
+
+/* 테이블 id 열 */
+.id-cell{background:var(--calc)!important;font-weight:700;color:var(--ch-mid)}
+.input-cell{background:var(--ivory-in)!important}
+
+/* 반응형 */
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.pg{grid-template-columns:repeat(4,1fr)}.ig{grid-template-columns:1fr}}
+@media print{.hd,.tabs{display:none}.panel{display:block!important;page-break-before:always}}
+</style>
+</head>
+<body>
+
+<header class="hd">
+  <div class="hd-left">
+    <h1>PRIME CAREER SOCIETY</h1>
+    <p>7 : 7 PRIVATE ROTATION  ·  MATCHING MANAGEMENT SYSTEM</p>
+  </div>
+  <div class="hd-right">
+    <span class="autosave" id="asStat">● 저장됨</span>
+    <button class="btn btn-gold" onclick="loadTest()">테스트 데이터</button>
+    <button class="btn btn-danger" onclick="clearAll()">초기화</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab on" data-tab="start">START</button>
+  <button class="tab" data-tab="input">참가자 입력</button>
+  <button class="tab" data-tab="mutual">상호선택</button>
+  <button class="tab" data-tab="matching">매칭계산</button>
+  <button class="tab" data-tab="result">최종결과</button>
+  <button class="tab" data-tab="review">운영자 검토</button>
+</nav>
+
+<!-- ════════════════════ START ════════════════════ -->
+<div class="panel on" id="p-start">
+  <div class="hero">
+    <h2>PRIME CAREER SOCIETY</h2>
+    <p>7 : 7 PRIVATE ROTATION  |  MATCHING MANAGEMENT</p>
+  </div>
+
+  <div class="stitle">■ 사용 순서</div>
+  <ol class="steps">
+    <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업을 입력합니다.</li>
+    <li>각 참가자의 1순위 / 2순위 / 3순위를 드롭다운으로 선택합니다.</li>
+    <li>[상호선택] 탭에서 상호 선택 관계를 실시간으로 확인합니다.</li>
+    <li>[매칭계산] 탭에서 전체 최적화 매칭 추천 결과를 확인합니다.</li>
+    <li>[최종결과] 탭에서 참가자별 최종 매칭 현황을 확인합니다.</li>
+    <li>[운영자 검토] 탭에서 승인 및 연락처 공유 동의를 관리합니다.</li>
+  </ol>
+
+  <div class="stitle">■ 운영 원칙</div>
+  <div class="ig">
+    <div class="ic"><h4>선택 규칙</h4><p>• 1인 최대 3명 선택 (1/2/3순위)<br>• 이성 참가자만 선택 가능<br>• 순서대로 입력 (1→2→3)</p></div>
+    <div class="ic"><h4>매칭 규칙</h4><p>• 반드시 상호 선택한 경우에만 후보<br>• 1인 최대 2명 매칭<br>• 매칭 없음도 정상 결과</p></div>
+    <div class="ic"><h4>점수 계산</h4><p>• 1순위 = 3점&nbsp;&nbsp;2순위 = 2점&nbsp;&nbsp;3순위 = 1점<br>• 쌍방 합산 → 최대 6점<br>• 높은 점수 조합을 우선 배정</p></div>
+    <div class="ic"><h4>연락처 공유</h4><p>• 매칭 후 운영자 최종 승인 필수<br>• 양측 동의 확인 후에만 공유<br>• 한쪽만 거절해도 공유 불가</p></div>
+  </div>
+
+  <div class="stitle">■ 연락처 공유 상태 코드</div>
+  <div class="sl">
+    <div class="sl-item"><div class="sl-dot" style="background:#A5D6A7"></div>MATCHED — 상호선택 확인</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#FFF9E6;border:1px solid #FFE082"></div>PENDING CONSENT — 동의 확인 중</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#E8F5E9;border:1px solid #A5D6A7"></div>BOTH CONSENTED — 양측 동의</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#FFEBEE;border:1px solid #EF9A9A"></div>ONE SIDE DECLINED — 한쪽 거절</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#E3F2FD;border:1px solid #90CAF9"></div>CONTACT SHARED — 공유 완료</div>
+    <div class="sl-item"><div class="sl-dot" style="background:#EEE;border:1px solid #ccc"></div>DECLINED BY OPERATOR — 운영자 미승인</div>
+  </div>
+
+  <div style="margin-top:20px;padding:12px 16px;background:var(--gold-vlt);border:1px solid var(--gold-lt);font-size:12px;color:var(--ch-mid);line-height:1.8">
+    ※ 입력한 모든 데이터는 브라우저에 자동 저장됩니다. (localStorage)<br>
+    ※ 실제 운영 시 테스트 데이터를 먼저 삭제하세요. 우측 상단 [초기화] 버튼을 사용하세요.<br>
+    ※ 순위 변경 즉시 모든 계산이 자동으로 갱신됩니다.
+  </div>
+</div>
+
+<!-- ════════════════════ 참가자 입력 ════════════════════ -->
+<div class="panel" id="p-input">
+  <div class="warn">※ 노란색 배경 = 직접 입력  |  회색 = 자동  |  순위는 드롭다운으로 선택 — 변경 즉시 자동 계산</div>
+
+  <div class="sec-hd">▶ 남자 참가자 (M1 ~ M7)</div>
+  <table id="mt">
+    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
+    <tbody id="mb"></tbody>
+  </table>
+
+  <div class="sec-hd" style="margin-top:24px">▶ 여자 참가자 (W1 ~ W7)</div>
+  <table id="wt">
+    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
+    <tbody id="wb"></tbody>
+  </table>
+</div>
+
+<!-- ════════════════════ 상호선택 ════════════════════ -->
+<div class="panel" id="p-mutual">
+  <div id="mu"></div>
+</div>
+
+<!-- ════════════════════ 매칭계산 ════════════════════ -->
+<div class="panel" id="p-matching">
+  <div id="mg"></div>
+</div>
+
+<!-- ════════════════════ 최종결과 ════════════════════ -->
+<div class="panel" id="p-result">
+  <div id="rs"></div>
+</div>
+
+<!-- ════════════════════ 운영자 검토 ════════════════════ -->
+<div class="panel" id="p-review">
+  <div id="rv"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+const emptyState = () => ({
+  m: Array.from({length:7},(_,i)=>({id:`M${i+1}`,name:'',age:'',job:'',c:['','','']})),
+  w: Array.from({length:7},(_,i)=>({id:`W${i+1}`,name:'',age:'',job:'',c:['','','']})),
+  rv: {}
+});
+
+let S = emptyState();
+
+const TEST = {
+  m:[
+    {id:'M1',name:'김준혁',age:'32',job:'금융권',c:['W1','W2','W3']},
+    {id:'M2',name:'이승민',age:'35',job:'대기업',c:['W1','W4','W5']},
+    {id:'M3',name:'박지호',age:'30',job:'IT개발',c:['W2','W5','W6']},
+    {id:'M4',name:'정우진',age:'33',job:'의사',c:['W3','W6','W7']},
+    {id:'M5',name:'최현수',age:'31',job:'스타트업',c:['W4','W7','W2']},
+    {id:'M6',name:'강도현',age:'34',job:'변호사',c:['W5','W1','W3']},
+    {id:'M7',name:'윤재원',age:'29',job:'연구원',c:['W6','W7','W4']},
+  ],
+  w:[
+    {id:'W1',name:'김서연',age:'28',job:'마케팅',c:['M2','M1','M6']},
+    {id:'W2',name:'이지현',age:'30',job:'디자이너',c:['M1','M3','M5']},
+    {id:'W3',name:'박민지',age:'27',job:'회계사',c:['M4','M1','M6']},
+    {id:'W4',name:'정수아',age:'29',job:'IT기획',c:['M5','M7','M2']},
+    {id:'W5',name:'최예린',age:'31',job:'교사',c:['M3','M6','M2']},
+    {id:'W6',name:'강하은',age:'28',job:'간호사',c:['M7','M3','M4']},
+    {id:'W7',name:'윤채원',age:'26',job:'대학원생',c:['M4','M5','M7']},
+  ],
+  rv:{}
+};
+
+// ════════════════════════════════════════════════
+// 저장 / 불러오기
+// ════════════════════════════════════════════════
+function save(){
+  try{localStorage.setItem('pcs7x7',JSON.stringify(S));
+  document.getElementById('asStat').textContent='● 저장됨 '+new Date().toLocaleTimeString('ko')}catch(e){}}
+function load(){
+  try{const d=localStorage.getItem('pcs7x7');if(d){S=JSON.parse(d);return true}}catch(e){}return false}
+function clearAll(){
+  if(!confirm('모든 데이터를 초기화하시겠습니까?'))return;
+  localStorage.removeItem('pcs7x7');S=emptyState();renderAll()}
+function loadTest(){
+  if(!confirm('테스트 데이터를 불러옵니다. 기존 내용이 덮어쓰여집니다.'))return;
+  S=JSON.parse(JSON.stringify(TEST));save();renderAll()}
+
+// ════════════════════════════════════════════════
+// 알고리즘
+// ════════════════════════════════════════════════
+const rs=r=>r?4-r:0;
+const rt=r=>r?`${r}순위`:'—';
+
+function pairs(){
+  const res=[];
+  for(const m of S.m) for(const w of S.w){
+    const rm=m.c.indexOf(w.id)>=0?m.c.indexOf(w.id)+1:null;
+    const rw=w.c.indexOf(m.id)>=0?w.c.indexOf(m.id)+1:null;
+    const mu=rm!==null&&rw!==null;
+    res.push({mid:m.id,wid:w.id,rm,rw,sm:rm?rs(rm):null,sw:rw?rs(rw):null,total:mu?rs(rm)+rs(rw):null,mu});
+  }
+  return res;
+}
+function mutual(all){return all.filter(p=>p.mu).sort((a,b)=>b.total-a.total||a.mid.localeCompare(b.mid))}
+function match(mu){
+  const mc={},wc={};
+  S.m.forEach(m=>mc[m.id]=0);S.w.forEach(w=>wc[w.id]=0);
+  const res=[];
+  for(const p of mu){if(mc[p.mid]<2&&wc[p.wid]<2){res.push(p);mc[p.mid]++;wc[p.wid]++;}}
+  return{res,mc,wc};
+}
+
+// ════════════════════════════════════════════════
+// 유효성 검사
+// ════════════════════════════════════════════════
+function validate(p,opp){
+  const c=p.c;const ne=c.filter(x=>x);
+  if(c[1]&&!c[0])return{ok:false,msg:'⚠ 1순위 없이 2순위 입력'};
+  if(c[2]&&!c[1])return{ok:false,msg:'⚠ 2순위 없이 3순위 입력'};
+  if(new Set(ne).size<ne.length)return{ok:false,msg:'⚠ 중복 선택'};
+  for(const x of ne)if(!opp.includes(x))return{ok:false,msg:`⚠ 잘못된 ID: ${x}`};
+  return{ok:true,msg:ne.length?`✓ ${ne.length}명 선택`:'— 미입력'};
+}
+
+// ════════════════════════════════════════════════
+// 탭 네비
+// ════════════════════════════════════════════════
+const TABS=['start','input','mutual','matching','result','review'];
+document.querySelectorAll('.tab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    TABS.forEach(t=>{document.getElementById('p-'+t).classList.remove('on')});
+    b.classList.add('on');
+    const id=b.dataset.tab;
+    document.getElementById('p-'+id).classList.add('on');
+    if(id==='mutual')   renderMutual();
+    if(id==='matching') renderMatching();
+    if(id==='result')   renderResult();
+    if(id==='review')   renderReview();
+  };
+});
+
+// ════════════════════════════════════════════════
+// 참가자 입력 렌더
+// ════════════════════════════════════════════════
+function renderInput(){
+  const wids=S.w.map(w=>w.id);
+  const mids=S.m.map(m=>m.id);
+  function row(p,opp,isMale){
+    const v=validate(p,opp);
+    const opts=(idx)=>{
+      const used=p.c.filter((_,i)=>i!==idx&&p.c[i]);
+      return`<option value="">—</option>`+opp.map(id=>{
+        const dis=used.includes(id)?'disabled':'';
+        const sel=p.c[idx]===id?'selected':'';
+        return`<option value="${id}"${sel?' selected':''}${dis?' disabled':''}>${id}</option>`;
+      }).join('');
+    };
+    const im=isMale?1:0;
+    return`<tr>
+      <td class="id-cell">${p.id}</td>
+      <td class="input-cell"><input type="text" value="${esc(p.name)}" placeholder="이름" oninput="upd('${p.id}','name',this.value,${im})"></td>
+      <td class="input-cell"><input type="number" value="${esc(p.age)}" placeholder="나이" min="20" max="60" style="width:56px" oninput="upd('${p.id}','age',this.value,${im})"></td>
+      <td class="input-cell"><input type="text" value="${esc(p.job)}" placeholder="직업" oninput="upd('${p.id}','job',this.value,${im})"></td>
+      <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',0,this.value,${im})">${opts(0)}</select></td>
+      <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',1,this.value,${im})">${opts(1)}</select></td>
+      <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',2,this.value,${im})">${opts(2)}</select></td>
+      <td class="${v.ok?'ok-txt':'err-txt'}">${v.msg}</td>
+    </tr>`;
+  }
+  document.getElementById('mb').innerHTML=S.m.map(m=>row(m,wids,true)).join('');
+  document.getElementById('wb').innerHTML=S.w.map(w=>row(w,mids,false)).join('');
+}
+function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function upd(id,field,val,isMale){
+  const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
+  if(p){p[field]=val;save();renderInput();}
+}
+function updR(id,idx,val,isMale){
+  const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
+  if(p){p.c[idx]=val;save();renderInput();}
+}
+
+// ════════════════════════════════════════════════
+// 상호선택 렌더
+// ════════════════════════════════════════════════
+function renderMutual(){
+  const all=pairs(),mu=mutual(all);
+  const el=document.getElementById('mu');
+  if(mu.length===0){el.innerHTML=`<div style="text-align:center;padding:48px;color:var(--ch-lt)">상호선택이 없습니다.<br>참가자 순위를 입력하세요.</div>`;return;}
+  const avg=mu.length?(mu.reduce((s,p)=>s+p.total,0)/mu.length).toFixed(1):0;
+  el.innerHTML=`
+  <div class="stats">
+    <div class="sc"><div class="n">${mu.length}</div><div class="l">상호선택 쌍</div></div>
+    <div class="sc"><div class="n">${mu.filter(p=>p.total>=5).length}</div><div class="l">5점 이상 (고득점)</div></div>
+    <div class="sc"><div class="n">${mu.filter(p=>p.total===6).length}</div><div class="l">6점 만점 쌍</div></div>
+    <div class="sc"><div class="n">${avg}</div><div class="l">평균 점수</div></div>
+  </div>
+  <div class="stitle">■ 상호선택 후보 (${mu.length}쌍 — 점수 내림차순)</div>
+  <table>
+    <thead><tr><th>남자</th><th>여자</th><th>남→여 순위</th><th>여→남 순위</th><th>남 점수</th><th>여 점수</th><th>총점</th><th>상호선택</th></tr></thead>
+    <tbody>${mu.map(p=>`<tr style="background:var(--green)">
+      <td style="font-weight:700">${p.mid}</td><td style="font-weight:700">${p.wid}</td>
+      <td>${rt(p.rm)}</td><td>${rt(p.rw)}</td>
+      <td style="font-weight:700;color:var(--gold-dk)">${p.sm}</td>
+      <td style="font-weight:700;color:var(--gold-dk)">${p.sw}</td>
+      <td style="font-weight:800;font-size:15px;color:${p.total>=5?'var(--green-dk)':'var(--ch-mid)'}">${p.total}</td>
+      <td><span class="badge b-green">✓ YES</span></td>
+    </tr>`).join('')}</tbody>
+  </table>
+  <div class="stitle" style="margin-top:24px">■ 전체 선택 현황 (49조합)</div>
+  <table>
+    <thead><tr><th>남자</th><th>여자</th><th>남→여</th><th>여→남</th><th>남점</th><th>여점</th><th>총점</th><th>상호선택</th></tr></thead>
+    <tbody>${all.map(p=>`<tr style="opacity:${p.mu?1:.4};background:${p.mu?'var(--green)':''}">
+      <td style="font-weight:${p.mu?700:400}">${p.mid}</td>
+      <td style="font-weight:${p.mu?700:400}">${p.wid}</td>
+      <td>${p.rm?rt(p.rm):'—'}</td><td>${p.rw?rt(p.rw):'—'}</td>
+      <td>${p.sm??'—'}</td><td>${p.sw??'—'}</td><td>${p.total??'—'}</td>
+      <td><span class="badge ${p.mu?'b-green':'b-gray'}">${p.mu?'✓ YES':'—'}</span></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ════════════════════════════════════════════════
+// 매칭계산 렌더
+// ════════════════════════════════════════════════
+function renderMatching(){
+  const all=pairs(),mu=mutual(all);
+  const{res:matched,mc,wc}=match(mu);
+  const el=document.getElementById('mg');
+  if(mu.length===0){el.innerHTML=`<div style="text-align:center;padding:48px;color:var(--ch-lt)">상호선택 쌍이 없어 계산할 수 없습니다.</div>`;return;}
+  const ms=new Set(matched.map(p=>`${p.mid}-${p.wid}`));
+  const excl=mu.filter(p=>!ms.has(`${p.mid}-${p.wid}`));
+  const totalScore=matched.reduce((s,p)=>s+p.total,0);
+  el.innerHTML=`
+  <div class="stats">
+    <div class="sc"><div class="n">${matched.length}</div><div class="l">최종 매칭 쌍</div></div>
+    <div class="sc"><div class="n">${totalScore}</div><div class="l">총 점수 합계</div></div>
+    <div class="sc"><div class="n">${excl.length}</div><div class="l">제외된 후보</div></div>
+    <div class="sc"><div class="n">${matched.length?((totalScore/matched.length).toFixed(1)):0}</div><div class="l">평균 점수</div></div>
+  </div>
+  <div class="warn">※ 알고리즘: 점수 내림차순 그리디 b-매칭 — 양쪽 모두 2명 미만일 때만 배정</div>
+  <div class="stitle">■ 상호선택 → 최적 배정 결과 (${mu.length}쌍)</div>
+  <table>
+    <thead><tr><th>남자</th><th>여자</th><th>남 순위</th><th>여 순위</th><th>남 점수</th><th>여 점수</th><th>총점</th><th>배정 결과</th></tr></thead>
+    <tbody>${mu.map(p=>{const on=ms.has(`${p.mid}-${p.wid}`);return`<tr style="background:${on?'var(--green-d)':'var(--ivory-s)'};opacity:${on?1:.55}">
+      <td style="font-weight:${on?700:400}">${p.mid}</td>
+      <td style="font-weight:${on?700:400}">${p.wid}</td>
+      <td>${rt(p.rm)}</td><td>${rt(p.rw)}</td>
+      <td style="font-weight:700;color:var(--gold-dk)">${p.sm}</td>
+      <td style="font-weight:700;color:var(--gold-dk)">${p.sw}</td>
+      <td style="font-weight:800;font-size:${on?15:13}px">${p.total}</td>
+      <td><span class="badge ${on?'b-match':'b-gray'}">${on?'★ 최종 매칭':'— 제외'}</span></td>
+    </tr>`}).join('')}</tbody>
+  </table>
+  ${excl.length?`
+  <div class="stitle" style="margin-top:20px">■ 매칭 제외 사유 (${excl.length}쌍)</div>
+  <table>
+    <thead><tr><th>남자</th><th>여자</th><th>남 순위</th><th>여 순위</th><th>총점</th><th>제외 이유</th></tr></thead>
+    <tbody>${excl.map(p=>{
+      const mf=mc[p.mid]>=2,wf=wc[p.wid]>=2;
+      const reason=mf&&wf?`${p.mid}, ${p.wid} 모두 2명 제한 도달`:mf?`${p.mid} 2명 제한 도달`:wf?`${p.wid} 2명 제한 도달`:'더 높은 점수 쌍에 밀려 탈락';
+      return`<tr style="opacity:.6;background:var(--warn)">
+        <td>${p.mid}</td><td>${p.wid}</td><td>${rt(p.rm)}</td><td>${rt(p.rw)}</td>
+        <td>${p.total}</td><td style="text-align:left;color:var(--red-dk)">${reason}</td>
+      </tr>`;}).join('')}</tbody>
+  </table>`:`<div style="background:var(--green);border:1px solid var(--green-d);padding:11px 14px;font-size:13px;color:var(--green-dk);margin-top:16px">✓ 모든 상호선택 쌍이 최종 매칭에 배정되었습니다.</div>`}`;
+}
+
+// ════════════════════════════════════════════════
+// 최종결과 렌더
+// ════════════════════════════════════════════════
+function renderResult(){
+  const all=pairs(),mu=mutual(all);
+  const{res:matched,mc,wc}=match(mu);
+  const el=document.getElementById('rs');
+  if(matched.length===0){el.innerHTML=`<div style="text-align:center;padding:48px;color:var(--ch-lt)">매칭 결과가 없습니다.<br>상호선택이 발생해야 매칭이 이루어집니다.</div>`;return;}
+  const totalScore=matched.reduce((s,p)=>s+p.total,0);
+  const allMu=matched.every(p=>mu.some(m=>m.mid===p.mid&&m.wid===p.wid));
+  const maxOk=Object.values(mc).every(v=>v<=2)&&Object.values(wc).every(v=>v<=2);
+  el.innerHTML=`
+  <div class="stats">
+    <div class="sc"><div class="n">${matched.length}</div><div class="l">최종 매칭 쌍</div></div>
+    <div class="sc"><div class="n">${totalScore}</div><div class="l">총 점수</div></div>
+    <div class="sc"><div class="n">${S.m.filter(m=>(mc[m.id]||0)>0).length}</div><div class="l">매칭된 남자</div></div>
+    <div class="sc"><div class="n">${S.w.filter(w=>(wc[w.id]||0)>0).length}</div><div class="l">매칭된 여자</div></div>
+  </div>
+  <div class="stitle">■ 최종 매칭 쌍 (${matched.length}쌍)</div>
+  ${matched.map(p=>`<div class="mc ${p.total>=5?'hi':''}">
+    <div>
+      <div class="mc-names">${p.mid}&nbsp;&nbsp;↔&nbsp;&nbsp;${p.wid}</div>
+      <div class="mc-detail">${p.rm}순위 ↔ ${p.rw}순위 &nbsp;|&nbsp; ${p.sm}점 + ${p.sw}점</div>
+    </div>
+    <div class="mc-score">${p.total}점</div>
+  </div>`).join('')}
+  <div class="stitle" style="margin-top:24px">■ 남자 참가자별 매칭 현황</div>
+  <div class="pg">${S.m.map(m=>{const cnt=mc[m.id]||0;const pt=matched.filter(p=>p.mid===m.id).map(p=>p.wid).join(', ')||'없음';return`<div class="pc c${cnt}"><div class="pid">${m.id}</div><div class="pn">${m.name||'—'}</div><div class="pcnt" style="color:${cnt?'var(--green-dk)':'#aaa'}">${cnt}명</div><div class="pp">${pt}</div></div>`;}).join('')}</div>
+  <div class="stitle">■ 여자 참가자별 매칭 현황</div>
+  <div class="pg">${S.w.map(w=>{const cnt=wc[w.id]||0;const pt=matched.filter(p=>p.wid===w.id).map(p=>p.mid).join(', ')||'없음';return`<div class="pc c${cnt}"><div class="pid">${w.id}</div><div class="pn">${w.name||'—'}</div><div class="pcnt" style="color:${cnt?'var(--green-dk)':'#aaa'}">${cnt}명</div><div class="pp">${pt}</div></div>`;}).join('')}</div>
+  <div class="stitle">■ 알고리즘 검증</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+    <div style="background:${allMu?'var(--green-d)':'var(--red-l)'};padding:10px 16px;border-radius:3px;font-size:13px;font-weight:700;color:${allMu?'var(--green-dk)':'var(--red-dk)'}">${allMu?'✓':'✗'} 모든 최종 매칭이 상호선택</div>
+    <div style="background:${maxOk?'var(--green-d)':'var(--red-l)'};padding:10px 16px;border-radius:3px;font-size:13px;font-weight:700;color:${maxOk?'var(--green-dk)':'var(--red-dk)'}">${maxOk?'✓':'✗'} 모든 참가자 매칭 수 ≤ 2명</div>
+    <div style="background:var(--ivory-s);border:1px solid var(--gold-lt);padding:10px 16px;border-radius:3px;font-size:13px;color:var(--ch-mid)">총 ${matched.length}쌍 / ${totalScore}점</div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// 운영자 검토 렌더
+// ════════════════════════════════════════════════
+function getStatus(key){
+  const r=S.rv[key]||{};
+  if(r.ap===false) return{cls:'b-gray',label:'DECLINED BY OPERATOR',bg:'var(--calc)'};
+  if(r.ap===true&&r.cm===true&&r.cw===true) return{cls:'b-shared',label:'CONTACT SHARED',bg:'var(--shared)'};
+  if(r.ap===true&&(r.cm===false||r.cw===false)) return{cls:'b-red',label:'ONE SIDE DECLINED',bg:'var(--red-l)'};
+  if(r.ap===true) return{cls:'b-pend',label:'PENDING CONSENT',bg:'var(--pending)'};
+  return{cls:'b-green',label:'MATCHED',bg:'var(--green-d)'};
+}
+function tglBtn(key,field){
+  const val=(S.rv[key]||{})[field];
+  const cls=val===true?'yes':val===false?'no':'';
+  const lbl=val===true?'YES':val===false?'NO':'미입력';
+  return`<button class="tgl ${cls}" onclick="tgl('${key}','${field}')">${lbl}</button>`;
+}
+function tgl(key,field){
+  if(!S.rv[key])S.rv[key]={};
+  const cur=S.rv[key][field];
+  S.rv[key][field]=cur===true?false:cur===false?null:true;
+  save();renderReview();
+}
+function updMemo(key,v){if(!S.rv[key])S.rv[key]={};S.rv[key].memo=v;save();}
+
+function renderReview(){
+  const all=pairs(),mu=mutual(all);
+  const{res:matched}=match(mu);
+  const el=document.getElementById('rv');
+  if(matched.length===0){el.innerHTML=`<div style="text-align:center;padding:48px;color:var(--ch-lt)">매칭 결과가 없습니다.</div>`;return;}
+  const approved=matched.filter(p=>(S.rv[`${p.mid}-${p.wid}`]||{}).ap===true).length;
+  const shared=matched.filter(p=>getStatus(`${p.mid}-${p.wid}`).label==='CONTACT SHARED').length;
+  const declined=matched.filter(p=>['ONE SIDE DECLINED','DECLINED BY OPERATOR'].includes(getStatus(`${p.mid}-${p.wid}`).label)).length;
+  el.innerHTML=`
+  <div class="stats">
+    <div class="sc"><div class="n">${matched.length}</div><div class="l">전체 추천 쌍</div></div>
+    <div class="sc"><div class="n">${approved}</div><div class="l">운영자 승인</div></div>
+    <div class="sc"><div class="n">${shared}</div><div class="l">연락처 공유 완료</div></div>
+    <div class="sc"><div class="n">${declined}</div><div class="l">거절 / 제외</div></div>
+  </div>
+  <div class="warn">※ [운영자 승인] 버튼 클릭 → YES/NO/미입력 순서로 순환합니다.<br>
+  ※ 자동 추천 결과를 무조건 연락처 공유로 연결하지 마세요. 반드시 운영자가 검토 후 진행하세요.</div>
+  <div class="stitle">■ 매칭 쌍별 최종 검토</div>
+  <div style="overflow-x:auto">
+  <table>
+    <thead><tr><th>남자</th><th>여자</th><th>점수</th><th>순위조합</th><th>자동추천</th><th>운영자 승인</th><th>연락처동의<br>남자</th><th>연락처동의<br>여자</th><th>최종 상태</th><th style="min-width:120px">메모</th></tr></thead>
+    <tbody>${matched.map(p=>{
+      const key=`${p.mid}-${p.wid}`;
+      const st=getStatus(key);
+      const r=S.rv[key]||{};
+      const rowBg=r.ap===true?'background:#F1F8E9':r.ap===false?'background:var(--calc)':'';
+      return`<tr style="${rowBg}">
+        <td style="font-weight:700">${p.mid}</td>
+        <td style="font-weight:700">${p.wid}</td>
+        <td style="font-weight:800;color:var(--gold-dk)">${p.total}점</td>
+        <td style="font-size:11px;color:var(--ch-lt)">${p.rm}↔${p.rw}순위</td>
+        <td><span class="badge b-green" style="font-size:10px">MATCHED</span></td>
+        <td>${tglBtn(key,'ap')}</td>
+        <td>${tglBtn(key,'cm')}</td>
+        <td>${tglBtn(key,'cw')}</td>
+        <td><span class="badge ${st.cls}" style="font-size:10px">${st.label}</span></td>
+        <td><input type="text" placeholder="메모..." value="${esc((S.rv[key]||{}).memo||'')}" onchange="updMemo('${key}',this.value)" style="min-width:110px;font-size:11px"></td>
+      </tr>`;}).join('')}
+    </tbody>
+  </table>
+  </div>
+  <div class="stitle" style="margin-top:20px">■ 운영 지침</div>
+  <ol style="font-size:12px;color:var(--ch-mid);padding-left:20px;line-height:2.2;margin-top:8px">
+    <li>자동추천 결과를 검토한 후 [운영자 승인] 버튼을 YES로 설정합니다.</li>
+    <li>운영자 승인이 YES인 쌍만 참가자에게 매칭 사실을 통보합니다.</li>
+    <li>통보 후 참가자 양측에게 연락처 공유 동의를 별도로 확인합니다.</li>
+    <li>양측 모두 YES인 경우에만 [연락처 공유 완료] 상태가 됩니다.</li>
+    <li>버튼 클릭 즉시 저장되며 최종 상태가 자동으로 갱신됩니다.</li>
+  </ol>`;
+}
+
+// ════════════════════════════════════════════════
+// 초기화
+// ════════════════════════════════════════════════
+function renderAll(){
+  renderInput();
+  const on=document.querySelector('.tab.on')?.dataset.tab;
+  if(on==='mutual')   renderMutual();
+  if(on==='matching') renderMatching();
+  if(on==='result')   renderResult();
+  if(on==='review')   renderReview();
+}
+
+load();
+renderAll();
+</script>
+</body>
+</html>
