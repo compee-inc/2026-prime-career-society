@@ -5,80 +5,14 @@
 
 const SESSION_DATA = [
   {
-    "id": "2026-10-05",
-    "date": "10.05",
-    "day": "SUN",
+    "id": "2026-10-16",
+    "date": "10.16",
+    "day": "FRI",
     "time": "19:00",
     "location": "공덕역 인근",
     "status": "RECRUITING",
-    "targetMen": 7,
-    "targetWomen": 7,
-    "men": [
-      {
-        "occupation": "금융투자",
-        "age": 30
-      },
-      {
-        "occupation": "대기업",
-        "age": 33
-      },
-      {
-        "occupation": "SK계열사",
-        "age": 34
-      },
-      {
-        "occupation": "현대계열사",
-        "age": 34
-      },
-      {
-        "occupation": "은행",
-        "age": 32
-      }
-    ],
-    "women": [
-      {
-        "occupation": "사업",
-        "age": 37
-      },
-      {
-        "occupation": "약사",
-        "age": 37
-      },
-      {
-        "occupation": "대기업",
-        "age": 36
-      },
-      {
-        "occupation": "공무원",
-        "age": 34
-      },
-      {
-        "occupation": "의료직",
-        "age": 33
-      }
-    ]
-  },
-  {
-    "id": "2026-10-09",
-    "date": "10.09",
-    "day": "FRI",
-    "time": "19:30",
-    "location": "공덕역 인근",
-    "status": "SOON",
-    "targetMen": 7,
-    "targetWomen": 7,
-    "men": [],
-    "women": []
-  },
-  {
-    "id": "2026-10-11",
-    "date": "10.11",
-    "day": "SUN",
-    "time": "19:00",
-    "location": "공덕역 인근",
-    "status": "SOON",
-    "targetMen": 7,
-    "targetWomen": 7,
+    "targetMen": 6,
+    "targetWomen": 6,
     "men": [],
     "women": []
   }
