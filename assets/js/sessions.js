@@ -13,8 +13,38 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 6,
     "targetWomen": 6,
-    "men": [],
-    "women": []
+    "men": [
+      {
+        "occupation": "파일럿",
+        "age": 91
+      },
+      {
+        "occupation": "치과의사",
+        "age": 93
+      },
+      {
+        "occupation": "증권",
+        "age": 94
+      }
+    ],
+    "women": [
+      {
+        "occupation": "금융유관기관",
+        "age": 93
+      },
+      {
+        "occupation": "간호사",
+        "age": 96
+      },
+      {
+        "occupation": "대기업",
+        "age": 97
+      },
+      {
+        "occupation": "대기업",
+        "age": 97
+      }
+    ]
   }
 ];
 
