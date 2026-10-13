@@ -549,7 +549,7 @@ function appendSessionBlock(s) {
 function pRowHTML(p) {
   return `<div class="participant-row">
     <input type="text"   class="p-occ" placeholder="직업/직군" value="${(p.occupation||'').replace(/"/g,'&quot;')}" />
-    <input type="number" class="p-age" placeholder="나이"       value="${p.age??''}" min="20" max="65" />
+    <input type="number" class="p-age" placeholder="년생"       value="${p.age??''}" />
     <button class="btn btn--icon" onclick="this.closest('.participant-row').remove()">×</button>
   </div>`;
 }

@@ -62,7 +62,7 @@ let _currentIndex = -1;
 
 /* ── 참가자 행 생성 ──────────────────────────────────────── */
 function _participantRow(p) {
-  const age = p.age != null ? p.age : '확인 중';
+  const age = p.age != null ? `${p.age}년생` : '확인 중';
   return `<li class="sc-row"><span class="sc-occ">${p.occupation}</span><span class="sc-age">${age}</span></li>`;
 }
 
@@ -85,7 +85,7 @@ function _colHTML(label, participants, target, status) {
 <div class="sc-col">
   <h3 class="sc-col-title">${label} <span class="sc-col-max">MAX ${target}</span></h3>
   <div class="sc-col-labels" aria-hidden="true">
-    <span>직업 / 직군</span><span>나이</span>
+    <span>직업 / 직군</span><span>년생</span>
   </div>
   <ul class="sc-participants" aria-label="${label} 참가자 목록">${rows}</ul>
   <div class="sc-total">${seatLabel}</div>
