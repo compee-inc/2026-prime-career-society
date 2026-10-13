@@ -83,7 +83,7 @@ function _colHTML(label, participants, target, status) {
 
   return `
 <div class="sc-col">
-  <h3 class="sc-col-title">${label} <span class="sc-col-max">MAX ${target}</span></h3>
+  <h3 class="sc-col-title">${label}</h3>
   <div class="sc-col-labels" aria-hidden="true">
     <span>직업 / 직군</span><span>년생</span>
   </div>
