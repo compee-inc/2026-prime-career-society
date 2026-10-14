@@ -25,6 +25,18 @@ const SESSION_DATA = [
       {
         "occupation": "증권",
         "age": 94
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
+      },
+      {
+        "occupation": "보험",
+        "age": 92
+      },
+      {
+        "occupation": "은행",
+        "age": 94
       }
     ],
     "women": [
@@ -43,6 +55,14 @@ const SESSION_DATA = [
       {
         "occupation": "대기업",
         "age": 97
+      },
+      {
+        "occupation": "교사",
+        "age": 93
+      },
+      {
+        "occupation": "금융유관기관",
+        "age": 92
       }
     ]
   }
