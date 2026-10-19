@@ -10,7 +10,13 @@ const CONFIG = {
     threads:   'https://threads.net/@prime.society.seoul',
   },
   stats: {
-    pastSessions: [],
+    pastSessions: [
+        {
+            "date": "10.16",
+            "day": "FRI",
+            "couples": 8
+        }
+    ],
     soonDates:    [],
   },
 };
