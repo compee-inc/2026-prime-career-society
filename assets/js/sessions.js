@@ -10,7 +10,7 @@ const SESSION_DATA = [
     "day": "FRI",
     "time": "19:00",
     "location": "공덕역 인근",
-    "status": "RECRUITING",
+    "status": "CLOSED",
     "targetMen": 6,
     "targetWomen": 6,
     "men": [
