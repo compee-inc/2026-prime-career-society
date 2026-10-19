@@ -134,7 +134,7 @@ function _buildCard(s) {
   const isSoon = s.status === 'SOON' || (s.men.length === 0 && s.women.length === 0);
 
   const columnsHTML = isSoon
-    ? `<div class="sc-empty-state"><p>2기 준비 중입니다.</p><p>대기 신청을 해두시면 회차 오픈 즉시 카카오톡으로 가장 먼저 안내드려요.</p></div>`
+    ? `<div class="sc-empty-state"><p>2기 준비 중입니다.</p><p>대기 신청을 해두시면 회차 오픈 즉시 문자로 가장 먼저 안내드려요.</p></div>`
     : `<div class="sc-columns">
         ${_colHTML('MEN',   s.men,   s.targetMen,   s.status)}
         <div class="sc-col-sep" aria-hidden="true"></div>
