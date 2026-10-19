@@ -5,6 +5,22 @@
 
 const SESSION_DATA = [
   {
+    "id": "vol-02",
+    "date": "2기",
+    "day": "TBA",
+    "time": "",
+    "location": "일정 · 장소 확정 후 공개",
+    "status": "SOON",
+    "targetMen": 10,
+    "targetWomen": 10,
+    "men": [],
+    "women": []
+  }
+];
+
+/* 지난 회차 기록 (화면에는 표시하지 않음)
+[
+  {
     "id": "2026-10-16",
     "date": "10.16",
     "day": "FRI",
@@ -67,6 +83,7 @@ const SESSION_DATA = [
     ]
   }
 ];
+*/
 
 /* ── 내부 상수 ───────────────────────────────────────────── */
 const STATUS_LABEL = {
@@ -117,7 +134,7 @@ function _buildCard(s) {
   const isSoon = s.status === 'SOON' || (s.men.length === 0 && s.women.length === 0);
 
   const columnsHTML = isSoon
-    ? `<div class="sc-empty-state"><p>모집 준비 중입니다.</p><p>일정이 확정되면 공개됩니다.</p></div>`
+    ? `<div class="sc-empty-state"><p>2기 준비 중입니다.</p><p>대기 신청을 해두시면 회차 오픈 즉시 카카오톡으로 가장 먼저 안내드려요.</p></div>`
     : `<div class="sc-columns">
         ${_colHTML('MEN',   s.men,   s.targetMen,   s.status)}
         <div class="sc-col-sep" aria-hidden="true"></div>
@@ -135,7 +152,7 @@ function _buildCard(s) {
     <header class="sc-header">
       <p class="sc-brand-name">2026 PRIVATE DATING</p>
       <div class="sc-gold-line" aria-hidden="true"></div>
-      <p class="sc-datetime">${s.date} (${s.day}) &nbsp;&middot;&nbsp; ${s.time}</p>
+      <p class="sc-datetime">${s.time ? `${s.date} (${s.day}) &nbsp;&middot;&nbsp; ${s.time}` : s.date}</p>
       <p class="sc-location">${s.location}</p>
       <p class="sc-status-text">${STATUS_LABEL[s.status] || s.status}</p>
     </header>
