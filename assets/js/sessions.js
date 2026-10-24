@@ -5,14 +5,14 @@
 
 const SESSION_DATA = [
   {
-    "id": "vol-02",
-    "date": "2기",
-    "day": "TBA",
-    "time": "",
-    "location": "일정 · 장소 확정 후 공개",
-    "status": "SOON",
-    "targetMen": 10,
-    "targetWomen": 10,
+    "id": "2026-10-30",
+    "date": "10.30",
+    "day": "FRI",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
+    "targetMen": 8,
+    "targetWomen": 8,
     "men": [],
     "women": []
   }
@@ -111,7 +111,7 @@ function _colHTML(label, participants, target, status) {
   const isEmpty   = count === 0;
 
   const rows = isEmpty
-    ? `<li class="sc-row sc-row--empty"><span class="sc-occ-empty">모집 준비 중</span></li>`
+    ? `<li class="sc-row sc-row--empty"><span class="sc-occ-empty">${status === 'RECRUITING' ? '신청 받는 중' : '모집 준비 중'}</span></li>`
     : participants.map(_participantRow).join('');
 
   const seatLabel = isFull
@@ -131,7 +131,7 @@ function _colHTML(label, participants, target, status) {
 
 /* ── 프리미엄 카드 HTML 생성 ─────────────────────────────── */
 function _buildCard(s) {
-  const isSoon = s.status === 'SOON' || (s.men.length === 0 && s.women.length === 0);
+  const isSoon = s.status === 'SOON';
 
   const columnsHTML = isSoon
     ? `<div class="sc-empty-state"><p>2기 준비 중입니다.</p><p>대기 신청을 해두시면 회차 오픈 즉시 문자로 가장 먼저 안내드려요.</p></div>`
