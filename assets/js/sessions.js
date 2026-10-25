@@ -13,8 +13,15 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "men": [],
-    "women": []
+    "note": "선착순이 아닌 프로필 검토로 구성 중 · 라인업은 변동될 수 있어요",
+    "men": [
+      { "occupation": "변호사", "age": 91 },
+      { "occupation": "대기업", "age": 93 }
+    ],
+    "women": [
+      { "occupation": "약사", "age": 99 },
+      { "occupation": "대기업", "age": 96 }
+    ]
   }
 ];
 
@@ -161,7 +168,7 @@ function _buildCard(s) {
 
     <footer class="sc-footer">
       <div class="sc-gold-line" aria-hidden="true"></div>
-      <p class="sc-footer-text">SELECTED MEMBERS</p>
+      <p class="sc-footer-text">${s.note || 'SELECTED MEMBERS'}</p>
     </footer>
   </div>
 </div>`;
