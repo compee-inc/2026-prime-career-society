@@ -13,14 +13,45 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "선착순이 아닌 프로필 검토로 구성 중 · 라인업은 변동될 수 있어요",
     "men": [
-      { "occupation": "변호사", "age": 91 },
-      { "occupation": "대기업", "age": 93 }
+      {
+        "occupation": "변호사",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 93
+      },
+      {
+        "occupation": "개발자",
+        "age": 93
+      },
+      {
+        "occupation": "은행원",
+        "age": 90
+      }
     ],
     "women": [
-      { "occupation": "약사", "age": 99 },
-      { "occupation": "대기업", "age": 96 }
+      {
+        "occupation": "약사",
+        "age": 99
+      },
+      {
+        "occupation": "대기업",
+        "age": 96
+      },
+      {
+        "occupation": "승무원",
+        "age": 97
+      },
+      {
+        "occupation": "금융유관기관",
+        "age": 92
+      },
+      {
+        "occupation": "공무원",
+        "age": 94
+      }
     ]
   }
 ];
