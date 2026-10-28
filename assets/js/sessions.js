@@ -3,6 +3,7 @@
    새 세션 추가 시 SESSION_DATA 배열에만 추가하면 됩니다.
    ============================================================ */
 
+/* 2기(10.30) — 장소 사정으로 취소 (2026-10-28)
 const SESSION_DATA = [
   {
     "id": "2026-10-30",
@@ -55,6 +56,8 @@ const SESSION_DATA = [
     ]
   }
 ];
+*/
+const SESSION_DATA = [];
 
 /* 지난 회차 기록 (화면에는 표시하지 않음)
 [
@@ -172,7 +175,7 @@ function _buildCard(s) {
   const isSoon = s.status === 'SOON';
 
   const columnsHTML = isSoon
-    ? `<div class="sc-empty-state"><p>2기 준비 중입니다.</p><p>대기 신청을 해두시면 회차 오픈 즉시 문자로 가장 먼저 안내드려요.</p></div>`
+    ? `<div class="sc-empty-state"><p>다음 회차는 11월 중 운영 예정이에요.</p><p>대기 신청을 해두시면 회차 오픈 즉시 문자로 가장 먼저 안내드려요.</p></div>`
     : `<div class="sc-columns">
         ${_colHTML('MEN',   s.men,   s.targetMen,   s.status)}
         <div class="sc-col-sep" aria-hidden="true"></div>
