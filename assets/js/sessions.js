@@ -59,14 +59,41 @@ const SESSION_DATA = [
 */
 const SESSION_DATA = [
   {
-    "id": "2026-11",
-    "date": "11월",
-    "day": "NOV",
-    "time": "",
-    "location": "일정 확정 시 문자로 안내드려요",
-    "status": "SOON",
+    "id": "2026-11-12",
+    "date": "11.12",
+    "day": "THU",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
+    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "men": [],
+    "women": []
+  },
+  {
+    "id": "2026-11-19",
+    "date": "11.19",
+    "day": "THU",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "men": [],
+    "women": []
+  },
+  {
+    "id": "2026-11-20",
+    "date": "11.20",
+    "day": "FRI",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
     "men": [],
     "women": []
   }
