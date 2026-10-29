@@ -94,7 +94,12 @@ const SESSION_DATA = [
     "targetMen": 8,
     "targetWomen": 8,
     "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
-    "men": [],
+    "men": [
+      {
+        "occupation": "보험계리사",
+        "age": 91
+      }
+    ],
     "women": []
   }
 ];
