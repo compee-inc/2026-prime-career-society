@@ -96,7 +96,7 @@ const SESSION_DATA = [
     "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
     "men": [
       {
-        "occupation": "보험계리사",
+        "occupation": "금융 전문직",
         "age": 91
       }
     ],
