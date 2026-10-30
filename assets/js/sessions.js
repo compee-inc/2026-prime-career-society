@@ -68,8 +68,26 @@ const SESSION_DATA = [
     "targetMen": 8,
     "targetWomen": 8,
     "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
-    "men": [],
-    "women": []
+    "men": [
+      {
+        "occupation": "의사",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 90
+      }
+    ],
+    "women": [
+      {
+        "occupation": "승무원",
+        "age": 93
+      },
+      {
+        "occupation": "대기업",
+        "age": 97
+      }
+    ]
   },
   {
     "id": "2026-11-19",
