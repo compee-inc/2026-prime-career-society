@@ -76,12 +76,20 @@ const SESSION_DATA = [
       {
         "occupation": "대기업",
         "age": 90
+      },
+      {
+        "occupation": "증권사",
+        "age": 94
       }
     ],
     "women": [
       {
         "occupation": "승무원",
         "age": 93
+      },
+      {
+        "occupation": "SK하이닉스 계열사",
+        "age": 94
       },
       {
         "occupation": "대기업",
