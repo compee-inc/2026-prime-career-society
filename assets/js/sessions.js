@@ -64,10 +64,10 @@ const SESSION_DATA = [
     "day": "THU",
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
-    "status": "RECRUITING",
+    "status": "FULL",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "note": "8:8 마감 · 현재 대기 신청만 받아요",
     "men": [
       {
         "occupation": "의사",
@@ -80,6 +80,26 @@ const SESSION_DATA = [
       {
         "occupation": "증권사",
         "age": 94
+      },
+      {
+        "occupation": "증권사",
+        "age": 92
+      },
+      {
+        "occupation": "금융유관기관",
+        "age": 93
+      },
+      {
+        "occupation": "공기업",
+        "age": 95
+      },
+      {
+        "occupation": "은행",
+        "age": 96
+      },
+      {
+        "occupation": "사업",
+        "age": 93
       }
     ],
     "women": [
@@ -96,8 +116,24 @@ const SESSION_DATA = [
         "age": 97
       },
       {
-        "occupation": "확인중",
-        "age": 99
+        "occupation": "외국계",
+        "age": 95
+      },
+      {
+        "occupation": "컨설턴트",
+        "age": 97
+      },
+      {
+        "occupation": "공공기관",
+        "age": 93
+      },
+      {
+        "occupation": "약사",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 94
       }
     ]
   },
