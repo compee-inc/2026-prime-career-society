@@ -146,10 +146,10 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "note": "최대 8:8 · 프로필 검토로 구성 · ★ 연봉·자산 추가 인증 완료",
     "men": [
       {
-        "occupation": "경찰",
+        "occupation": "★ 경찰",
         "age": 90
       }
     ],
@@ -177,7 +177,7 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "note": "최대 8:8 · 프로필 검토로 구성 · ★ 연봉·자산 추가 인증 완료",
     "men": [
       {
         "occupation": "금융 전문직",
