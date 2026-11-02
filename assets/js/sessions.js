@@ -179,7 +179,12 @@ const SESSION_DATA = [
         "age": 91
       }
     ],
-    "women": []
+    "women": [
+      {
+        "occupation": "사업",
+        "age": 93
+      }
+    ]
   }
 ];
 
