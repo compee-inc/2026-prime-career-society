@@ -190,6 +190,10 @@ const SESSION_DATA = [
       {
         "occupation": "공무원",
         "age": 94
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
       }
     ]
   }
