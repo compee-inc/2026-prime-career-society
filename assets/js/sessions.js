@@ -160,10 +160,6 @@ const SESSION_DATA = [
         "age": 93
       },
       {
-        "occupation": "확인중",
-        "age": 96
-      },
-      {
         "occupation": "교사",
         "age": 95
       }
