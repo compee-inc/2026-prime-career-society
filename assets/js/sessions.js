@@ -146,7 +146,8 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 프로필 검토로 구성 · ★ 연봉·자산 추가 인증 완료",
+    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
     "men": [
       {
         "occupation": "★ 경찰",
@@ -177,7 +178,8 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 프로필 검토로 구성 · ★ 연봉·자산 추가 인증 완료",
+    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
     "men": [
       {
         "occupation": "금융 전문직",
@@ -335,6 +337,8 @@ function _buildCard(s) {
       <p class="sc-location">${s.location}</p>
       <p class="sc-status-text">${STATUS_LABEL[s.status] || s.status}</p>
     </header>
+
+    ${s.badge ? `<p class="sc-badge" style="margin:0 0 14px;text-align:center;color:#111;font-size:14px;font-weight:600;line-height:1.5;">${s.badge}</p>` : ''}
 
     ${columnsHTML}
 
