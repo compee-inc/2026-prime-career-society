@@ -152,6 +152,10 @@ const SESSION_DATA = [
       {
         "occupation": "★ 경찰",
         "age": 90
+      },
+      {
+        "occupation": "파일럿",
+        "age": 93
       }
     ],
     "women": [
@@ -162,6 +166,10 @@ const SESSION_DATA = [
       {
         "occupation": "교사",
         "age": 95
+      },
+      {
+        "occupation": "승무원",
+        "age": 96
       }
     ]
   },
