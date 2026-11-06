@@ -164,6 +164,10 @@ const SESSION_DATA = [
     ],
     "women": [
       {
+        "occupation": "개발자",
+        "age": 93
+      },
+      {
         "occupation": "교사",
         "age": 95
       },
