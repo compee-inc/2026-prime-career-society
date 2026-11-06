@@ -210,6 +210,10 @@ const SESSION_DATA = [
       {
         "occupation": "중견기업",
         "age": 95
+      },
+      {
+        "occupation": "컨설턴트",
+        "age": 92
       }
     ]
   }
