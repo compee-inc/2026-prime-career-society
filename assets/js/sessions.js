@@ -160,24 +160,32 @@ const SESSION_DATA = [
       {
         "occupation": "회계사",
         "age": 89
+      },
+      {
+        "occupation": "SK 계열사",
+        "age": 96
       }
     ],
     "women": [
-      {
-        "occupation": "개발자",
-        "age": 93
-      },
       {
         "occupation": "교사",
         "age": 95
       },
       {
-        "occupation": "승무원",
+        "occupation": "공공기관",
         "age": 96
       },
       {
-        "occupation": "공공기관",
+        "occupation": "대기업",
         "age": 96
+      },
+      {
+        "occupation": "공무원",
+        "age": 94
+      },
+      {
+        "occupation": "대기업",
+        "age": 97
       }
     ]
   },
@@ -196,16 +204,16 @@ const SESSION_DATA = [
       {
         "occupation": "금융 전문직",
         "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 89
       }
     ],
     "women": [
       {
         "occupation": "사업",
         "age": 93
-      },
-      {
-        "occupation": "공무원",
-        "age": 94
       },
       {
         "occupation": "중견기업",
