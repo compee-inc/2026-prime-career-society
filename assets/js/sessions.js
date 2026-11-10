@@ -166,7 +166,7 @@ const SESSION_DATA = [
         "age": 96
       },
       {
-        "occupation": "공무원",
+        "occupation": "★ 공무원",
         "age": 93
       }
     ],
