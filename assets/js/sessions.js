@@ -162,7 +162,7 @@ const SESSION_DATA = [
         "age": 89
       },
       {
-        "occupation": "SK 계열사",
+        "occupation": "SK하이닉스",
         "age": 96
       },
       {
