@@ -164,6 +164,10 @@ const SESSION_DATA = [
       {
         "occupation": "SK 계열사",
         "age": 96
+      },
+      {
+        "occupation": "공무원",
+        "age": 93
       }
     ],
     "women": [
