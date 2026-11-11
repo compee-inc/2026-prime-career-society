@@ -179,10 +179,6 @@ const SESSION_DATA = [
         "occupation": "대기업",
         "age": 96
       },
-      {
-        "occupation": "공무원",
-        "age": 94
-      },
        { "occupation": "세무사", "age": 91 },
        { "occupation": "약사", "age": 99 },
       {
@@ -228,7 +224,8 @@ const SESSION_DATA = [
       {
         "occupation": "컨설턴트",
         "age": 92
-      }
+      },
+      { "occupation": "공무원", "age": 94 }
     ]
   },
   {
