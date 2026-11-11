@@ -184,6 +184,7 @@ const SESSION_DATA = [
         "age": 94
       },
        { "occupation": "세무사", "age": 91 },
+       { "occupation": "약사", "age": 99 },
       {
         "occupation": "무용강사",
         "age": 98
