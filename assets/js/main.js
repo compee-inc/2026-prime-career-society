@@ -109,7 +109,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
       <span class="past__row-no">${String(i + 1).padStart(2, '0')}</span>
       <span class="past__row-date">${r.date}</span>
       <span class="past__row-day">${r.day}</span>
-      <span class="past__row-couples">&#9829; ${r.couples} COUPLE${r.couples !== 1 ? 'S' : ''}</span>
+      <span class="past__row-couples">${r.couples == null ? 'RESULTS SOON' : `&#9829; ${r.couples} COUPLE${r.couples !== 1 ? 'S' : ''}`}</span>
     </div>`
   ).join('');
 })();
