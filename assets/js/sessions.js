@@ -59,85 +59,6 @@ const SESSION_DATA = [
 */
 const SESSION_DATA = [
   {
-    "id": "2026-11-12",
-    "date": "11.12",
-    "day": "THU",
-    "time": "19:00",
-    "location": "영등포구 양평동 인근 · 카페 전체 대관",
-    "status": "FULL",
-    "targetMen": 8,
-    "targetWomen": 8,
-    "note": "8:8 마감 · 현재 대기 신청만 받아요",
-    "men": [
-      {
-        "occupation": "의사",
-        "age": 91
-      },
-      {
-        "occupation": "대기업",
-        "age": 90
-      },
-      {
-        "occupation": "증권사",
-        "age": 94
-      },
-      {
-        "occupation": "증권사",
-        "age": 92
-      },
-      {
-        "occupation": "금융유관기관",
-        "age": 93
-      },
-      {
-        "occupation": "공기업",
-        "age": 95
-      },
-      {
-        "occupation": "은행",
-        "age": 96
-      },
-      {
-        "occupation": "사업",
-        "age": 93
-      }
-    ],
-    "women": [
-      {
-        "occupation": "승무원",
-        "age": 93
-      },
-      {
-        "occupation": "SK하이닉스 계열사",
-        "age": 94
-      },
-      {
-        "occupation": "대기업",
-        "age": 97
-      },
-      {
-        "occupation": "외국계",
-        "age": 95
-      },
-      {
-        "occupation": "컨설턴트",
-        "age": 97
-      },
-      {
-        "occupation": "공공기관",
-        "age": 93
-      },
-      {
-        "occupation": "약사",
-        "age": 91
-      },
-      {
-        "occupation": "대기업",
-        "age": 94
-      }
-    ]
-  },
-  {
     "id": "2026-11-19",
     "date": "11.19",
     "day": "THU",
@@ -243,6 +164,85 @@ const SESSION_DATA = [
 
 /* 지난 회차 기록 (화면에는 표시하지 않음)
 [
+  {
+    "id": "2026-11-12",
+    "date": "11.12",
+    "day": "THU",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "CLOSED",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "note": "8:8 마감 · 현재 대기 신청만 받아요",
+    "men": [
+      {
+        "occupation": "의사",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 90
+      },
+      {
+        "occupation": "증권사",
+        "age": 94
+      },
+      {
+        "occupation": "증권사",
+        "age": 92
+      },
+      {
+        "occupation": "금융유관기관",
+        "age": 93
+      },
+      {
+        "occupation": "공기업",
+        "age": 95
+      },
+      {
+        "occupation": "은행",
+        "age": 96
+      },
+      {
+        "occupation": "사업",
+        "age": 93
+      }
+    ],
+    "women": [
+      {
+        "occupation": "승무원",
+        "age": 93
+      },
+      {
+        "occupation": "SK하이닉스 계열사",
+        "age": 94
+      },
+      {
+        "occupation": "대기업",
+        "age": 97
+      },
+      {
+        "occupation": "외국계",
+        "age": 95
+      },
+      {
+        "occupation": "컨설턴트",
+        "age": 97
+      },
+      {
+        "occupation": "공공기관",
+        "age": 93
+      },
+      {
+        "occupation": "약사",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 94
+      }
+    ]
+  },
   {
     "id": "2026-10-16",
     "date": "10.16",
