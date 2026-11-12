@@ -184,7 +184,8 @@ const SESSION_DATA = [
       {
         "occupation": "무용강사",
         "age": 98
-      }
+      },
+      { "occupation": "음악강사", "age": 93 }
     ]
   },
   {
