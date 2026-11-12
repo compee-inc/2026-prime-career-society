@@ -184,10 +184,6 @@ const SESSION_DATA = [
       {
         "occupation": "무용강사",
         "age": 98
-      },
-      {
-        "occupation": "대기업",
-        "age": 95
       }
     ]
   },
