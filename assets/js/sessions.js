@@ -156,8 +156,8 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "Prime Marriage Edition · 남녀 각 5명 모이면 바로 확정 · 최대 8:8",
-    "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 82~90년생 · 여 85~92년생 · 59,000원",
+    "note": "Prime Marriage Edition · 11/14~11/20 별도 지원 · 11/21 일괄 발표 · 최대 8:8",
+    "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 82~90년생 · 여 85~92년생 · 59,000원<br>11/21 일괄 발표 후 승인된 분만 입금",
     "men": [],
     "women": []
   }
