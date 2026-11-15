@@ -65,9 +65,9 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
     "status": "RECRUITING",
-    "targetMen": 6,
-    "targetWomen": 6,
-    "note": "6:6 진행 · 선착순이 아닌 프로필 검토로 구성",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "note": "6:6 모이면 진행 · 최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
     "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
     "men": [
       {
@@ -110,7 +110,7 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "note": "6:6 모이면 진행 · 최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
     "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
     "men": [
       {
