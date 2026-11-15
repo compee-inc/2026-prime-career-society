@@ -85,8 +85,7 @@ const SESSION_DATA = [
       {
         "occupation": "★ 공무원",
         "age": 93
-      },
-      { "occupation": "금융권", "age": 91 }
+      }
     ],
     "women": [
       {
@@ -121,7 +120,8 @@ const SESSION_DATA = [
       {
         "occupation": "대기업",
         "age": 89
-      }
+      },
+      { "occupation": "금융권", "age": 91 }
     ],
     "women": [
       {
