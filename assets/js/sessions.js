@@ -121,7 +121,7 @@ const SESSION_DATA = [
         "occupation": "대기업",
         "age": 89
       },
-      { "occupation": "금융권", "age": 91 }
+      { "occupation": "회계사", "age": 91 }
     ],
     "women": [
       {
