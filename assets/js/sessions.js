@@ -83,14 +83,6 @@ const SESSION_DATA = [
         "age": 93
       },
       {
-        "occupation": "전문직",
-        "age": 96
-      },
-      {
-        "occupation": "대기업",
-        "age": 93
-      },
-      {
         "occupation": "은행",
         "age": 93
       },
