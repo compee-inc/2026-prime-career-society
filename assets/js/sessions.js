@@ -71,10 +71,6 @@ const SESSION_DATA = [
     "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
     "men": [
       {
-        "occupation": "★ 공무원",
-        "age": 90
-      },
-      {
         "occupation": "파일럿",
         "age": 93
       },
