@@ -139,7 +139,7 @@ const SESSION_DATA = [
       { "occupation": "공무원", "age": 94 },
       { "occupation": "약사", "age": 93 },
       { "occupation": "교사", "age": 95 },
-      { "occupation": "외국계 기업", "age": 94 }
+      { "occupation": "외국계 기업", "age": 94 },      { "occupation": "중견기업", "age": 95 }
     ]
   },
   {
