@@ -151,7 +151,7 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 8,
     "targetWomen": 8,
-    "note": "Prime Marriage Edition · 11/14~11/20 별도 지원 · 11/21 일괄 발표 · 최대 8:8",
+    "note": "Prime Marriage Edition · 11/14~11/20 별도 지원 · 11/21 일괄 발표 · 최대 8:8", "image": "./assets/images/marriage_poster.png",
     "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 82~90년생 · 여 85~92년생 · 59,000원<br>11/21 일괄 발표 후 승인된 분만 입금",
     "men": [],
     "women": []
@@ -378,7 +378,7 @@ function _buildCard(s) {
 
     ${s.badge ? `<p class="sc-badge" style="margin:0 0 14px;text-align:center;color:#111;font-size:14px;font-weight:600;line-height:1.5;">${s.badge}</p>` : ''}
 
-    ${columnsHTML}
+    ${s.image ? `<img src="${s.image}" alt="Prime Marriage Edition 5기 특집 안내 포스터" style="display:block;width:100%;max-width:360px;margin:0 auto 18px;border-radius:4px">` : ''}${columnsHTML}
 
     <footer class="sc-footer">
       <div class="sc-gold-line" aria-hidden="true"></div>
