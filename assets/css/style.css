@@ -1078,3 +1078,7 @@ ul, ol { list-style: none; }
 
 :focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; }
 ::selection { background: var(--c-accent); color: var(--c-white); }
+
+
+/* Marriage edition apply button hover */
+.marriage-apply .btn:hover { background: #d4b896 !important; color: #111 !important; border-color: #d4b896 !important; }
