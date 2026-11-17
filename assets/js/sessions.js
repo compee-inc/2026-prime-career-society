@@ -272,7 +272,7 @@ const SESSION_DATA = [
       },
       {
         "occupation": "확인중",
-        "age": 91
+        "age": ""
       }
     ]
   },
@@ -452,7 +452,7 @@ let _currentIndex = -1;
 
 /* ── 참가자 행 생성 ──────────────────────────────────────── */
 function _participantRow(p) {
-  const age = p.age != null ? `${p.age}년생` : '확인 중';
+  const age = p.age === '' ? '' : (p.age != null ? `${p.age}년생` : '확인 중');
   return `<li class="sc-row"><span class="sc-occ">${p.occupation}</span><span class="sc-age">${age}</span></li>`;
 }
 
