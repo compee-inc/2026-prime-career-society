@@ -167,6 +167,10 @@ const SESSION_DATA = [
       {
         "occupation": "5급 공무원",
         "age": 92
+      },
+      {
+        "occupation": "금융투자업",
+        "age": 93
       }
     ],
     "women": [
