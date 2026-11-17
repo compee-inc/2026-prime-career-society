@@ -182,13 +182,22 @@ const SESSION_DATA = [
         "occupation": "공공기관",
         "age": 96
       },
-       { "occupation": "세무사", "age": 91 },
-       { "occupation": "약사", "age": 99 },
+      {
+        "occupation": "세무사",
+        "age": 91
+      },
+      {
+        "occupation": "약사",
+        "age": 99
+      },
       {
         "occupation": "무용강사",
         "age": 98
       },
-      { "occupation": "음악강사", "age": 93 },
+      {
+        "occupation": "음악강사",
+        "age": 93
+      },
       {
         "occupation": "스타트업",
         "age": 95
@@ -215,7 +224,10 @@ const SESSION_DATA = [
         "occupation": "대기업",
         "age": 89
       },
-      { "occupation": "회계사", "age": 91 }
+      {
+        "occupation": "회계사",
+        "age": 91
+      }
     ],
     "women": [
       {
@@ -230,10 +242,26 @@ const SESSION_DATA = [
         "occupation": "컨설턴트",
         "age": 92
       },
-      { "occupation": "공무원", "age": 94 },
-      { "occupation": "약사", "age": 93 },
-      
-      { "occupation": "외국계 기업", "age": 94 },      { "occupation": "중견기업", "age": 95 }
+      {
+        "occupation": "공무원",
+        "age": 94
+      },
+      {
+        "occupation": "약사",
+        "age": 93
+      },
+      {
+        "occupation": "외국계 기업",
+        "age": 94
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
+      },
+      {
+        "occupation": "확인중",
+        "age": 91
+      }
     ]
   },
   {
