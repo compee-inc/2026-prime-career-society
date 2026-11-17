@@ -523,6 +523,14 @@ function appendSessionBlock(s) {
             <input type="number" data-field="targetWomen" value="${s.targetWomen??7}" min="1" max="10" />
           </div>
         </div>
+        <div class="field-group" style="grid-column:1/-1">
+          <label>안내 문구 (note)</label>
+          <input type="text" data-field="note" value="${(s.note||'').replace(/"/g,'&quot;')}" placeholder="예) 6:6 모이면 진행 · 최대 8:8" />
+        </div>
+        <div class="field-group" style="grid-column:1/-1">
+          <label>배지 설명 (badge)</label>
+          <input type="text" data-field="badge" value="${(s.badge||'').replace(/"/g,'&quot;')}" placeholder="예) ★ 표시는 연봉·자산 추가 인증을 완료한 분이에요" />
+        </div>
       </div>
       <div class="participants-wrap">
         <div>
@@ -642,6 +650,8 @@ function collectSessions() {
       status:      g('status'),
       targetMen:   parseInt(block.querySelector('[data-field="targetMen"]')?.value)   || 7,
       targetWomen: parseInt(block.querySelector('[data-field="targetWomen"]')?.value) || 7,
+      ...(g('note')  ? { note:  g('note')  } : {}),
+      ...(g('badge') ? { badge: g('badge') } : {}),
       men:   collectParticipants(block, 'men'),
       women: collectParticipants(block, 'women'),
     };
