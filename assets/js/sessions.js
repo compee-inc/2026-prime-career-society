@@ -205,6 +205,10 @@ const SESSION_DATA = [
       {
         "occupation": "법무법인",
         "age": 94
+      },
+      {
+        "occupation": "확인중",
+        "age": 94
       }
     ]
   },
