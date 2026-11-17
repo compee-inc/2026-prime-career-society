@@ -6,8 +6,70 @@
 /* 2기(10.30) — 장소 사정으로 취소 (2026-10-28)
 const SESSION_DATA = [
   {
-    "id": "2026-10-30",
-    "date": "10.30",
+    "id": "2026-11-19",
+    "date": "11.19",
+    "day": "THU",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "men": [
+      {
+        "occupation": "파일럿",
+        "age": 93
+      },
+      {
+        "occupation": "회계사",
+        "age": 89
+      },
+      {
+        "occupation": "★ 공무원",
+        "age": 93
+      },
+      {
+        "occupation": "★금융유관기관",
+        "age": 93
+      },
+      {
+        "occupation": "의사",
+        "age": 96
+      },
+      {
+        "occupation": "확인중",
+        "age": 91
+      }
+    ],
+    "women": [
+      {
+        "occupation": "공공기관",
+        "age": 96
+      },
+      {
+        "occupation": "세무사",
+        "age": 91
+      },
+      {
+        "occupation": "약사",
+        "age": 99
+      },
+      {
+        "occupation": "무용강사",
+        "age": 98
+      },
+      {
+        "occupation": "음악강사",
+        "age": 93
+      },
+      {
+        "occupation": "스타트업",
+        "age": 95
+      }
+    ]
+  },
+  {
+    "id": "2026-11-20",
+    "date": "11.20",
     "day": "FRI",
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
@@ -16,44 +78,60 @@ const SESSION_DATA = [
     "targetWomen": 8,
     "men": [
       {
-        "occupation": "변호사",
+        "occupation": "금융 전문직",
         "age": 91
       },
       {
         "occupation": "대기업",
-        "age": 93
+        "age": 89
       },
       {
-        "occupation": "개발자",
-        "age": 93
-      },
-      {
-        "occupation": "은행원",
-        "age": 90
+        "occupation": "회계사",
+        "age": 91
       }
     ],
     "women": [
       {
-        "occupation": "약사",
-        "age": 99
+        "occupation": "사업",
+        "age": 93
       },
       {
-        "occupation": "대기업",
-        "age": 96
+        "occupation": "중견기업",
+        "age": 95
       },
       {
-        "occupation": "승무원",
-        "age": 97
-      },
-      {
-        "occupation": "금융유관기관",
+        "occupation": "컨설턴트",
         "age": 92
       },
       {
         "occupation": "공무원",
         "age": 94
+      },
+      {
+        "occupation": "약사",
+        "age": 93
+      },
+      {
+        "occupation": "외국계 기업",
+        "age": 94
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
       }
     ]
+  },
+  {
+    "id": "2026-11-27",
+    "date": "11.27",
+    "day": "FRI",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "RECRUITING",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "men": [],
+    "women": []
   }
 ];
 */
