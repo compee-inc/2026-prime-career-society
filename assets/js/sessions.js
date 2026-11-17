@@ -227,6 +227,10 @@ const SESSION_DATA = [
       {
         "occupation": "회계사",
         "age": 91
+      },
+      {
+        "occupation": "공기업",
+        "age": 92
       }
     ],
     "women": [
