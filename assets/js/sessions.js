@@ -171,6 +171,10 @@ const SESSION_DATA = [
       {
         "occupation": "금융투자업",
         "age": 93
+      },
+      {
+        "occupation": "★ 부동산업",
+        "age": 93
       }
     ],
     "women": [
