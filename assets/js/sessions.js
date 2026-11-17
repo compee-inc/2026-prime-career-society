@@ -207,7 +207,7 @@ const SESSION_DATA = [
         "age": 94
       },
       {
-        "occupation": "확인중",
+        "occupation": "대기업",
         "age": 94
       }
     ]
