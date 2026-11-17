@@ -778,10 +778,14 @@ document.getElementById('btn-push').addEventListener('click', async () => {
     /* sessions.js — SESSION_DATA 부분만 교체 */
     showStatus('loading', 'sessions.js 업데이트 중...');
     const { sha: sesSHA, content: sesContent } = await getFileSHA(token, 'assets/js/sessions.js');
-    const newSesContent = sesContent.replace(
-      /const SESSION_DATA = \[[\s\S]*?\n\];/,
-      buildSessionDataStr(ses)
-    );
+    /* 주석 처리된 옛 SESSION_DATA가 위에 남아 있어도, 실제로 쓰이는 마지막 SESSION_DATA만 교체 */
+    const sesMatches = [...sesContent.matchAll(/const SESSION_DATA = \[[\s\S]*?\n\];/g)];
+    if (!sesMatches.length) throw new Error('sessions.js에서 SESSION_DATA를 찾지 못했어요');
+    const liveMatch = sesMatches[sesMatches.length - 1];
+    const newSesContent =
+      sesContent.slice(0, liveMatch.index) +
+      buildSessionDataStr(ses) +
+      sesContent.slice(liveMatch.index + liveMatch[0].length);
     await updateFile(token, 'assets/js/sessions.js', newSesContent, sesSHA, 'update SESSION_DATA via admin');
 
     showStatus('success', '저장 완료! GitHub Pages 반영까지 약 1분 소요됩니다.');
