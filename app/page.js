@@ -9,6 +9,8 @@ function fmt(n) {
 
 export default function Home() {
   const [input, setInput] = useState('');
+  const [suitability, setSuitability] = useState(10);
+  const [quality, setQuality] = useState(7);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -20,7 +22,12 @@ export default function Home() {
     setResult(null);
     setError('');
     try {
-      const res = await fetch(`/api/check?blogId=${encodeURIComponent(input.trim())}`);
+      const params = new URLSearchParams({
+        blogId: input.trim(),
+        suitability,
+        quality,
+      });
+      const res = await fetch(`/api/check?${params}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '오류가 발생했어요');
       setResult(data);
@@ -34,22 +41,57 @@ export default function Home() {
   return (
     <main className="page">
       <div className="header">
-        <h1>네이버 블로그 체험단 점수</h1>
+        <h1>로테이션 소개팅<br />블로그 체험단 심사</h1>
         <p>블로그 ID 또는 URL을 입력하면 자동 분석해드려요</p>
       </div>
 
-      <form className="search-box" onSubmit={handleCheck}>
-        <input
-          className="search-input"
-          type="text"
-          placeholder="블로그 ID 또는 URL 입력"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={loading}
-        />
-        <button className="search-btn" type="submit" disabled={loading || !input.trim()}>
-          분석
-        </button>
+      <form onSubmit={handleCheck}>
+        <div className="search-box">
+          <input
+            className="search-input"
+            type="text"
+            placeholder="블로그 ID 또는 URL 입력"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            disabled={loading}
+          />
+          <button className="search-btn" type="submit" disabled={loading || !input.trim()}>
+            분석
+          </button>
+        </div>
+
+        {/* 정성 평가 — 관리자 입력 항목 */}
+        <div className="qualitative-box">
+          <div className="qualitative-label">정성 평가 <span className="admin-badge">관리자</span></div>
+          <div className="qualitative-row">
+            <label>
+              연령대·직업군 적합도
+              <span className="q-max">/ 15점</span>
+            </label>
+            <div className="q-input-wrap">
+              <input
+                type="range" min="0" max="15" value={suitability}
+                onChange={e => setSuitability(Number(e.target.value))}
+                className="q-range"
+              />
+              <span className="q-val">{suitability}점</span>
+            </div>
+          </div>
+          <div className="qualitative-row">
+            <label>
+              글·사진 퀄리티
+              <span className="q-max">/ 10점</span>
+            </label>
+            <div className="q-input-wrap">
+              <input
+                type="range" min="0" max="10" value={quality}
+                onChange={e => setQuality(Number(e.target.value))}
+                className="q-range"
+              />
+              <span className="q-val">{quality}점</span>
+            </div>
+          </div>
+        </div>
       </form>
 
       {loading && (
@@ -63,7 +105,7 @@ export default function Home() {
 
       {result && (
         <>
-          {/* 프로필 + 점수 */}
+          {/* 프로필 */}
           <div className="card">
             <div className="profile-row">
               {result.profileImage && (
@@ -71,79 +113,90 @@ export default function Home() {
               )}
               <div>
                 <div className="blog-name">{result.blogName}</div>
-                <div className="blog-id">{result.nickName && `${result.nickName} · `}blog.naver.com/{result.blogId}</div>
-              </div>
-            </div>
-
-            <div className="score-row">
-              <div className="score-circle" style={{ color: result.gradeColor, borderColor: result.gradeColor }}>
-                <span className="score-num">{result.score}</span>
-                <span className="score-label">/ 100</span>
-              </div>
-              <div className="grade-info">
-                <div className="grade-badge" style={{ background: result.gradeColor }}>{result.grade}등급</div>
-                <div className="grade-comment">{result.comment}</div>
-              </div>
-            </div>
-
-            {/* 점수 바 */}
-            <div style={{ marginTop: 4 }}>
-              {[
-                { label: '구독자/이웃 수', score: result.breakdown.subScore, max: 35, color: '#0071e3' },
-                { label: '최근 1개월 활동', score: result.breakdown.actScore, max: 35, color: '#34c759' },
-                { label: '평균 공감 수', score: result.breakdown.sympScore, max: 20, color: '#ff9500' },
-                { label: '평균 댓글 수', score: result.breakdown.cmtScore, max: 10, color: '#ff3b30' },
-              ].map(({ label, score, max, color }) => (
-                <div className="score-bar-wrap" key={label} style={{ marginTop: 10 }}>
-                  <div className="score-bar-label">
-                    <span>{label}</span>
-                    <span>{score} / {max}점</span>
-                  </div>
-                  <div className="score-bar-bg">
-                    <div className="score-bar-fill" style={{ width: `${(score / max) * 100}%`, background: color }} />
-                  </div>
+                <div className="blog-id">
+                  {result.nickName && `${result.nickName} · `}blog.naver.com/{result.blogId}
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* 등급 + 페이백 */}
+            <div className="grade-row">
+              <div className="grade-circle" style={{ borderColor: result.gradeColor, color: result.gradeColor }}>
+                <span className="grade-letter">{result.grade}</span>
+                <span className="grade-sub">등급</span>
+              </div>
+              <div className="grade-detail">
+                {result.grade !== '탈락' ? (
+                  <>
+                    <div className="payback-num" style={{ color: result.gradeColor }}>
+                      {result.payback}% 페이백
+                    </div>
+                    <div className="payback-desc">{result.resultComment}</div>
+                  </>
+                ) : (
+                  <div className="payback-desc" style={{ color: result.gradeColor }}>
+                    {result.resultComment}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 안내 문구 (외부 공개용) */}
+            <div className="policy-notice">
+              내부 심사 기준에 따라 30%~100% 차등 페이백 등급이 안내됩니다.
             </div>
           </div>
 
-          {/* 통계 카드 */}
+          {/* 블로그 현황 */}
           <div className="card">
+            <div className="card-section-title">블로그 현황</div>
             <div className="stat-grid">
-              <div className="stat-item">
-                <div className="stat-value">{fmt(result.stats.subscriberCount)}</div>
-                <div className="stat-name">구독자 수</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-value">{result.stats.recentPostCount}개</div>
-                <div className="stat-name">최근 30일 포스팅</div>
-              </div>
               <div className="stat-item">
                 <div className="stat-value">{fmt(result.stats.dayVisitorCount)}</div>
                 <div className="stat-name">오늘 방문자</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">{result.stats.monthlyPostCount}개</div>
+                <div className="stat-name">최근 30일 포스팅</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-value">{result.stats.avgEngagement}</div>
+                <div className="stat-name">평균 공감+댓글</div>
               </div>
               <div className="stat-item">
                 <div className="stat-value">{fmt(result.stats.totalVisitorCount)}</div>
                 <div className="stat-name">누적 방문자</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">{result.stats.avgSympathy}</div>
-                <div className="stat-name">평균 공감</div>
+                <div className="stat-value">{result.qualitative.suitability}점</div>
+                <div className="stat-name">적합도</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">{result.stats.avgComment}</div>
-                <div className="stat-name">평균 댓글</div>
+                <div className="stat-value">{result.qualitative.quality}점</div>
+                <div className="stat-name">퀄리티</div>
               </div>
             </div>
           </div>
 
-          {/* 채점 기준 */}
-          <div className="card">
-            <div className="criteria-title">채점 기준 (100점)</div>
-            <div className="criteria-row"><span>구독자 수 (35점)</span><span>1만+ = 30점, 5천+ = 24점, 1천+ = 17점</span></div>
-            <div className="criteria-row"><span>월 포스팅 (35점)</span><span>20개+ = 30점, 10개+ = 18점, 4개+ = 7점</span></div>
-            <div className="criteria-row"><span>평균 공감 (20점)</span><span>50+ = 16점, 20+ = 12점, 10+ = 8점</span></div>
-            <div className="criteria-row"><span>평균 댓글 (10점)</span><span>20+ = 8점, 10+ = 6점, 5+ = 4점</span></div>
+          {/* 운영 정책 안내 */}
+          <div className="card policy-card">
+            <div className="policy-title">체험단 페이백 안내</div>
+            <div className="policy-row">
+              <span>결제</span>
+              <span>참가비 전액 선결제</span>
+            </div>
+            <div className="policy-row">
+              <span>페이백 조건</span>
+              <span>행사 종료 후 포스팅 검수 완료 시</span>
+            </div>
+            <div className="policy-row">
+              <span>페이백 범위</span>
+              <span>심사 등급에 따라 30% ~ 100%</span>
+            </div>
+            <div className="policy-row" style={{ borderBottom: 'none' }}>
+              <span>탈락 시</span>
+              <span>페이백 없이 일반 참가로 안내</span>
+            </div>
           </div>
         </>
       )}

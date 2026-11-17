@@ -1,62 +1,66 @@
 export const dynamic = 'force-dynamic';
 
-function calcScore({ subscriberCount, recentPostCount, avgSympathy, avgComment }) {
-  // 구독자 수 (35점)
-  let subScore = 0;
-  if (subscriberCount >= 50000) subScore = 35;
-  else if (subscriberCount >= 10000) subScore = 30;
-  else if (subscriberCount >= 5000) subScore = 24;
-  else if (subscriberCount >= 1000) subScore = 17;
-  else if (subscriberCount >= 500) subScore = 11;
-  else if (subscriberCount >= 100) subScore = 6;
-  else if (subscriberCount >= 1) subScore = 3;
+function calcScore({ dayVisitorCount, monthlyPostCount, avgEngagement, suitability, quality }) {
+  // 일방문자 수 (35점)
+  let visitorScore = 5;
+  if (dayVisitorCount >= 1000) visitorScore = 35;
+  else if (dayVisitorCount >= 500) visitorScore = 25;
+  else if (dayVisitorCount >= 200) visitorScore = 15;
 
-  // 최근 1개월 포스팅 (35점)
-  let actScore = 0;
-  if (recentPostCount >= 25) actScore = 35;
-  else if (recentPostCount >= 20) actScore = 30;
-  else if (recentPostCount >= 15) actScore = 24;
-  else if (recentPostCount >= 10) actScore = 18;
-  else if (recentPostCount >= 7) actScore = 12;
-  else if (recentPostCount >= 4) actScore = 7;
-  else if (recentPostCount >= 2) actScore = 4;
-  else if (recentPostCount >= 1) actScore = 2;
+  // 월 포스팅 수 (25점)
+  let postScore = 3;
+  if (monthlyPostCount >= 15) postScore = 25;
+  else if (monthlyPostCount >= 8) postScore = 18;
+  else if (monthlyPostCount >= 4) postScore = 10;
 
-  // 평균 공감 (20점)
-  let sympScore = 0;
-  if (avgSympathy >= 100) sympScore = 20;
-  else if (avgSympathy >= 50) sympScore = 16;
-  else if (avgSympathy >= 20) sympScore = 12;
-  else if (avgSympathy >= 10) sympScore = 8;
-  else if (avgSympathy >= 5) sympScore = 5;
-  else if (avgSympathy >= 1) sympScore = 2;
+  // 평균 공감+댓글 합산 (15점)
+  let engagementScore = 0;
+  if (avgEngagement >= 20) engagementScore = 15;
+  else if (avgEngagement >= 10) engagementScore = 10;
+  else if (avgEngagement >= 5) engagementScore = 5;
 
-  // 평균 댓글 (10점)
-  let cmtScore = 0;
-  if (avgComment >= 50) cmtScore = 10;
-  else if (avgComment >= 20) cmtScore = 8;
-  else if (avgComment >= 10) cmtScore = 6;
-  else if (avgComment >= 5) cmtScore = 4;
-  else if (avgComment >= 2) cmtScore = 2;
-  else if (avgComment >= 1) cmtScore = 1;
+  // 정성 평가 (25점): 적합도(0~15) + 퀄리티(0~10)
+  const suitabilityScore = Math.min(15, Math.max(0, suitability));
+  const qualityScore = Math.min(10, Math.max(0, quality));
+  const qualitativeScore = suitabilityScore + qualityScore;
 
-  const total = subScore + actScore + sympScore + cmtScore;
+  const total = visitorScore + postScore + engagementScore + qualitativeScore;
 
-  let grade, gradeColor, comment;
-  if (total >= 85) { grade = 'S'; gradeColor = '#7c3aed'; comment = '최우선 선발 대상이에요'; }
-  else if (total >= 70) { grade = 'A+'; gradeColor = '#2563eb'; comment = '체험단 선발 가능성 매우 높아요'; }
-  else if (total >= 58) { grade = 'A'; gradeColor = '#0891b2'; comment = '체험단 선발 가능해요'; }
-  else if (total >= 45) { grade = 'B+'; gradeColor = '#16a34a'; comment = '활동량을 조금 더 늘리면 좋아요'; }
-  else if (total >= 33) { grade = 'B'; gradeColor = '#65a30d'; comment = '꾸준한 포스팅과 이웃 관리가 필요해요'; }
-  else if (total >= 20) { grade = 'C'; gradeColor = '#d97706'; comment = '이웃 수와 활동량 보완이 필요해요'; }
-  else { grade = 'D'; gradeColor = '#dc2626'; comment = '체험단 기준에 미달이에요'; }
+  let grade, payback, gradeColor, resultComment;
+  if (total >= 85) {
+    grade = 'S'; payback = 100; gradeColor = '#7c3aed';
+    resultComment = '참가비 전액(100%) 페이백 대상이에요';
+  } else if (total >= 70) {
+    grade = 'A'; payback = 70; gradeColor = '#2563eb';
+    resultComment = '참가비의 70% 페이백 대상이에요';
+  } else if (total >= 55) {
+    grade = 'B'; payback = 50; gradeColor = '#0891b2';
+    resultComment = '참가비의 50% 페이백 대상이에요';
+  } else if (total >= 40) {
+    grade = 'C'; payback = 30; gradeColor = '#16a34a';
+    resultComment = '참가비의 30% 페이백 대상이에요';
+  } else {
+    grade = '탈락'; payback = 0; gradeColor = '#dc2626';
+    resultComment = '체험단 기준 미달 — 일반 참가로 안내드려요';
+  }
 
-  return { total, breakdown: { subScore, actScore, sympScore, cmtScore }, grade, gradeColor, comment };
+  return {
+    total,
+    grade,
+    payback,
+    gradeColor,
+    resultComment,
+    // 내부용 breakdown (외부 노출 금지)
+    _breakdown: { visitorScore, postScore, engagementScore, qualitativeScore },
+  };
 }
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const input = (searchParams.get('blogId') || '').trim();
+  // 정성 평가 파라미터 (관리자 입력, 기본값 적용)
+  const suitability = Number(searchParams.get('suitability') ?? 10);
+  const quality = Number(searchParams.get('quality') ?? 7);
 
   if (!input) {
     return Response.json({ error: '블로그 ID 또는 URL을 입력해주세요' }, { status: 400 });
@@ -75,7 +79,6 @@ export async function GET(request) {
     'Referer': 'https://blog.naver.com/',
   };
 
-  // 블로그 프로필 + 첫 페이지 포스트 병렬 요청
   const [profileRes, postRes1] = await Promise.all([
     fetch(`https://m.blog.naver.com/api/blogs/${blogId}`, { headers: h }),
     fetch(`https://m.blog.naver.com/api/blogs/${blogId}/post-list?categoryNo=0&page=1&pageSize=10`, { headers: h }),
@@ -93,12 +96,11 @@ export async function GET(request) {
   const profile = profileData.result;
   const blogName = profile.blogName || blogId;
   const nickName = profile.displayNickName || profile.nickName || '';
-  const subscriberCount = profile.subscriberCount || 0;
   const dayVisitorCount = profile.dayVisitorCount || 0;
   const totalVisitorCount = profile.totalVisitorCount || 0;
   const profileImage = profile.profileImagePath || null;
 
-  // 최근 30일 포스팅 수 집계 - 페이지 3개(30개)까지 확인
+  // 최근 30일 포스팅 수 집계 (최대 3페이지)
   let allItems = [];
   const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
 
@@ -107,7 +109,6 @@ export async function GET(request) {
     const items = d?.result?.items || [];
     allItems = [...items];
 
-    // 1페이지 최신 포스트가 30일 이내면 2~3페이지 추가 요청
     if (items.length > 0 && items[items.length - 1].addDate >= thirtyDaysAgo) {
       const [r2, r3] = await Promise.all([
         fetch(`https://m.blog.naver.com/api/blogs/${blogId}/post-list?categoryNo=0&page=2&pageSize=10`, { headers: h }),
@@ -118,16 +119,16 @@ export async function GET(request) {
     }
   }
 
-  const recentPostCount = allItems.filter(p => p.addDate >= thirtyDaysAgo).length;
-  const totalFetchedPosts = allItems.length;
+  const monthlyPostCount = allItems.filter(p => p.addDate >= thirtyDaysAgo).length;
 
   const sample = allItems.slice(0, 10);
   const avgSympathy = sample.length > 0
     ? sample.reduce((s, p) => s + (p.sympathyCnt || 0), 0) / sample.length : 0;
   const avgComment = sample.length > 0
     ? sample.reduce((s, p) => s + (p.commentCnt || 0), 0) / sample.length : 0;
+  const avgEngagement = avgSympathy + avgComment;
 
-  const score = calcScore({ subscriberCount, recentPostCount, avgSympathy, avgComment });
+  const score = calcScore({ dayVisitorCount, monthlyPostCount, avgEngagement, suitability, quality });
 
   return Response.json({
     blogId,
@@ -135,18 +136,16 @@ export async function GET(request) {
     nickName,
     profileImage,
     stats: {
-      subscriberCount,
       dayVisitorCount,
       totalVisitorCount,
-      recentPostCount,
-      totalFetchedPosts,
-      avgSympathy: Math.round(avgSympathy * 10) / 10,
-      avgComment: Math.round(avgComment * 10) / 10,
+      monthlyPostCount,
+      avgEngagement: Math.round(avgEngagement * 10) / 10,
     },
+    qualitative: { suitability, quality },
     score: score.total,
-    breakdown: score.breakdown,
     grade: score.grade,
+    payback: score.payback,
     gradeColor: score.gradeColor,
-    comment: score.comment,
+    resultComment: score.resultComment,
   });
 }
