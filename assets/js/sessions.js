@@ -32,12 +32,12 @@ const SESSION_DATA = [
         "age": 96
       },
       {
-        "occupation": "확인중",
-        "age": 91
-      },
-      {
         "occupation": "5급 공무원",
         "age": 92
+      },
+      {
+        "occupation": "확인중",
+        "age": null
       }
     ],
     "women": [
