@@ -245,16 +245,16 @@ const SESSION_DATA = [
         "age": 92
       },
       {
-        "occupation": "증권",
-        "age": 95
-      },
-      {
         "occupation": "공무원",
         "age": 89
       },
       {
         "occupation": "금융공기업",
         "age": 93
+      },
+      {
+        "occupation": "확인중",
+        "age": 95
       }
     ],
     "women": [
