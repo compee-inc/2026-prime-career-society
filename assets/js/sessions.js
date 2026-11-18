@@ -288,7 +288,7 @@ const SESSION_DATA = [
       },
       {
         "occupation": "확인중",
-        "age": null
+        "age": 92
       }
     ]
   },
