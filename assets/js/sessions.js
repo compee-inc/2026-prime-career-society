@@ -243,6 +243,18 @@ const SESSION_DATA = [
       {
         "occupation": "공기업",
         "age": 92
+      },
+      {
+        "occupation": "증권",
+        "age": 95
+      },
+      {
+        "occupation": "공무원",
+        "age": 89
+      },
+      {
+        "occupation": "금융공기업",
+        "age": 93
       }
     ],
     "women": [
