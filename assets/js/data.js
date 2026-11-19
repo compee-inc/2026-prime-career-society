@@ -20,7 +20,8 @@ const CONFIG = {
             "date": "11.12",
             "day": "THU",
             "couples": 6
-        }
+        },
+       { "date": "11.19", "day": "THU", "couples": null }
     ],
     soonDates:    [],
   },
