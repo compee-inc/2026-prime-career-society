@@ -235,10 +235,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- ════════════════════ 인원체크 ════════════════════ -->
 <div class="panel" id="p-attend">
   <div id="atSum"></div>
-  <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다</div>
+  <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다  |  첫인상 투표 폼 보내기는 [첫인상] 탭에 있습니다</div>
   <div id="at"></div>
   <datalist id="drinkList"></datalist>
-  <div id="fsBox"></div>
 </div>
 
 <!-- ════════════════════ 참가자 입력 ════════════════════ -->
@@ -500,7 +499,6 @@ function renderAttend(){
     <tbody>${list.map(p=>row(p,isMale)).join('')}</tbody></table>`;
   document.getElementById('at').innerHTML=tbl(S.m,true,`▶ 남자 (1 ~ ${N}번)`)+tbl(S.w,false,`▶ 여자 (1 ~ ${N}번)`);
   renderAttendSum();
-  renderFormBox();
 }
 
 // ── 첫인상 투표 폼 보내기 ──
@@ -531,7 +529,7 @@ async function fsCopyGroup(g){
   if(await copyText(FS_GROUP_DEFAULT.replaceAll('{링크}',link)))alert(`${g==='M'?'남자':g==='W'?'여자':'전체'} 단톡방 공지용 문구를 복사했습니다.`);
 }
 function renderFormBox(){
-  document.getElementById('fsBox').innerHTML=`<div class="stitle" style="margin-top:28px">■ 첫인상 투표 폼 보내기</div>
+  document.getElementById('fsBox').innerHTML=`<div class="stitle" style="margin-top:0">■ 첫인상 투표 폼 보내기</div>
   <div class="imp">
     <div class="two">
       <div><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">👨 남자용 첫인상 투표 폼 링크</label>
@@ -824,7 +822,7 @@ function renderFirst(){
       <thead><tr><th style="text-align:left">투표한 사람 ↓ / 받은 사람 →</th>${head}<th>선택</th></tr></thead>
       <tbody>${body}${foot}</tbody></table></div>`;
   };
-  const input=`<div class="stitle" style="margin-top:0">■ 첫인상 입력 (남녀별 1~3순위)
+  const input=`<div class="stitle" style="margin-top:28px">■ 첫인상 입력 (남녀별 1~3순위)
     <button class="btn btn-danger" style="float:right;padding:2px 10px;font-size:11px;margin-top:-2px" onclick="clearFi()">첫인상 초기화</button></div>
     ${inTbl(S.m,S.w,'▶ 남자 첫인상 (M1 ~ M'+N+')')}
     <div style="height:12px"></div>
@@ -882,7 +880,8 @@ function renderFirst(){
   </div>
   <div id="fiShare"></div>`;
 
-  el.innerHTML=input+imp+manual+result+share;
+  el.innerHTML='<div id="fsBox"></div>'+input+imp+manual+result+share;
+  renderFormBox();
   renderShare();
 }
 
