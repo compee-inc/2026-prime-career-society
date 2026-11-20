@@ -179,6 +179,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <nav class="tabs">
   <button class="tab on" data-tab="start">START</button>
+  <button class="tab" data-tab="attend">인원체크</button>
   <button class="tab" data-tab="input">참가자 입력</button>
   <button class="tab" data-tab="first">첫인상</button>
   <button class="tab" data-tab="mutual">상호선택</button>
@@ -196,6 +197,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="stitle">■ 사용 순서</div>
   <ol class="steps">
+    <li>[인원체크] 탭에서 남녀 번호별 참석 여부, 음료, 회사명, 연락처를 체크합니다.</li>
     <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업, 연락처를 입력합니다.</li>
     <li>[첫인상] 탭에서 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력하고, 받은 표 수를 메시지로 복사해 공유합니다.</li>
     <li>각 참가자의 1순위 / 2순위 / 3순위를 드롭다운으로 선택합니다.</li>
@@ -228,6 +230,14 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     ※ 실제 운영 시 테스트 데이터를 먼저 삭제하세요. 우측 상단 [초기화] 버튼을 사용하세요.<br>
     ※ 순위 변경 즉시 모든 계산이 자동으로 갱신됩니다.
   </div>
+</div>
+
+<!-- ════════════════════ 인원체크 ════════════════════ -->
+<div class="panel" id="p-attend">
+  <div id="atSum"></div>
+  <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다</div>
+  <div id="at"></div>
+  <datalist id="drinkList"></datalist>
 </div>
 
 <!-- ════════════════════ 참가자 입력 ════════════════════ -->
@@ -277,7 +287,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 // STATE
 // ════════════════════════════════════════════════
 const N = 8; // 참가자 수 (남녀 각각)
-const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',phone:'',c:['','','']});
+const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',phone:'',attend:'',drink:'',company:'',c:['','','']});
 const emptyState = () => ({
   m: Array.from({length:N},(_,i)=>blank('M',i)),
   w: Array.from({length:N},(_,i)=>blank('W',i)),
@@ -293,7 +303,7 @@ function normalize(){
   }
   if(!S.rv)S.rv={};
   if(!S.fi)S.fi={};
-  [...S.m,...S.w].forEach(p=>{if(p.phone==null)p.phone='';});
+  [...S.m,...S.w].forEach(p=>{for(const f of ['phone','attend','drink','company'])if(p[f]==null)p[f]='';});
 }
 
 let S = emptyState();
@@ -385,7 +395,7 @@ function validate(p,opp){
 // ════════════════════════════════════════════════
 // 탭 네비
 // ════════════════════════════════════════════════
-const TABS=['start','input','first','mutual','matching','result','review'];
+const TABS=['start','attend','input','first','mutual','matching','result','review'];
 document.querySelectorAll('.tab').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -393,6 +403,8 @@ document.querySelectorAll('.tab').forEach(b=>{
     b.classList.add('on');
     const id=b.dataset.tab;
     document.getElementById('p-'+id).classList.add('on');
+    if(id==='attend')   renderAttend();
+    if(id==='input')    renderInput();
     if(id==='first')    renderFirst();
     if(id==='mutual')   renderMutual();
     if(id==='matching') renderMatching();
@@ -441,6 +453,51 @@ function upd(id,field,val,isMale){
 function updR(id,idx,val,isMale){
   const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
   if(p){p.c[idx]=val;save();renderInput();}
+}
+
+// ════════════════════════════════════════════════
+// 인원체크
+// ════════════════════════════════════════════════
+const DRINKS=['아이스 아메리카노','따뜻한 아메리카노','카페라떼','바닐라라떼','녹차','허브티','에이드','오렌지주스','탄산수','논알콜'];
+const AT={'':{lbl:'미확인',cls:''},Y:{lbl:'참석',cls:'yes'},N:{lbl:'불참',cls:'no'}};
+function atToggle(id,isMale){
+  const p=(isMale?S.m:S.w).find(x=>x.id===id);
+  p.attend=p.attend===''?'Y':p.attend==='Y'?'N':'';save();renderAttend();
+}
+// 글자 입력 중에는 저장만 (한글 조합 끊김 방지), 칸을 벗어나면 요약 갱신
+function atUpd(id,field,val,isMale){upd(id,field,val,isMale);}
+function renderAttendSum(){
+  const all=[...S.m,...S.w];
+  const cnt=(l,v)=>l.filter(p=>p.attend===v).length;
+  const drinks={};all.filter(p=>p.attend!=='N'&&p.drink.trim()).forEach(p=>{const d=p.drink.trim();drinks[d]=(drinks[d]||0)+1;});
+  const noDrink=all.filter(p=>p.attend==='Y'&&!p.drink.trim()).length;
+  document.getElementById('atSum').innerHTML=`<div class="stats">
+    <div class="sc"><div class="n">${cnt(S.m,'Y')}/${N}</div><div class="l">남자 참석</div></div>
+    <div class="sc"><div class="n">${cnt(S.w,'Y')}/${N}</div><div class="l">여자 참석</div></div>
+    <div class="sc"><div class="n" style="color:var(--red-dk)">${cnt(all,'N')}</div><div class="l">불참</div></div>
+    <div class="sc"><div class="n" style="color:var(--ch-lt)">${cnt(all,'')}</div><div class="l">미확인</div></div>
+  </div>
+  <div class="stitle" style="margin-top:0">■ 음료 집계 (불참 제외)</div>
+  <div class="sl" style="margin-bottom:14px">${Object.keys(drinks).length?Object.entries(drinks).sort((a,b)=>b[1]-a[1]).map(([d,n])=>`<div class="sl-item"><b>${esc(d)}</b> × ${n}</div>`).join(''):'<span style="font-size:11px;color:var(--ch-lt)">아직 입력된 음료가 없습니다</span>'}
+  ${noDrink?`<div class="sl-item" style="color:var(--red-dk)">참석인데 음료 미입력 ${noDrink}명</div>`:''}</div>`;
+  const used=all.map(p=>p.drink.trim()).filter(Boolean);
+  document.getElementById('drinkList').innerHTML=[...new Set([...DRINKS,...used])].map(d=>`<option value="${esc(d)}">`).join('');
+}
+function renderAttend(){
+  const row=(p,isMale)=>{const im=isMale?1:0;const a=AT[p.attend]||AT[''];
+    return`<tr style="${p.attend==='N'?'opacity:.5':''}">
+      <td class="id-cell" style="font-size:14px">${isMale?'남':'여'} ${p.id.slice(1)}번<div style="font-size:10px;font-weight:400">${p.id}</div></td>
+      <td><button class="tgl ${a.cls}" style="min-width:70px" onclick="atToggle('${p.id}',${im})">${a.lbl}</button></td>
+      <td class="input-cell"><input type="text" value="${esc(p.name)}" placeholder="이름" oninput="atUpd('${p.id}','name',this.value,${im})"></td>
+      <td class="input-cell"><input type="text" list="drinkList" value="${esc(p.drink)}" placeholder="음료 선택/입력" oninput="atUpd('${p.id}','drink',this.value,${im})" onchange="renderAttendSum()"></td>
+      <td class="input-cell"><input type="text" value="${esc(p.company)}" placeholder="회사명" oninput="atUpd('${p.id}','company',this.value,${im})"></td>
+      <td class="input-cell"><input type="tel" value="${esc(p.phone)}" placeholder="010-0000-0000" oninput="atUpd('${p.id}','phone',this.value,${im})" style="width:100%;background:var(--ivory-in);border:1px solid #ddd;border-radius:2px;padding:5px 8px;font-size:12px"></td>
+    </tr>`};
+  const tbl=(list,isMale,title)=>`<div class="sec-hd"${isMale?'':' style="margin-top:24px"'}>${title}</div><table>
+    <thead><tr><th style="width:80px">번호</th><th style="width:90px">참석여부</th><th>이름</th><th>음료</th><th>회사명</th><th>연락처</th></tr></thead>
+    <tbody>${list.map(p=>row(p,isMale)).join('')}</tbody></table>`;
+  document.getElementById('at').innerHTML=tbl(S.m,true,`▶ 남자 (1 ~ ${N}번)`)+tbl(S.w,false,`▶ 여자 (1 ~ ${N}번)`);
+  renderAttendSum();
 }
 
 // ════════════════════════════════════════════════
@@ -956,6 +1013,7 @@ function renderReview(){
 function renderAll(){
   renderInput();
   const on=document.querySelector('.tab.on')?.dataset.tab;
+  if(on==='attend')   renderAttend();
   if(on==='first')    renderFirst();
   if(on==='mutual')   renderMutual();
   if(on==='matching') renderMatching();
