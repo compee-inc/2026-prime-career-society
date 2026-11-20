@@ -128,8 +128,8 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
     "status": "RECRUITING",
-    "targetMen": 10,
-    "targetWomen": 10,
+    "targetMen": 8,
+    "targetWomen": 8,
     "men": [],
     "women": []
   }
@@ -220,9 +220,9 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
     "status": "RECRUITING",
-    "targetMen": 8,
-    "targetWomen": 8,
-    "note": "Prime Marriage Edition · ~11/22(일) 별도 지원 · 11/23(월) 개별 발표 · 최대 8:8",
+    "targetMen": 10,
+    "targetWomen": 10,
+    "note": "Prime Marriage Edition · ~11/22(일) 별도 지원 · 11/23(월) 개별 발표 · 최대 10:10",
     "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 82~90년생 · 여 85~92년생 · 59,000원<br>11/23 개별 발표 후 승인된 분만 11/24(화)까지 입금",
     "men": [],
     "women": []
