@@ -138,6 +138,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .id-cell{background:var(--calc)!important;font-weight:700;color:var(--ch-mid)}
 .input-cell{background:var(--ivory-in)!important}
 
+/* 첫인상 */
+.imp{background:var(--ivory-s);border:1px dashed var(--gold);padding:14px 16px;margin-top:10px}
+.imp-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.imp textarea{width:100%;min-height:70px;margin-top:8px;font-size:11px;padding:6px 8px;border:1px solid #ddd;background:var(--ivory-in);font-family:inherit}
+.imp .hint{font-size:11px;color:var(--ch-lt);line-height:1.7;margin-top:8px}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.map label{font-size:11px;font-weight:700;color:var(--ch-mid);display:block;margin-bottom:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.two,.map{grid-template-columns:1fr}}
+
 /* 반응형 */
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.pg{grid-template-columns:repeat(4,1fr)}.ig{grid-template-columns:1fr}}
 @media print{.hd,.tabs{display:none}.panel{display:block!important;page-break-before:always}}
@@ -160,6 +170,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <nav class="tabs">
   <button class="tab on" data-tab="start">START</button>
   <button class="tab" data-tab="input">참가자 입력</button>
+  <button class="tab" data-tab="first">첫인상</button>
   <button class="tab" data-tab="mutual">상호선택</button>
   <button class="tab" data-tab="matching">매칭계산</button>
   <button class="tab" data-tab="result">최종결과</button>
@@ -176,6 +187,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="stitle">■ 사용 순서</div>
   <ol class="steps">
     <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업을 입력합니다.</li>
+    <li>[첫인상] 탭에서 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력합니다.</li>
     <li>각 참가자의 1순위 / 2순위 / 3순위를 드롭다운으로 선택합니다.</li>
     <li>[상호선택] 탭에서 상호 선택 관계를 실시간으로 확인합니다.</li>
     <li>[매칭계산] 탭에서 전체 최적화 매칭 추천 결과를 확인합니다.</li>
@@ -225,6 +237,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </table>
 </div>
 
+<!-- ════════════════════ 첫인상 ════════════════════ -->
+<div class="panel" id="p-first">
+  <div id="fi"></div>
+</div>
+
 <!-- ════════════════════ 상호선택 ════════════════════ -->
 <div class="panel" id="p-mutual">
   <div id="mu"></div>
@@ -254,6 +271,7 @@ const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',c:['','','']}
 const emptyState = () => ({
   m: Array.from({length:N},(_,i)=>blank('M',i)),
   w: Array.from({length:N},(_,i)=>blank('W',i)),
+  fi: {}, // 첫인상 선택 { M1:['W2','W5',''], ... }
   rv: {}
 });
 // 기존 7:7 저장 데이터를 8:8로 맞춤 (부족한 인원 빈칸으로 추가)
@@ -264,6 +282,7 @@ function normalize(){
     S[k]=S[k].slice(0,N);
   }
   if(!S.rv)S.rv={};
+  if(!S.fi)S.fi={};
 }
 
 let S = emptyState();
@@ -289,6 +308,12 @@ const TEST = {
     {id:'W7',name:'윤채원',age:'26',job:'대학원생',c:['M4','M5','M7']},
     {id:'W8',name:'한소희',age:'29',job:'약사',c:['M8','M4','M3']},
   ],
+  fi:{
+    M1:['W2','W1','W3'],M2:['W1','W5','W4'],M3:['W2','W6','W5'],M4:['W7','W3','W2'],
+    M5:['W4','W2','W7'],M6:['W1','W5','W8'],M7:['W6','W4','W2'],M8:['W8','W2','W3'],
+    W1:['M2','M6','M1'],W2:['M1','M3','M8'],W3:['M4','M6','M1'],W4:['M5','M2','M7'],
+    W5:['M6','M3','M2'],W6:['M3','M7','M4'],W7:['M4','M5','M1'],W8:['M8','M6','M4']
+  },
   rv:{}
 };
 
@@ -305,7 +330,7 @@ function clearAll(){
   localStorage.removeItem('pcs7x7');S=emptyState();renderAll()}
 function loadTest(){
   if(!confirm('테스트 데이터를 불러옵니다. 기존 내용이 덮어쓰여집니다.'))return;
-  S=JSON.parse(JSON.stringify(TEST));save();renderAll()}
+  S=JSON.parse(JSON.stringify(TEST));normalize();save();renderAll()}
 
 // ════════════════════════════════════════════════
 // 알고리즘
@@ -313,11 +338,13 @@ function loadTest(){
 const rs=r=>r?4-r:0;
 const rt=r=>r?`${r}순위`:'—';
 
-function pairs(){
+// get: 참가자 → 선택배열 (기본 = 최종 선택, fiGet = 첫인상)
+function pairs(get=p=>p.c){
   const res=[];
   for(const m of S.m) for(const w of S.w){
-    const rm=m.c.indexOf(w.id)>=0?m.c.indexOf(w.id)+1:null;
-    const rw=w.c.indexOf(m.id)>=0?w.c.indexOf(m.id)+1:null;
+    const cm=get(m),cw=get(w);
+    const rm=cm.indexOf(w.id)>=0?cm.indexOf(w.id)+1:null;
+    const rw=cw.indexOf(m.id)>=0?cw.indexOf(m.id)+1:null;
     const mu=rm!==null&&rw!==null;
     res.push({mid:m.id,wid:w.id,rm,rw,sm:rm?rs(rm):null,sw:rw?rs(rw):null,total:mu?rs(rm)+rs(rw):null,mu});
   }
@@ -347,7 +374,7 @@ function validate(p,opp){
 // ════════════════════════════════════════════════
 // 탭 네비
 // ════════════════════════════════════════════════
-const TABS=['start','input','mutual','matching','result','review'];
+const TABS=['start','input','first','mutual','matching','result','review'];
 document.querySelectorAll('.tab').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -355,6 +382,7 @@ document.querySelectorAll('.tab').forEach(b=>{
     b.classList.add('on');
     const id=b.dataset.tab;
     document.getElementById('p-'+id).classList.add('on');
+    if(id==='first')    renderFirst();
     if(id==='mutual')   renderMutual();
     if(id==='matching') renderMatching();
     if(id==='result')   renderResult();
@@ -401,6 +429,202 @@ function upd(id,field,val,isMale){
 function updR(id,idx,val,isMale){
   const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
   if(p){p.c[idx]=val;save();renderInput();}
+}
+
+// ════════════════════════════════════════════════
+// 첫인상
+// ════════════════════════════════════════════════
+const fiGet=p=>S.fi[p.id]||['','',''];
+const pname=id=>{const p=[...S.m,...S.w].find(x=>x.id===id);return p&&p.name?`${id} ${p.name}`:id};
+let IMP=null; // 불러온 폼 데이터 {head:[], rows:[[]], map:{who,sex,r1,r2,r3}}
+
+function updFi(id,idx,val){
+  const a=[...fiGet({id})];a[idx]=val;S.fi[id]=a;save();renderFirst();
+}
+function clearFi(){
+  if(!confirm('첫인상 선택만 모두 지웁니다. 계속할까요?'))return;
+  S.fi={};save();renderFirst();
+}
+
+// ── 응답 값 → 참가자 ID 해석 ──
+// "M3", "m-3", "남3", "남자 3번", "김준혁", "3" (성별을 알 때) 모두 인식
+function resolveId(raw,pool,pre){
+  const s=String(raw??'').trim();if(!s)return '';
+  const ids=pool.map(p=>p.id);
+  let m=s.match(/(?:^|[^A-Za-z])([MW])\s*-?\s*(\d{1,2})(?!\d)/i);
+  if(m){const id=m[1].toUpperCase()+(+m[2]);if(ids.includes(id))return id;}
+  m=s.match(/(남|여)[자성]?\s*(\d{1,2})(?!\d)/);
+  if(m){const id=(m[1]==='남'?'M':'W')+(+m[2]);if(ids.includes(id))return id;}
+  const byName=pool.filter(p=>p.name&&s.replace(/\s/g,'').includes(p.name.replace(/\s/g,'')));
+  if(byName.length===1)return byName[0].id;
+  m=s.match(/(\d{1,2})(?!\d)/);
+  if(m&&pre){const id=pre+(+m[1]);if(ids.includes(id))return id;}
+  return '?';
+}
+function sexOf(v){const s=String(v||'').trim().toUpperCase();if(/^(남|M|MALE)/.test(s))return 'M';if(/^(여|W|F|FEMALE)/.test(s))return 'W';return null}
+
+function impResolve(){
+  const {rows,map}=IMP;const out=[];
+  for(const r of rows){
+    const whoRaw=map.who>=0?r[map.who]:'';
+    if(!String(whoRaw).trim())continue;
+    const sx=map.sex>=0?sexOf(r[map.sex]):null;
+    const pool=sx==='M'?S.m:sx==='W'?S.w:[...S.m,...S.w];
+    const who=resolveId(whoRaw,pool,sx);
+    let raws=[map.r1,map.r2,map.r3].map(i=>i>=0?String(r[i]??'').trim():'');
+    // 순위가 한 칸에 "W1, W3, W5"처럼 들어온 경우
+    if(raws[0]&&!raws[1]&&!raws[2]&&map.r2<0&&map.r3<0)raws=raws[0].split(/[,\/·\n]|\s{2,}/).map(x=>x.trim()).filter(Boolean).slice(0,3);
+    while(raws.length<3)raws.push('');
+    const opp=who.startsWith('M')?S.w:who.startsWith('W')?S.m:[];
+    const oppPre=who.startsWith('M')?'W':who.startsWith('W')?'M':null;
+    const picks=raws.map(x=>x?resolveId(x,opp,oppPre):'');
+    const errs=[];
+    if(who==='?')errs.push('응답자 인식 실패');
+    picks.forEach((p,i)=>{if(p==='?')errs.push(`${i+1}순위 인식 실패`)});
+    const ok=picks.filter(p=>p&&p!=='?');
+    if(new Set(ok).size<ok.length)errs.push('중복 선택');
+    out.push({whoRaw,who,raws,picks,errs});
+  }
+  return out;
+}
+function impApply(){
+  const res=impResolve().filter(x=>x.who&&x.who!=='?');
+  const seen=new Set();
+  for(const x of res){
+    const c=[];for(const p of x.picks)if(p&&p!=='?'&&!c.includes(p))c.push(p);
+    while(c.length<3)c.push('');
+    S.fi[x.who]=c;seen.add(x.who); // 같은 사람이 여러 번 응답하면 마지막 응답 사용
+  }
+  IMP=null;save();renderFirst();
+  alert(`${seen.size}명의 첫인상을 반영했습니다.`);
+}
+function impCancel(){IMP=null;renderFirst()}
+function impSet(k,v){IMP.map[k]=+v;renderFirst()}
+
+function guessMap(head){
+  const f=re=>head.findIndex(h=>re.test(h));
+  const rk=k=>f(new RegExp(`${k}\\s*(순위|지망|위)`));
+  let who=f(/^(?!.*(순위|지망)).*(참가\s*번호|번호|본인|이름|성함|닉네임|ID)/i);
+  return{who,sex:f(/성별/),r1:rk(1),r2:rk(2),r3:rk(3)};
+}
+function impLoad(rows){
+  rows=rows.map(r=>r.map(c=>String(c??'').trim())).filter(r=>r.some(c=>c));
+  if(rows.length<2){alert('불러올 응답이 없습니다.');return;}
+  // 네이버폼 엑셀은 위쪽에 제목줄이 있을 수 있음 → '순위'가 있는 줄을 헤더로
+  let hi=rows.slice(0,10).findIndex(r=>r.some(c=>/순위|지망/.test(c)));if(hi<0)hi=0;
+  const head=rows[hi];const body=rows.slice(hi+1);
+  IMP={head,rows:body,map:guessMap(head)};renderFirst();
+}
+function loadXLSX(){
+  if(window.XLSX)return Promise.resolve();
+  return new Promise((ok,ng)=>{const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload=ok;s.onerror=()=>ng(new Error('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'));
+    document.head.appendChild(s);});
+}
+async function fiFile(file){
+  if(!file)return;
+  try{
+    await loadXLSX();
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    impLoad(XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false}));
+  }catch(e){alert('파일을 읽지 못했습니다: '+e.message)}
+}
+function fiPaste(){
+  const t=document.getElementById('fiTxt').value;
+  if(!t.trim()){alert('엑셀에서 복사한 내용을 붙여넣으세요.');return;}
+  impLoad(t.split(/\r?\n/).map(l=>l.split('\t')));
+}
+
+function renderFirst(){
+  const el=document.getElementById('fi');
+  const wids=S.w.map(w=>w.id),mids=S.m.map(m=>m.id);
+
+  // ── 불러오기 영역
+  let imp=`<div class="stitle">■ 네이버폼 결과 불러오기</div>
+  <div class="imp">
+    <div class="imp-row">
+      <input type="file" accept=".xlsx,.xls,.csv" onchange="fiFile(this.files[0]);this.value=''" style="font-size:12px">
+      <span style="font-size:11px;color:var(--ch-lt)">또는 아래에 엑셀 내용을 복사해서 붙여넣기</span>
+    </div>
+    <textarea id="fiTxt" placeholder="엑셀에서 헤더(제목줄) 포함해서 복사 → 붙여넣기"></textarea>
+    <div class="imp-row" style="margin-top:6px"><button class="btn btn-gold" onclick="fiPaste()">붙여넣은 내용 불러오기</button></div>
+    <div class="hint">네이버폼 → 결과 → <b>엑셀 다운로드</b> 한 파일을 그대로 올리면 됩니다.<br>
+    응답자 칸에는 <b>참가번호(M3, 남3, 3번 등)</b>나 이름, 순위 칸에는 <b>상대 번호나 이름</b>이 들어 있으면 자동으로 인식합니다. 번호만 쓰는 경우 성별 문항이 있어야 합니다.</div>
+  </div>`;
+
+  if(IMP){
+    const res=impResolve();
+    const okN=res.filter(x=>x.who!=='?'&&!x.errs.length).length;
+    const sel=(k,label)=>`<div><label>${label}</label><select onchange="impSet('${k}',this.value)">
+      <option value="-1"${IMP.map[k]<0?' selected':''}>— 없음 —</option>
+      ${IMP.head.map((h,i)=>`<option value="${i}"${IMP.map[k]===i?' selected':''}>${esc(h||`(${i+1}열)`)}</option>`).join('')}
+    </select></div>`;
+    imp+=`<div class="stitle">■ 문항 연결 확인 (응답 ${res.length}건)</div>
+    <div class="warn">자동으로 문항을 연결했어요. 틀린 부분이 있으면 드롭다운에서 고쳐주세요. 아래 미리보기를 확인한 뒤 [적용]을 누르면 반영됩니다.</div>
+    <div class="map">${sel('who','응답자 (본인 번호/이름)')}${sel('sex','성별 (선택)')}${sel('r1','1순위')}${sel('r2','2순위')}${sel('r3','3순위')}</div>
+    <table><thead><tr><th>응답자(원본)</th><th>인식</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead><tbody>
+    ${res.map(x=>`<tr style="${x.errs.length?'background:var(--red-l)':''}">
+      <td style="text-align:left">${esc(x.whoRaw)}</td><td style="font-weight:700">${x.who==='?'?'✗':pname(x.who)}</td>
+      ${x.picks.map((p,i)=>`<td>${p===''?'—':p==='?'?`<span class="err-txt">✗ ${esc(x.raws[i])}</span>`:`<b>${p}</b>`}</td>`).join('')}
+      <td class="${x.errs.length?'err-txt':'ok-txt'}">${x.errs.length?'⚠ '+x.errs.join(', '):'✓'}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="imp-row" style="margin-top:10px">
+      <button class="btn btn-gold" onclick="impApply()">적용 (${res.filter(x=>x.who!=='?').length}명)</button>
+      <button class="btn btn-danger" onclick="impCancel()">취소</button>
+      <span style="font-size:11px;color:var(--ch-lt)">정상 ${okN}건 · 인식 실패한 순위는 비워서 반영됩니다</span>
+    </div>`;
+  }
+
+  // ── 직접 입력 영역
+  const row=(p,opp)=>{
+    const c=fiGet(p);
+    const opts=idx=>{const used=c.filter((x,i)=>i!==idx&&x);
+      return`<option value="">—</option>`+opp.map(id=>`<option value="${id}"${c[idx]===id?' selected':''}${used.includes(id)?' disabled':''}>${id}</option>`).join('');};
+    return`<tr><td class="id-cell">${p.id}</td><td style="text-align:left">${esc(p.name)||'<span style="color:#bbb">—</span>'}</td>
+      ${[0,1,2].map(i=>`<td class="input-cell"><select style="width:68px" onchange="updFi('${p.id}',${i},this.value)">${opts(i)}</select></td>`).join('')}</tr>`;
+  };
+  const tbl=(list,opp,title)=>`<div><div class="sec-hd">${title}</div><table>
+    <thead><tr><th>ID</th><th>이름</th><th>1순위</th><th>2순위</th><th>3순위</th></tr></thead>
+    <tbody>${list.map(p=>row(p,opp)).join('')}</tbody></table></div>`;
+  const manual=`<div class="stitle">■ 첫인상 선택 현황 (직접 수정 가능)
+    <button class="btn btn-danger" style="float:right;padding:2px 10px;font-size:11px;margin-top:-2px" onclick="clearFi()">첫인상 초기화</button></div>
+    <div class="two">${tbl(S.m,wids,'▶ 남자 → 여자')}${tbl(S.w,mids,'▶ 여자 → 남자')}</div>`;
+
+  // ── 결과 영역
+  const all=pairs(fiGet),mu=mutual(all);
+  const fin=mutual(pairs());const finM=match(fin).res;
+  const has=(arr,p)=>arr.some(x=>x.mid===p.mid&&x.wid===p.wid);
+  const recv={};[...S.m,...S.w].forEach(p=>recv[p.id]={cnt:0,pts:0,r1:0});
+  [...S.m,...S.w].forEach(p=>fiGet(p).forEach((t,i)=>{if(t&&recv[t]){recv[t].cnt++;recv[t].pts+=3-i;if(i===0)recv[t].r1++;}}));
+  const answered=[...S.m,...S.w].filter(p=>fiGet(p).some(x=>x)).length;
+  const rank=list=>[...list].sort((a,b)=>recv[b.id].pts-recv[a.id].pts||recv[b.id].r1-recv[a.id].r1||a.id.localeCompare(b.id,undefined,{numeric:true}));
+  const rankTbl=(list,title)=>`<div><div class="sec-hd">${title}</div><table>
+    <thead><tr><th>순위</th><th>참가자</th><th>받은 표</th><th>1순위 표</th><th>점수</th></tr></thead>
+    <tbody>${rank(list).map((p,i)=>{const r=recv[p.id];return`<tr style="${r.cnt?'':'opacity:.45'}">
+      <td style="font-weight:800;color:var(--gold-dk)">${i+1}</td><td style="font-weight:700;text-align:left">${pname(p.id)}</td>
+      <td>${r.cnt}</td><td>${r.r1}</td><td style="font-weight:800">${r.pts}</td></tr>`}).join('')}</tbody></table></div>`;
+
+  const result=`<div class="stitle">■ 첫인상 결과</div>
+  <div class="stats">
+    <div class="sc"><div class="n">${answered}/${N*2}</div><div class="l">응답 완료</div></div>
+    <div class="sc"><div class="n">${mu.length}</div><div class="l">첫인상 상호선택 쌍</div></div>
+    <div class="sc"><div class="n">${mu.filter(p=>p.total===6).length}</div><div class="l">서로 1순위 쌍</div></div>
+    <div class="sc"><div class="n">${mu.filter(p=>has(fin,p)).length}</div><div class="l">최종까지 이어진 쌍</div></div>
+  </div>
+  <div class="stitle">■ 첫인상 상호선택 (${mu.length}쌍 — 점수 내림차순)</div>
+  ${mu.length?`<table><thead><tr><th>남자</th><th>여자</th><th>남→여</th><th>여→남</th><th>총점</th><th>최종 선택</th></tr></thead><tbody>
+  ${mu.map(p=>{const fm=has(finM,p),fu=has(fin,p);return`<tr style="background:${p.total>=5?'var(--green-d)':'var(--green)'}">
+    <td style="font-weight:700">${pname(p.mid)}</td><td style="font-weight:700">${pname(p.wid)}</td>
+    <td>${rt(p.rm)}</td><td>${rt(p.rw)}</td><td style="font-weight:800;font-size:15px">${p.total}</td>
+    <td><span class="badge ${fm?'b-match':fu?'b-green':'b-gray'}">${fm?'★ 최종 매칭':fu?'✓ 최종 상호선택':'—'}</span></td></tr>`}).join('')}
+  </tbody></table>`:`<div style="text-align:center;padding:28px;color:var(--ch-lt)">아직 첫인상 상호선택이 없습니다.</div>`}
+  <div class="stitle" style="margin-top:24px">■ 첫인상 인기 순위 (1순위 3점 · 2순위 2점 · 3순위 1점)</div>
+  <div class="warn" style="margin-bottom:8px">※ 운영자 참고용입니다. 참가자에게 순위를 공개할지는 신중히 결정하세요.</div>
+  <div class="two">${rankTbl(S.m,'▶ 남자')}${rankTbl(S.w,'▶ 여자')}</div>`;
+
+  el.innerHTML=imp+manual+result;
 }
 
 // ════════════════════════════════════════════════
@@ -609,6 +833,7 @@ function renderReview(){
 function renderAll(){
   renderInput();
   const on=document.querySelector('.tab.on')?.dataset.tab;
+  if(on==='first')    renderFirst();
   if(on==='mutual')   renderMutual();
   if(on==='matching') renderMatching();
   if(on==='result')   renderResult();
