@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIME CAREER SOCIETY — 7:7 Matching</title>
+<title>PRIME CAREER SOCIETY — 8:8 Matching</title>
 <style>
 :root {
   --ivory:     #FFFFF0;
@@ -99,7 +99,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .mc-score{margin-left:auto;font-size:24px;font-weight:800;color:var(--green-dk)}
 
 /* ── 참가자 카드 그리드 ── */
-.pg{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:8px 0}
+.pg{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin:8px 0}
 .pc{background:var(--ivory-s);border:1px solid #e0e0e0;padding:10px 6px;text-align:center;border-radius:3px}
 .pc .pid{font-size:13px;font-weight:800;color:var(--ch)}
 .pc .pn{font-size:10px;color:var(--ch-lt);margin-top:2px;min-height:14px}
@@ -148,7 +148,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <header class="hd">
   <div class="hd-left">
     <h1>PRIME CAREER SOCIETY</h1>
-    <p>7 : 7 PRIVATE ROTATION  ·  MATCHING MANAGEMENT SYSTEM</p>
+    <p>8 : 8 PRIVATE ROTATION  ·  MATCHING MANAGEMENT SYSTEM</p>
   </div>
   <div class="hd-right">
     <span class="autosave" id="asStat">● 저장됨</span>
@@ -170,7 +170,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div class="panel on" id="p-start">
   <div class="hero">
     <h2>PRIME CAREER SOCIETY</h2>
-    <p>7 : 7 PRIVATE ROTATION  |  MATCHING MANAGEMENT</p>
+    <p>8 : 8 PRIVATE ROTATION  |  MATCHING MANAGEMENT</p>
   </div>
 
   <div class="stitle">■ 사용 순서</div>
@@ -212,13 +212,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div class="panel" id="p-input">
   <div class="warn">※ 노란색 배경 = 직접 입력  |  회색 = 자동  |  순위는 드롭다운으로 선택 — 변경 즉시 자동 계산</div>
 
-  <div class="sec-hd">▶ 남자 참가자 (M1 ~ M7)</div>
+  <div class="sec-hd">▶ 남자 참가자 (M1 ~ M8)</div>
   <table id="mt">
     <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
     <tbody id="mb"></tbody>
   </table>
 
-  <div class="sec-hd" style="margin-top:24px">▶ 여자 참가자 (W1 ~ W7)</div>
+  <div class="sec-hd" style="margin-top:24px">▶ 여자 참가자 (W1 ~ W8)</div>
   <table id="wt">
     <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
     <tbody id="wb"></tbody>
@@ -249,11 +249,22 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 // ════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════
+const N = 8; // 참가자 수 (남녀 각각)
+const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',c:['','','']});
 const emptyState = () => ({
-  m: Array.from({length:7},(_,i)=>({id:`M${i+1}`,name:'',age:'',job:'',c:['','','']})),
-  w: Array.from({length:7},(_,i)=>({id:`W${i+1}`,name:'',age:'',job:'',c:['','','']})),
+  m: Array.from({length:N},(_,i)=>blank('M',i)),
+  w: Array.from({length:N},(_,i)=>blank('W',i)),
   rv: {}
 });
+// 기존 7:7 저장 데이터를 8:8로 맞춤 (부족한 인원 빈칸으로 추가)
+function normalize(){
+  for(const [k,pre] of [['m','M'],['w','W']]){
+    if(!Array.isArray(S[k]))S[k]=[];
+    for(let i=S[k].length;i<N;i++)S[k].push(blank(pre,i));
+    S[k]=S[k].slice(0,N);
+  }
+  if(!S.rv)S.rv={};
+}
 
 let S = emptyState();
 
@@ -266,6 +277,7 @@ const TEST = {
     {id:'M5',name:'최현수',age:'31',job:'스타트업',c:['W4','W7','W2']},
     {id:'M6',name:'강도현',age:'34',job:'변호사',c:['W5','W1','W3']},
     {id:'M7',name:'윤재원',age:'29',job:'연구원',c:['W6','W7','W4']},
+    {id:'M8',name:'한지훈',age:'33',job:'공무원',c:['W8','W3','W5']},
   ],
   w:[
     {id:'W1',name:'김서연',age:'28',job:'마케팅',c:['M2','M1','M6']},
@@ -275,6 +287,7 @@ const TEST = {
     {id:'W5',name:'최예린',age:'31',job:'교사',c:['M3','M6','M2']},
     {id:'W6',name:'강하은',age:'28',job:'간호사',c:['M7','M3','M4']},
     {id:'W7',name:'윤채원',age:'26',job:'대학원생',c:['M4','M5','M7']},
+    {id:'W8',name:'한소희',age:'29',job:'약사',c:['M8','M4','M3']},
   ],
   rv:{}
 };
@@ -286,7 +299,7 @@ function save(){
   try{localStorage.setItem('pcs7x7',JSON.stringify(S));
   document.getElementById('asStat').textContent='● 저장됨 '+new Date().toLocaleTimeString('ko')}catch(e){}}
 function load(){
-  try{const d=localStorage.getItem('pcs7x7');if(d){S=JSON.parse(d);return true}}catch(e){}return false}
+  try{const d=localStorage.getItem('pcs7x7');if(d){S=JSON.parse(d);normalize();return true}}catch(e){}return false}
 function clearAll(){
   if(!confirm('모든 데이터를 초기화하시겠습니까?'))return;
   localStorage.removeItem('pcs7x7');S=emptyState();renderAll()}
@@ -383,7 +396,7 @@ function renderInput(){
 function esc(s){return(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
 function upd(id,field,val,isMale){
   const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
-  if(p){p[field]=val;save();renderInput();}
+  if(p){p[field]=val;save();} // 다시 그리면 한글 조합이 끊기므로 렌더 안 함
 }
 function updR(id,idx,val,isMale){
   const arr=isMale?S.m:S.w;const p=arr.find(x=>x.id===id);
@@ -417,7 +430,7 @@ function renderMutual(){
       <td><span class="badge b-green">✓ YES</span></td>
     </tr>`).join('')}</tbody>
   </table>
-  <div class="stitle" style="margin-top:24px">■ 전체 선택 현황 (49조합)</div>
+  <div class="stitle" style="margin-top:24px">■ 전체 선택 현황 (${N*N}조합)</div>
   <table>
     <thead><tr><th>남자</th><th>여자</th><th>남→여</th><th>여→남</th><th>남점</th><th>여점</th><th>총점</th><th>상호선택</th></tr></thead>
     <tbody>${all.map(p=>`<tr style="opacity:${p.mu?1:.4};background:${p.mu?'var(--green)':''}">
