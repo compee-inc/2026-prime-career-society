@@ -128,8 +128,8 @@ const SESSION_DATA = [
     "time": "19:00",
     "location": "영등포구 양평동 인근 · 카페 전체 대관",
     "status": "RECRUITING",
-    "targetMen": 8,
-    "targetWomen": 8,
+    "targetMen": 10,
+    "targetWomen": 10,
     "men": [],
     "women": []
   }
