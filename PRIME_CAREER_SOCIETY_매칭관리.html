@@ -148,6 +148,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:900px){.two,.map{grid-template-columns:1fr}}
 
+/* 첫인상 체크판 */
+.fgrid td.fc{cursor:pointer;user-select:none;font-weight:800;font-size:14px;position:relative;height:38px}
+.fgrid td.fc:hover{outline:2px solid var(--gold);outline-offset:-2px}
+.fc.r1{background:var(--gold)!important;color:var(--ch)}
+.fc.r2{background:var(--gold-lt)!important;color:var(--gold-dk)}
+.fc.r3{background:var(--gold-vlt)!important;color:var(--gold-dk)}
+.fc.mu{box-shadow:inset 0 0 0 2px #4CAF50}
+.fc.lg{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:2px;font-weight:800;font-size:11px}
+.hrt{color:#E53935;font-size:10px;margin-left:2px}
+
 /* 반응형 */
 @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.pg{grid-template-columns:repeat(4,1fr)}.ig{grid-template-columns:1fr}}
 @media print{.hd,.tabs{display:none}.panel{display:block!important;page-break-before:always}}
@@ -443,6 +453,16 @@ let IMP=null; // 불러온 폼 데이터 {head:[], rows:[[]], map:{who,sex,r1,r2
 function updFi(id,idx,val){
   const a=[...fiGet({id})];a[idx]=val;S.fi[id]=a;save();renderFirst();
 }
+// 체크판 칸 클릭: 비어있으면 → 남은 순위 중 가장 높은 순위, 이미 있으면 → 다음 빈 순위, 더 없으면 비움
+function fiCell(id,target){
+  const c=[...fiGet({id})];const cur=c.indexOf(target);
+  if(cur>=0)c[cur]='';
+  let next=-1;
+  for(let i=(cur>=0?cur+1:0);i<3;i++)if(!c[i]){next=i;break;}
+  if(next<0&&cur<0){alert('이미 1~3순위를 모두 선택했습니다. 기존 칸을 눌러 비운 뒤 선택하세요.');return;}
+  if(next>=0)c[next]=target;
+  S.fi[id]=c;save();renderFirst();
+}
 function clearFi(){
   if(!confirm('첫인상 선택만 모두 지웁니다. 계속할까요?'))return;
   S.fi={};save();renderFirst();
@@ -640,20 +660,27 @@ function renderFirst(){
     </div>`;
   }
 
-  // ── 직접 입력 영역
-  const row=(p,opp)=>{
-    const c=fiGet(p);
-    const opts=idx=>{const used=c.filter((x,i)=>i!==idx&&x);
-      return`<option value="">—</option>`+opp.map(id=>`<option value="${id}"${c[idx]===id?' selected':''}${used.includes(id)?' disabled':''}>${id}</option>`).join('');};
-    return`<tr><td class="id-cell">${p.id}</td><td style="text-align:left">${esc(p.name)||'<span style="color:#bbb">—</span>'}</td>
-      ${[0,1,2].map(i=>`<td class="input-cell"><select style="width:68px" onchange="updFi('${p.id}',${i},this.value)">${opts(i)}</select></td>`).join('')}</tr>`;
+  // ── 체크 집계판 (행 = 투표한 사람, 열 = 받은 사람, 칸 클릭 → 1→2→3→비움)
+  const recvB=fiRecv();
+  const grid=(rows,cols,title)=>{
+    const head=cols.map(o=>`<th style="min-width:54px">${o.id}<div style="font-weight:400;font-size:10px;opacity:.8">${esc(o.name)||''}</div></th>`).join('');
+    const body=rows.map(p=>{const c=fiGet(p);const n=c.filter(x=>x).length;
+      return`<tr><td class="id-cell" style="text-align:left;white-space:nowrap">${p.id} <span style="font-weight:400">${esc(p.name)||''}</span></td>
+      ${cols.map(o=>{const r=c.indexOf(o.id)+1;const back=fiGet(o).includes(p.id);
+        return`<td class="fc r${r}${r&&back?' mu':''}" onclick="fiCell('${p.id}','${o.id}')" title="${p.id} → ${o.id}">${r?r:''}${r&&back?'<span class="hrt">♥</span>':''}</td>`}).join('')}
+      <td style="font-weight:700;color:${n===3?'var(--green-dk)':n?'var(--gold-dk)':'#bbb'}">${n}/3</td></tr>`}).join('');
+    const foot=`<tr style="background:var(--gold-vlt)"><td style="font-weight:800;text-align:left">받은 표</td>${cols.map(o=>`<td style="font-weight:800;font-size:14px;color:${recvB[o.id].cnt?'var(--gold-dk)':'#bbb'}">${recvB[o.id].cnt}</td>`).join('')}<td></td></tr>`;
+    return`<div class="sec-hd" style="margin-top:12px">${title}</div><div style="overflow-x:auto"><table class="fgrid">
+      <thead><tr><th style="text-align:left">투표한 사람 ↓ / 받은 사람 →</th>${head}<th>선택</th></tr></thead>
+      <tbody>${body}${foot}</tbody></table></div>`;
   };
-  const tbl=(list,opp,title)=>`<div><div class="sec-hd">${title}</div><table>
-    <thead><tr><th>ID</th><th>이름</th><th>1순위</th><th>2순위</th><th>3순위</th></tr></thead>
-    <tbody>${list.map(p=>row(p,opp)).join('')}</tbody></table></div>`;
-  const manual=`<div class="stitle">■ 첫인상 선택 현황 (직접 수정 가능)
+  const manual=`<div class="stitle" style="margin-top:0">■ 첫인상 체크판 — 칸을 누르면 1순위 → 2순위 → 3순위 → 비움
     <button class="btn btn-danger" style="float:right;padding:2px 10px;font-size:11px;margin-top:-2px" onclick="clearFi()">첫인상 초기화</button></div>
-    <div class="two">${tbl(S.m,wids,'▶ 남자 → 여자')}${tbl(S.w,mids,'▶ 여자 → 남자')}</div>`;
+    <div class="sl" style="margin:0 0 4px">
+      <div class="sl-item"><span class="fc r1 lg">1</span>1순위</div><div class="sl-item"><span class="fc r2 lg">2</span>2순위</div>
+      <div class="sl-item"><span class="fc r3 lg">3</span>3순위</div><div class="sl-item"><span class="hrt">♥</span>서로 뽑음</div>
+    </div>
+    ${grid(S.m,S.w,'▶ 남자가 뽑은 여자')}${grid(S.w,S.m,'▶ 여자가 뽑은 남자')}`;
 
   // ── 결과 영역
   const all=pairs(fiGet),mu=mutual(all);
@@ -701,7 +728,7 @@ function renderFirst(){
   </div>
   <div id="fiShare"></div>`;
 
-  el.innerHTML=imp+manual+result+share;
+  el.innerHTML=manual+imp+result+share;
   renderShare();
 }
 
