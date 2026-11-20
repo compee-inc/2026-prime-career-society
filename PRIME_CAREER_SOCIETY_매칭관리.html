@@ -186,8 +186,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="stitle">■ 사용 순서</div>
   <ol class="steps">
-    <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업을 입력합니다.</li>
-    <li>[첫인상] 탭에서 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력합니다.</li>
+    <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업, 연락처를 입력합니다.</li>
+    <li>[첫인상] 탭에서 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력하고, 받은 표 수를 메시지로 복사해 공유합니다.</li>
     <li>각 참가자의 1순위 / 2순위 / 3순위를 드롭다운으로 선택합니다.</li>
     <li>[상호선택] 탭에서 상호 선택 관계를 실시간으로 확인합니다.</li>
     <li>[매칭계산] 탭에서 전체 최적화 매칭 추천 결과를 확인합니다.</li>
@@ -226,13 +226,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="sec-hd">▶ 남자 참가자 (M1 ~ M8)</div>
   <table id="mt">
-    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
+    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th style="min-width:120px">연락처</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
     <tbody id="mb"></tbody>
   </table>
 
   <div class="sec-hd" style="margin-top:24px">▶ 여자 참가자 (W1 ~ W8)</div>
   <table id="wt">
-    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
+    <thead><tr><th>ID</th><th style="min-width:80px">이름</th><th style="width:60px">나이</th><th style="min-width:90px">직업</th><th style="min-width:120px">연락처</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead>
     <tbody id="wb"></tbody>
   </table>
 </div>
@@ -267,7 +267,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 // STATE
 // ════════════════════════════════════════════════
 const N = 8; // 참가자 수 (남녀 각각)
-const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',c:['','','']});
+const blank = (pre,i) => ({id:`${pre}${i+1}`,name:'',age:'',job:'',phone:'',c:['','','']});
 const emptyState = () => ({
   m: Array.from({length:N},(_,i)=>blank('M',i)),
   w: Array.from({length:N},(_,i)=>blank('W',i)),
@@ -283,6 +283,7 @@ function normalize(){
   }
   if(!S.rv)S.rv={};
   if(!S.fi)S.fi={};
+  [...S.m,...S.w].forEach(p=>{if(p.phone==null)p.phone='';});
 }
 
 let S = emptyState();
@@ -412,6 +413,7 @@ function renderInput(){
       <td class="input-cell"><input type="text" value="${esc(p.name)}" placeholder="이름" oninput="upd('${p.id}','name',this.value,${im})"></td>
       <td class="input-cell"><input type="number" value="${esc(p.age)}" placeholder="나이" min="20" max="60" style="width:56px" oninput="upd('${p.id}','age',this.value,${im})"></td>
       <td class="input-cell"><input type="text" value="${esc(p.job)}" placeholder="직업" oninput="upd('${p.id}','job',this.value,${im})"></td>
+      <td class="input-cell"><input type="tel" value="${esc(p.phone)}" placeholder="010-0000-0000" oninput="upd('${p.id}','phone',this.value,${im})" style="width:100%;background:var(--ivory-in);border:1px solid #ddd;border-radius:2px;padding:5px 8px;font-size:12px"></td>
       <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',0,this.value,${im})">${opts(0)}</select></td>
       <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',1,this.value,${im})">${opts(1)}</select></td>
       <td class="input-cell"><select style="width:72px" onchange="updR('${p.id}',2,this.value,${im})">${opts(2)}</select></td>
@@ -537,6 +539,62 @@ function fiPaste(){
   impLoad(t.split(/\r?\n/).map(l=>l.split('\t')));
 }
 
+function fiRecv(){
+  const recv={};[...S.m,...S.w].forEach(p=>recv[p.id]={cnt:0,pts:0,r1:0});
+  [...S.m,...S.w].forEach(p=>fiGet(p).forEach((t,i)=>{if(t&&recv[t]){recv[t].cnt++;recv[t].pts+=3-i;if(i===0)recv[t].r1++;}}));
+  return recv;
+}
+
+// ── 결과 공유 (복사 / 문자) ──
+const FI_MSG_DEFAULT='[PRIME CAREER SOCIETY]\n{이름}님, 오늘 첫인상 투표에서 {표}표를 받으셨어요 💛\n남은 시간도 즐거운 대화 나누세요!';
+let COPIED=new Set(); // 이번 화면에서 복사한 사람 표시용 (저장 안 함)
+function fiMsgOf(p,r){
+  return (S.fiMsg??FI_MSG_DEFAULT)
+    .replaceAll('{이름}',p.name||p.id).replaceAll('{번호}',p.id)
+    .replaceAll('{표}',r.cnt).replaceAll('{1순위}',r.r1);
+}
+function fiMsgSet(v){S.fiMsg=v;save();renderShare();}
+function fiMsgReset(){S.fiMsg=FI_MSG_DEFAULT;save();document.getElementById('fiMsg').value=FI_MSG_DEFAULT;renderShare();}
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);return true}catch(e){}
+  const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}
+  ta.remove();return ok;
+}
+async function fiCopy(id){
+  const p=[...S.m,...S.w].find(x=>x.id===id);const r=fiRecv()[id];
+  if(await copyText(fiMsgOf(p,r))){COPIED.add(id);renderShare();}
+  else alert('복사에 실패했습니다. 메시지를 직접 선택해서 복사하세요.');
+}
+async function fiCopyAll(){
+  const recv=fiRecv();
+  const t=[...S.m,...S.w].map(p=>`▶ ${p.id} ${p.name||''} ${p.phone||''}\n${fiMsgOf(p,recv[p.id])}`).join('\n\n');
+  if(await copyText(t))alert('전체 메시지를 복사했습니다.');
+}
+const telOf=ph=>String(ph||'').replace(/[^\d+]/g,'');
+function renderShare(){
+  const box=document.getElementById('fiShare');if(!box)return;
+  const recv=fiRecv();
+  const row=p=>{const r=recv[p.id],msg=fiMsgOf(p,r),tel=telOf(p.phone),done=COPIED.has(p.id);
+    return`<tr style="${done?'background:var(--green)':''}">
+      <td class="id-cell">${p.id}</td>
+      <td style="font-weight:700">${esc(p.name)||'<span style="color:#bbb">—</span>'}</td>
+      <td style="font-size:11px">${esc(p.phone)||'<span class="err-txt">연락처 없음</span>'}</td>
+      <td style="font-weight:800;color:var(--gold-dk);font-size:15px">${r.cnt}</td>
+      <td style="text-align:left;font-size:11px;white-space:pre-wrap;color:var(--ch-mid);max-width:360px">${esc(msg)}</td>
+      <td style="white-space:nowrap">
+        <button class="tgl ${done?'yes':''}" onclick="fiCopy('${p.id}')">${done?'✓ 복사됨':'복사'}</button>
+        ${tel?`<a class="tgl" style="text-decoration:none;color:inherit;display:inline-block" href="sms:${tel}?&body=${encodeURIComponent(msg)}">문자</a>`:''}
+      </td></tr>`};
+  const tbl=(list,title)=>`<div class="sec-hd" style="margin-top:14px">${title}</div><table>
+    <thead><tr><th>ID</th><th>이름</th><th>연락처</th><th>받은 표</th><th>메시지 미리보기</th><th>공유</th></tr></thead>
+    <tbody>${list.map(row).join('')}</tbody></table>`;
+  box.innerHTML=`<div class="imp-row" style="margin-top:10px;justify-content:space-between">
+      <span style="font-size:11px;color:var(--ch-lt)">복사 완료 ${COPIED.size}/${N*2}명 · [복사] 후 카톡 대화방에 붙여넣기 · [문자]는 휴대폰에서 누르면 문자앱이 열립니다</span>
+      <button class="btn btn-gold" onclick="fiCopyAll()">전체 메시지 한번에 복사</button>
+    </div>${tbl(S.m,'▶ 남자')}${tbl(S.w,'▶ 여자')}`;
+}
+
 function renderFirst(){
   const el=document.getElementById('fi');
   const wids=S.w.map(w=>w.id),mids=S.m.map(m=>m.id);
@@ -596,8 +654,7 @@ function renderFirst(){
   const all=pairs(fiGet),mu=mutual(all);
   const fin=mutual(pairs());const finM=match(fin).res;
   const has=(arr,p)=>arr.some(x=>x.mid===p.mid&&x.wid===p.wid);
-  const recv={};[...S.m,...S.w].forEach(p=>recv[p.id]={cnt:0,pts:0,r1:0});
-  [...S.m,...S.w].forEach(p=>fiGet(p).forEach((t,i)=>{if(t&&recv[t]){recv[t].cnt++;recv[t].pts+=3-i;if(i===0)recv[t].r1++;}}));
+  const recv=fiRecv();
   const answered=[...S.m,...S.w].filter(p=>fiGet(p).some(x=>x)).length;
   const rank=list=>[...list].sort((a,b)=>recv[b.id].pts-recv[a.id].pts||recv[b.id].r1-recv[a.id].r1||a.id.localeCompare(b.id,undefined,{numeric:true}));
   const rankTbl=(list,title)=>`<div><div class="sec-hd">${title}</div><table>
@@ -624,7 +681,19 @@ function renderFirst(){
   <div class="warn" style="margin-bottom:8px">※ 운영자 참고용입니다. 참가자에게 순위를 공개할지는 신중히 결정하세요.</div>
   <div class="two">${rankTbl(S.m,'▶ 남자')}${rankTbl(S.w,'▶ 여자')}</div>`;
 
-  el.innerHTML=imp+manual+result;
+  const share=`<div class="stitle" style="margin-top:24px">■ 첫인상 결과 공유 (참가자별 메시지 복사)</div>
+  <div class="imp">
+    <label style="font-size:11px;font-weight:700;color:var(--ch-mid)">메시지 문구</label>
+    <textarea id="fiMsg" oninput="fiMsgSet(this.value)">${esc(S.fiMsg??FI_MSG_DEFAULT).replace(/>/g,'&gt;')}</textarea>
+    <div class="imp-row" style="margin-top:6px">
+      <span class="hint" style="margin:0">사용 가능: <b>{이름}</b> <b>{번호}</b> <b>{표}</b>(받은 표 수) <b>{1순위}</b>(1순위로 받은 표 수) — 누가 뽑았는지는 메시지에 들어가지 않습니다.</span>
+      <button class="btn btn-outline" style="color:var(--ch-mid);border-color:#ccc" onclick="fiMsgReset()">기본 문구로</button>
+    </div>
+  </div>
+  <div id="fiShare"></div>`;
+
+  el.innerHTML=imp+manual+result+share;
+  renderShare();
 }
 
 // ════════════════════════════════════════════════
