@@ -304,6 +304,7 @@ function normalize(){
   }
   if(!S.rv)S.rv={};
   if(!S.fi)S.fi={};
+  if(S.formUrl&&!S.formUrlM&&!S.formUrlW){S.formUrlM=S.formUrl;S.formUrlW=S.formUrl;} delete S.formUrl; // 예전 단일 링크 → 남녀 링크
   [...S.m,...S.w].forEach(p=>{for(const f of ['phone','attend','drink','company'])if(p[f]==null)p[f]='';});
 }
 
@@ -508,32 +509,45 @@ const FS_GROUP_DEFAULT='안녕하세요, 프라임 커리어 소사이어티입�
 let FSENT=new Set();
 const seatOf=p=>`${p.id[0]==='M'?'남':'여'} ${p.id.slice(1)}번`;
 function fsMsgOf(p){
-  return(S.fsMsg??FS_MSG_DEFAULT).replaceAll('{이름}',p.name||seatOf(p)).replaceAll('{번호}',seatOf(p)).replaceAll('{링크}',S.formUrl||'(폼 링크 미입력)');
+  return(S.fsMsg??FS_MSG_DEFAULT).replaceAll('{이름}',p.name||seatOf(p)).replaceAll('{번호}',seatOf(p)).replaceAll('{링크}',linkOf(p)||'(폼 링크 미입력)');
 }
 function fsSet(k,v){S[k]=v;save();renderFormList();}
 function fsReset(){S.fsMsg=FS_MSG_DEFAULT;save();document.getElementById('fsMsg').value=FS_MSG_DEFAULT;renderFormList();}
-function fsCheck(){if(!S.formUrl||!S.formUrl.trim()){alert('먼저 첫인상 투표 폼 링크를 입력하세요.');return false}return true}
+const linkOf=p=>((p.id[0]==='M'?S.formUrlM:S.formUrlW)||'').trim();
+function fsCheck(p){
+  const need=p?[p.id[0]]:['M','W'];
+  for(const g of need)if(!((g==='M'?S.formUrlM:S.formUrlW)||'').trim()){alert(`먼저 ${g==='M'?'남자':'여자'}용 첫인상 투표 폼 링크를 입력하세요.`);return false}
+  return true;
+}
 async function fsCopy(id){
-  if(!fsCheck())return;
   const p=[...S.m,...S.w].find(x=>x.id===id);
+  if(!fsCheck(p))return;
   if(await copyText(fsMsgOf(p))){FSENT.add(id);renderFormList();}else alert('복사에 실패했습니다.');
 }
-async function fsCopyGroup(){
-  if(!fsCheck())return;
-  if(await copyText(FS_GROUP_DEFAULT.replaceAll('{링크}',S.formUrl)))alert('단톡방 공지용 문구를 복사했습니다.');
+// g: 'M' 남자 단톡방, 'W' 여자 단톡방, 'A' 전체 단톡방(링크 2개)
+async function fsCopyGroup(g){
+  if(!fsCheck(g==='A'?null:{id:g}))return;
+  const link=g==='M'?S.formUrlM.trim():g==='W'?S.formUrlW.trim():`👨 남성분: ${S.formUrlM.trim()}\n👩 여성분: ${S.formUrlW.trim()}`;
+  if(await copyText(FS_GROUP_DEFAULT.replaceAll('{링크}',link)))alert(`${g==='M'?'남자':g==='W'?'여자':'전체'} 단톡방 공지용 문구를 복사했습니다.`);
 }
 function renderFormBox(){
   document.getElementById('fsBox').innerHTML=`<div class="stitle" style="margin-top:28px">■ 첫인상 투표 폼 보내기</div>
   <div class="imp">
-    <label style="font-size:11px;font-weight:700;color:var(--ch-mid)">첫인상 투표 폼 링크 (네이버폼 공유 링크)</label>
-    <input type="text" value="${esc(S.formUrl||'')}" placeholder="https://naver.me/..." oninput="fsSet('formUrl',this.value)" style="margin-top:4px">
+    <div class="two">
+      <div><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">👨 남자용 첫인상 투표 폼 링크</label>
+      <input type="text" value="${esc(S.formUrlM||'')}" placeholder="https://naver.me/..." oninput="fsSet('formUrlM',this.value)" style="margin-top:4px"></div>
+      <div><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">👩 여자용 첫인상 투표 폼 링크</label>
+      <input type="text" value="${esc(S.formUrlW||'')}" placeholder="https://naver.me/..." oninput="fsSet('formUrlW',this.value)" style="margin-top:4px"></div>
+    </div>
     <label style="font-size:11px;font-weight:700;color:var(--ch-mid);display:block;margin-top:10px">개인 메시지 문구</label>
     <textarea id="fsMsg" oninput="fsSet('fsMsg',this.value)">${esc(S.fsMsg??FS_MSG_DEFAULT).replace(/>/g,'&gt;')}</textarea>
     <div class="imp-row" style="margin-top:6px;justify-content:space-between">
-      <span class="hint" style="margin:0">사용 가능: <b>{이름}</b> <b>{번호}</b>(예: 남 3번) <b>{링크}</b></span>
+      <span class="hint" style="margin:0">사용 가능: <b>{이름}</b> <b>{번호}</b>(예: 남 3번) <b>{링크}</b>(남자는 남자용, 여자는 여자용 링크가 자동으로 들어감)</span>
       <span class="imp-row">
         <button class="btn btn-outline" style="color:var(--ch-mid);border-color:#ccc" onclick="fsReset()">기본 문구로</button>
-        <button class="btn btn-gold" onclick="fsCopyGroup()">단톡방 공지용 복사</button>
+        <button class="btn btn-gold" onclick="fsCopyGroup('M')">남자 단톡방용 복사</button>
+        <button class="btn btn-gold" onclick="fsCopyGroup('W')">여자 단톡방용 복사</button>
+        <button class="btn btn-gold" onclick="fsCopyGroup('A')">전체 단톡방용 (링크 2개)</button>
       </span>
     </div>
   </div>
@@ -550,7 +564,7 @@ function renderFormList(){
       <td style="font-size:11px">${esc(p.phone)||'<span class="err-txt">연락처 없음</span>'}</td>
       <td style="text-align:left;font-size:11px;white-space:pre-wrap;color:var(--ch-mid);max-width:340px">${esc(msg)}</td>
       <td style="white-space:nowrap"><button class="tgl ${done?'yes':''}" onclick="fsCopy('${p.id}')">${done?'✓ 복사됨':'복사'}</button>
-        ${tel&&S.formUrl?`<a class="tgl" style="text-decoration:none;color:inherit;display:inline-block" href="sms:${tel}?&body=${encodeURIComponent(msg)}" onclick="FSENT.add('${p.id}');setTimeout(renderFormList,300)">문자</a>`:''}</td></tr>`};
+        ${tel&&linkOf(p)?`<a class="tgl" style="text-decoration:none;color:inherit;display:inline-block" href="sms:${tel}?&body=${encodeURIComponent(msg)}" onclick="FSENT.add('${p.id}');setTimeout(renderFormList,300)">문자</a>`:''}</td></tr>`};
   box.innerHTML=`<div style="font-size:11px;color:var(--ch-lt);margin:10px 0 6px">보낸 인원 ${FSENT.size}/${list.length}명 · 불참자는 목록에서 빠집니다 · [복사] 후 개인 카톡에 붙여넣기 · [문자]는 휴대폰에서 문자앱이 열립니다</div>
   <table><thead><tr><th>번호</th><th>이름</th><th>참석</th><th>연락처</th><th>메시지 미리보기</th><th>보내기</th></tr></thead>
   <tbody>${list.map(row).join('')||'<tr><td colspan="6" style="color:#bbb">보낼 대상이 없습니다</td></tr>'}</tbody></table>`;
@@ -603,7 +617,7 @@ function impResolve(){
   for(const r of rows){
     const whoRaw=map.who>=0?r[map.who]:'';
     if(!String(whoRaw).trim())continue;
-    const sx=map.sex>=0?sexOf(r[map.sex]):null;
+    const sx=map.form?map.form:map.sex>=0?sexOf(r[map.sex]):null; // 남자폼/여자폼이면 응답자 성별 고정
     const pool=sx==='M'?S.m:sx==='W'?S.w:[...S.m,...S.w];
     const who=resolveId(whoRaw,pool,sx);
     let raws=[map.r1,map.r2,map.r3].map(i=>i>=0?String(r[i]??'').trim():'');
@@ -634,13 +648,15 @@ function impApply(){
   alert(`${seen.size}명의 첫인상을 반영했습니다.`);
 }
 function impCancel(){IMP=null;renderFirst()}
-function impSet(k,v){IMP.map[k]=+v;renderFirst()}
+function impSet(k,v){IMP.map[k]=k==='form'?v:+v;renderFirst()}
 
 function guessMap(head){
   const f=re=>head.findIndex(h=>re.test(h));
   const rk=k=>f(new RegExp(`${k}\\s*(순위|지망|위)`));
   let who=f(/^(?!.*(순위|지망)).*(참가\s*번호|번호|본인|이름|성함|닉네임|ID)/i);
-  return{who,sex:f(/성별/),r1:rk(1),r2:rk(2),r3:rk(3)};
+  // 헤더에 '남자/여자'가 있으면 그 성별 폼으로 추정
+  const all=head.join(' ');let form=/남자|남성/.test(all)&&!/여자|여성/.test(all)?'M':/여자|여성/.test(all)&&!/남자|남성/.test(all)?'W':'';
+  return{who,sex:f(/성별/),r1:rk(1),r2:rk(2),r3:rk(3),form};
 }
 function impLoad(rows){
   rows=rows.map(r=>r.map(c=>String(c??'').trim())).filter(r=>r.some(c=>c));
@@ -648,7 +664,11 @@ function impLoad(rows){
   // 네이버폼 엑셀은 위쪽에 제목줄이 있을 수 있음 → '순위'가 있는 줄을 헤더로
   let hi=rows.slice(0,10).findIndex(r=>r.some(c=>/순위|지망/.test(c)));if(hi<0)hi=0;
   const head=rows[hi];const body=rows.slice(hi+1);
-  IMP={head,rows:body,map:guessMap(head)};renderFirst();
+  const map=guessMap(head);
+  // 제목줄에 '남자/여자'가 있으면 그 성별 폼으로 추정
+  const title=rows.slice(0,hi+1).flat().join(' ');
+  if(!map.form)map.form=/남자|남성/.test(title)&&!/여자|여성/.test(title)?'M':/여자|여성/.test(title)&&!/남자|남성/.test(title)?'W':'';
+  IMP={head,rows:body,map};renderFirst();
 }
 function loadXLSX(){
   if(window.XLSX)return Promise.resolve();
@@ -747,7 +767,7 @@ function renderFirst(){
     <textarea id="fiTxt" placeholder="엑셀에서 헤더(제목줄) 포함해서 복사 → 붙여넣기"></textarea>
     <div class="imp-row" style="margin-top:6px"><button class="btn btn-gold" onclick="fiPaste()">붙여넣은 내용 불러오기</button></div>
     <div class="hint">네이버폼 → 결과 → <b>엑셀 다운로드</b> 한 파일을 그대로 올리면 됩니다.<br>
-    응답자 칸에는 <b>참가번호(M3, 남3, 3번 등)</b>나 이름, 순위 칸에는 <b>상대 번호나 이름</b>이 들어 있으면 자동으로 인식합니다. 번호만 쓰는 경우 성별 문항이 있어야 합니다.</div>
+    남자용·여자용 폼이 따로면 <b>파일을 하나씩</b> 올리고 [남자용 폼 응답] / [여자용 폼 응답]을 고르세요. 한쪽을 적용해도 다른 쪽 응답은 그대로 남습니다.<br>응답자 칸에는 <b>참가번호(M3, 남3, 3번 등)</b>나 이름, 순위 칸에는 <b>상대 번호나 이름</b>이 들어 있으면 자동으로 인식합니다.</div>
   </div>`;
 
   if(IMP){
@@ -759,7 +779,10 @@ function renderFirst(){
     </select></div>`;
     imp+=`<div class="stitle">■ 문항 연결 확인 (응답 ${res.length}건)</div>
     <div class="warn">자동으로 문항을 연결했어요. 틀린 부분이 있으면 드롭다운에서 고쳐주세요. 아래 미리보기를 확인한 뒤 [적용]을 누르면 반영됩니다.</div>
-    <div class="map">${sel('who','응답자 (본인 번호/이름)')}${sel('sex','성별 (선택)')}${sel('r1','1순위')}${sel('r2','2순위')}${sel('r3','3순위')}</div>
+    <div class="imp-row" style="margin-top:8px"><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">이 파일은</label>
+      ${[['','성별 문항으로 구분'],['M','👨 남자용 폼 응답'],['W','👩 여자용 폼 응답']].map(([v,l])=>`<button class="tgl ${IMP.map.form===v?'yes':''}" onclick="impSet('form','${v}')">${l}</button>`).join('')}
+    </div>
+    <div class="map">${sel('who','응답자 (본인 번호/이름)')}${IMP.map.form?'<div></div>':sel('sex','성별')}${sel('r1','1순위')}${sel('r2','2순위')}${sel('r3','3순위')}</div>
     <table><thead><tr><th>응답자(원본)</th><th>인식</th><th>1순위</th><th>2순위</th><th>3순위</th><th>상태</th></tr></thead><tbody>
     ${res.map(x=>`<tr style="${x.errs.length?'background:var(--red-l)':''}">
       <td style="text-align:left">${esc(x.whoRaw)}</td><td style="font-weight:700">${x.who==='?'?'✗':pname(x.who)}</td>
