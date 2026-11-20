@@ -547,14 +547,19 @@ function fiRecv(){
 
 // ── 결과 공유 (복사 / 문자) ──
 const FI_MSG_DEFAULT='[PRIME CAREER SOCIETY]\n{이름}님, 오늘 첫인상 투표에서 {표}표를 받으셨어요 💛\n남은 시간도 즐거운 대화 나누세요!';
+const FI_MSG0_DEFAULT='[PRIME CAREER SOCIETY]\n{이름}님, 이번 첫인상 투표에서는 아쉽게 표가 없었어요.\n너무 상심하지 마세요! 첫인상은 시작일 뿐, 남은 대화에서 충분히 매력을 보여주실 수 있어요 💛';
 let COPIED=new Set(); // 이번 화면에서 복사한 사람 표시용 (저장 안 함)
 function fiMsgOf(p,r){
-  return (S.fiMsg??FI_MSG_DEFAULT)
+  const tpl=r.cnt===0?(S.fiMsg0??FI_MSG0_DEFAULT):(S.fiMsg??FI_MSG_DEFAULT); // 0표는 위로 문구
+  return tpl
     .replaceAll('{이름}',p.name||p.id).replaceAll('{번호}',p.id)
     .replaceAll('{표}',r.cnt).replaceAll('{1순위}',r.r1);
 }
-function fiMsgSet(v){S.fiMsg=v;save();renderShare();}
-function fiMsgReset(){S.fiMsg=FI_MSG_DEFAULT;save();document.getElementById('fiMsg').value=FI_MSG_DEFAULT;renderShare();}
+function fiMsgSet(k,v){S[k]=v;save();renderShare();}
+function fiMsgReset(){
+  S.fiMsg=FI_MSG_DEFAULT;S.fiMsg0=FI_MSG0_DEFAULT;save();
+  document.getElementById('fiMsg').value=FI_MSG_DEFAULT;document.getElementById('fiMsg0').value=FI_MSG0_DEFAULT;renderShare();
+}
 async function copyText(t){
   try{await navigator.clipboard.writeText(t);return true}catch(e){}
   const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
@@ -580,7 +585,7 @@ function renderShare(){
       <td class="id-cell">${p.id}</td>
       <td style="font-weight:700">${esc(p.name)||'<span style="color:#bbb">—</span>'}</td>
       <td style="font-size:11px">${esc(p.phone)||'<span class="err-txt">연락처 없음</span>'}</td>
-      <td style="font-weight:800;color:var(--gold-dk);font-size:15px">${r.cnt}</td>
+      <td style="font-weight:800;font-size:15px;color:${r.cnt?'var(--gold-dk)':'#aaa'}">${r.cnt}</td>
       <td style="text-align:left;font-size:11px;white-space:pre-wrap;color:var(--ch-mid);max-width:360px">${esc(msg)}</td>
       <td style="white-space:nowrap">
         <button class="tgl ${done?'yes':''}" onclick="fiCopy('${p.id}')">${done?'✓ 복사됨':'복사'}</button>
@@ -683,8 +688,12 @@ function renderFirst(){
 
   const share=`<div class="stitle" style="margin-top:24px">■ 첫인상 결과 공유 (참가자별 메시지 복사)</div>
   <div class="imp">
-    <label style="font-size:11px;font-weight:700;color:var(--ch-mid)">메시지 문구</label>
-    <textarea id="fiMsg" oninput="fiMsgSet(this.value)">${esc(S.fiMsg??FI_MSG_DEFAULT).replace(/>/g,'&gt;')}</textarea>
+    <div class="two">
+      <div><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">1표 이상 받은 경우</label>
+      <textarea id="fiMsg" oninput="fiMsgSet('fiMsg',this.value)">${esc(S.fiMsg??FI_MSG_DEFAULT).replace(/>/g,'&gt;')}</textarea></div>
+      <div><label style="font-size:11px;font-weight:700;color:var(--ch-mid)">0표인 경우 (위로 문구)</label>
+      <textarea id="fiMsg0" oninput="fiMsgSet('fiMsg0',this.value)">${esc(S.fiMsg0??FI_MSG0_DEFAULT).replace(/>/g,'&gt;')}</textarea></div>
+    </div>
     <div class="imp-row" style="margin-top:6px">
       <span class="hint" style="margin:0">사용 가능: <b>{이름}</b> <b>{번호}</b> <b>{표}</b>(받은 표 수) <b>{1순위}</b>(1순위로 받은 표 수) — 누가 뽑았는지는 메시지에 들어가지 않습니다.</span>
       <button class="btn btn-outline" style="color:var(--ch-mid);border-color:#ccc" onclick="fiMsgReset()">기본 문구로</button>
