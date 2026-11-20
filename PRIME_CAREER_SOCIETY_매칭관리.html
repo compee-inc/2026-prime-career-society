@@ -238,6 +238,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다</div>
   <div id="at"></div>
   <datalist id="drinkList"></datalist>
+  <div id="fsBox"></div>
 </div>
 
 <!-- ════════════════════ 참가자 입력 ════════════════════ -->
@@ -498,6 +499,61 @@ function renderAttend(){
     <tbody>${list.map(p=>row(p,isMale)).join('')}</tbody></table>`;
   document.getElementById('at').innerHTML=tbl(S.m,true,`▶ 남자 (1 ~ ${N}번)`)+tbl(S.w,false,`▶ 여자 (1 ~ ${N}번)`);
   renderAttendSum();
+  renderFormBox();
+}
+
+// ── 첫인상 투표 폼 보내기 ──
+const FS_MSG_DEFAULT='[PRIME CAREER SOCIETY]\n{이름}님, 첫인상 투표 시간이에요!\n아래 링크에서 마음에 드는 분을 1~3순위로 골라주세요 🙂\n본인 번호: {번호}\n{링크}';
+const FS_GROUP_DEFAULT='[PRIME CAREER SOCIETY] 첫인상 투표\n아래 링크에서 본인 번호를 확인하고 1~3순위를 선택해주세요 🙂\n{링크}';
+let FSENT=new Set();
+const seatOf=p=>`${p.id[0]==='M'?'남':'여'} ${p.id.slice(1)}번`;
+function fsMsgOf(p){
+  return(S.fsMsg??FS_MSG_DEFAULT).replaceAll('{이름}',p.name||seatOf(p)).replaceAll('{번호}',seatOf(p)).replaceAll('{링크}',S.formUrl||'(폼 링크 미입력)');
+}
+function fsSet(k,v){S[k]=v;save();renderFormList();}
+function fsReset(){S.fsMsg=FS_MSG_DEFAULT;save();document.getElementById('fsMsg').value=FS_MSG_DEFAULT;renderFormList();}
+function fsCheck(){if(!S.formUrl||!S.formUrl.trim()){alert('먼저 첫인상 투표 폼 링크를 입력하세요.');return false}return true}
+async function fsCopy(id){
+  if(!fsCheck())return;
+  const p=[...S.m,...S.w].find(x=>x.id===id);
+  if(await copyText(fsMsgOf(p))){FSENT.add(id);renderFormList();}else alert('복사에 실패했습니다.');
+}
+async function fsCopyGroup(){
+  if(!fsCheck())return;
+  if(await copyText(FS_GROUP_DEFAULT.replaceAll('{링크}',S.formUrl)))alert('단톡방 공지용 문구를 복사했습니다.');
+}
+function renderFormBox(){
+  document.getElementById('fsBox').innerHTML=`<div class="stitle" style="margin-top:28px">■ 첫인상 투표 폼 보내기</div>
+  <div class="imp">
+    <label style="font-size:11px;font-weight:700;color:var(--ch-mid)">첫인상 투표 폼 링크 (네이버폼 공유 링크)</label>
+    <input type="text" value="${esc(S.formUrl||'')}" placeholder="https://naver.me/..." oninput="fsSet('formUrl',this.value)" style="margin-top:4px">
+    <label style="font-size:11px;font-weight:700;color:var(--ch-mid);display:block;margin-top:10px">개인 메시지 문구</label>
+    <textarea id="fsMsg" oninput="fsSet('fsMsg',this.value)">${esc(S.fsMsg??FS_MSG_DEFAULT).replace(/>/g,'&gt;')}</textarea>
+    <div class="imp-row" style="margin-top:6px;justify-content:space-between">
+      <span class="hint" style="margin:0">사용 가능: <b>{이름}</b> <b>{번호}</b>(예: 남 3번) <b>{링크}</b></span>
+      <span class="imp-row">
+        <button class="btn btn-outline" style="color:var(--ch-mid);border-color:#ccc" onclick="fsReset()">기본 문구로</button>
+        <button class="btn btn-gold" onclick="fsCopyGroup()">단톡방 공지용 복사</button>
+      </span>
+    </div>
+  </div>
+  <div id="fsList"></div>`;
+  renderFormList();
+}
+function renderFormList(){
+  const box=document.getElementById('fsList');if(!box)return;
+  const list=[...S.m,...S.w].filter(p=>p.attend!=='N');
+  const row=p=>{const msg=fsMsgOf(p),tel=telOf(p.phone),done=FSENT.has(p.id);
+    return`<tr style="${done?'background:var(--green)':''}">
+      <td class="id-cell">${seatOf(p)}</td><td style="font-weight:700">${esc(p.name)||'<span style="color:#bbb">—</span>'}</td>
+      <td><span class="badge ${p.attend==='Y'?'b-green':'b-gray'}">${p.attend==='Y'?'참석':'미확인'}</span></td>
+      <td style="font-size:11px">${esc(p.phone)||'<span class="err-txt">연락처 없음</span>'}</td>
+      <td style="text-align:left;font-size:11px;white-space:pre-wrap;color:var(--ch-mid);max-width:340px">${esc(msg)}</td>
+      <td style="white-space:nowrap"><button class="tgl ${done?'yes':''}" onclick="fsCopy('${p.id}')">${done?'✓ 복사됨':'복사'}</button>
+        ${tel&&S.formUrl?`<a class="tgl" style="text-decoration:none;color:inherit;display:inline-block" href="sms:${tel}?&body=${encodeURIComponent(msg)}" onclick="FSENT.add('${p.id}');setTimeout(renderFormList,300)">문자</a>`:''}</td></tr>`};
+  box.innerHTML=`<div style="font-size:11px;color:var(--ch-lt);margin:10px 0 6px">보낸 인원 ${FSENT.size}/${list.length}명 · 불참자는 목록에서 빠집니다 · [복사] 후 개인 카톡에 붙여넣기 · [문자]는 휴대폰에서 문자앱이 열립니다</div>
+  <table><thead><tr><th>번호</th><th>이름</th><th>참석</th><th>연락처</th><th>메시지 미리보기</th><th>보내기</th></tr></thead>
+  <tbody>${list.map(row).join('')||'<tr><td colspan="6" style="color:#bbb">보낼 대상이 없습니다</td></tr>'}</tbody></table>`;
 }
 
 // ════════════════════════════════════════════════
