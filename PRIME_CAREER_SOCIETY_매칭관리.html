@@ -503,8 +503,8 @@ function renderAttend(){
 }
 
 // ── 첫인상 투표 폼 보내기 ──
-const FS_MSG_DEFAULT='[PRIME CAREER SOCIETY]\n{이름}님, 첫인상 투표 시간이에요!\n아래 링크에서 마음에 드는 분을 1~3순위로 골라주세요 🙂\n본인 번호: {번호}\n{링크}';
-const FS_GROUP_DEFAULT='[PRIME CAREER SOCIETY] 첫인상 투표\n아래 링크에서 본인 번호를 확인하고 1~3순위를 선택해주세요 🙂\n{링크}';
+const FS_MSG_DEFAULT='안녕하세요, 프라임 커리어 소사이어티입니다 😊\n{이름}님, 오늘 1부 대화는 어떠셨나요?\n이제 첫인상 투표를 진행하려고 해요.\n아래 링크에서 마음에 드는 분을 1~3순위로 골라주세요!\n\n본인 번호: {번호}\n{링크}';
+const FS_GROUP_DEFAULT='안녕하세요, 프라임 커리어 소사이어티입니다 😊\n오늘 1부 대화는 어떠셨나요?\n아래 링크에서 본인 번호를 입력하고 첫인상 1~3순위를 선택해주세요!\n{링크}';
 let FSENT=new Set();
 const seatOf=p=>`${p.id[0]==='M'?'남':'여'} ${p.id.slice(1)}번`;
 function fsMsgOf(p){
