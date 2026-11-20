@@ -237,7 +237,6 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div id="atSum"></div>
   <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다  |  첫인상 투표 폼 보내기는 [첫인상] 탭에 있습니다</div>
   <div id="at"></div>
-  <datalist id="drinkList"></datalist>
 </div>
 
 <!-- ════════════════════ 참가자 입력 ════════════════════ -->
@@ -459,7 +458,6 @@ function updR(id,idx,val,isMale){
 // ════════════════════════════════════════════════
 // 인원체크
 // ════════════════════════════════════════════════
-const DRINKS=['아이스 아메리카노','따뜻한 아메리카노','카페라떼','바닐라라떼','녹차','허브티','에이드','오렌지주스','탄산수','논알콜'];
 const AT={'':{lbl:'미확인',cls:''},Y:{lbl:'참석',cls:'yes'},N:{lbl:'불참',cls:'no'}};
 function atToggle(id,isMale){
   const p=(isMale?S.m:S.w).find(x=>x.id===id);
@@ -481,8 +479,6 @@ function renderAttendSum(){
   <div class="stitle" style="margin-top:0">■ 음료 집계 (불참 제외)</div>
   <div class="sl" style="margin-bottom:14px">${Object.keys(drinks).length?Object.entries(drinks).sort((a,b)=>b[1]-a[1]).map(([d,n])=>`<div class="sl-item"><b>${esc(d)}</b> × ${n}</div>`).join(''):'<span style="font-size:11px;color:var(--ch-lt)">아직 입력된 음료가 없습니다</span>'}
   ${noDrink?`<div class="sl-item" style="color:var(--red-dk)">참석인데 음료 미입력 ${noDrink}명</div>`:''}</div>`;
-  const used=all.map(p=>p.drink.trim()).filter(Boolean);
-  document.getElementById('drinkList').innerHTML=[...new Set([...DRINKS,...used])].map(d=>`<option value="${esc(d)}">`).join('');
 }
 function renderAttend(){
   const row=(p,isMale)=>{const im=isMale?1:0;const a=AT[p.attend]||AT[''];
@@ -490,7 +486,7 @@ function renderAttend(){
       <td class="id-cell" style="font-size:14px">${isMale?'남':'여'} ${p.id.slice(1)}번<div style="font-size:10px;font-weight:400">${p.id}</div></td>
       <td><button class="tgl ${a.cls}" style="min-width:70px" onclick="atToggle('${p.id}',${im})">${a.lbl}</button></td>
       <td class="input-cell"><input type="text" value="${esc(p.name)}" placeholder="이름" oninput="atUpd('${p.id}','name',this.value,${im})"></td>
-      <td class="input-cell"><input type="text" list="drinkList" value="${esc(p.drink)}" placeholder="음료 선택/입력" oninput="atUpd('${p.id}','drink',this.value,${im})" onchange="renderAttendSum()"></td>
+      <td class="input-cell"><input type="text" value="${esc(p.drink)}" placeholder="음료" autocomplete="off" oninput="atUpd('${p.id}','drink',this.value,${im})" onchange="renderAttendSum()"></td>
       <td class="input-cell"><input type="text" value="${esc(p.company)}" placeholder="회사명" oninput="atUpd('${p.id}','company',this.value,${im})"></td>
       <td class="input-cell"><input type="tel" value="${esc(p.phone)}" placeholder="010-0000-0000" oninput="atUpd('${p.id}','phone',this.value,${im})" style="width:100%;background:var(--ivory-in);border:1px solid #ddd;border-radius:2px;padding:5px 8px;font-size:12px"></td>
     </tr>`};
