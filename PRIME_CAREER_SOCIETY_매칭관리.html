@@ -180,8 +180,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <nav class="tabs">
   <button class="tab on" data-tab="start">START</button>
   <button class="tab" data-tab="attend">인원체크</button>
-  <button class="tab" data-tab="input">참가자 입력</button>
   <button class="tab" data-tab="first">첫인상</button>
+  <button class="tab" data-tab="input">최종매칭</button>
   <button class="tab" data-tab="mutual">상호선택</button>
   <button class="tab" data-tab="matching">매칭계산</button>
   <button class="tab" data-tab="result">최종결과</button>
@@ -198,9 +198,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="stitle">■ 사용 순서</div>
   <ol class="steps">
     <li>[인원체크] 탭에서 남녀 번호별 참석 여부, 음료, 회사명, 연락처를 체크합니다.</li>
-    <li>[참가자 입력] 탭에서 참가자 이름, 나이, 직업, 연락처를 입력합니다.</li>
-    <li>[첫인상] 탭에서 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력하고, 받은 표 수를 메시지로 복사해 공유합니다.</li>
-    <li>각 참가자의 1순위 / 2순위 / 3순위를 드롭다운으로 선택합니다.</li>
+    <li>[첫인상] 탭에서 투표 폼을 보내고, 네이버폼 결과 엑셀을 불러오거나 직접 첫인상 1~3순위를 입력한 뒤 받은 표 수를 메시지로 공유합니다.</li>
+    <li>[최종매칭] 탭에서 참가자별 최종 1순위 / 2순위 / 3순위를 선택합니다. (나이·직업도 여기서 입력)</li>
     <li>[상호선택] 탭에서 상호 선택 관계를 실시간으로 확인합니다.</li>
     <li>[매칭계산] 탭에서 전체 최적화 매칭 추천 결과를 확인합니다.</li>
     <li>[최종결과] 탭에서 참가자별 최종 매칭 현황을 확인합니다.</li>
@@ -236,11 +235,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <div class="panel" id="p-attend">
   <div id="atSum"></div>
   <div id="atImp"></div>
-  <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·연락처는 [참가자 입력] 탭과 같이 저장됩니다  |  첫인상 투표 폼 보내기는 [첫인상] 탭에 있습니다</div>
+  <div class="warn">※ 참석 버튼을 누르면 미확인 → 참석 → 불참 순서로 바뀝니다  |  이름·회사명·연락처는 [최종매칭] 탭과 같이 저장됩니다  |  첫인상 투표 폼 보내기는 [첫인상] 탭에 있습니다</div>
   <div id="at"></div>
 </div>
 
-<!-- ════════════════════ 참가자 입력 ════════════════════ -->
+<!-- ════════════════════ 최종매칭 (참가자 입력) ════════════════════ -->
 <div class="panel" id="p-input">
   <div class="warn">※ 노란색 배경 = 직접 입력  |  회색 = 자동  |  순위는 드롭다운으로 선택 — 변경 즉시 자동 계산</div>
 
@@ -396,7 +395,7 @@ function validate(p,opp){
 // ════════════════════════════════════════════════
 // 탭 네비
 // ════════════════════════════════════════════════
-const TABS=['start','attend','input','first','mutual','matching','result','review'];
+const TABS=['start','attend','first','input','mutual','matching','result','review'];
 document.querySelectorAll('.tab').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -415,7 +414,7 @@ document.querySelectorAll('.tab').forEach(b=>{
 });
 
 // ════════════════════════════════════════════════
-// 참가자 입력 렌더
+// 최종매칭 (참가자 입력) 렌더
 // ════════════════════════════════════════════════
 // 인원체크 정보 공용 표시
 const attBadge=p=>p.attend==='Y'?'<span class="badge b-green">참석</span>':p.attend==='N'?'<span class="badge b-red">불참</span>':'<span class="badge b-gray">미확인</span>';
