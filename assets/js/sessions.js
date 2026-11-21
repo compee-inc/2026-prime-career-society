@@ -137,86 +137,6 @@ const SESSION_DATA = [
 */
 const SESSION_DATA = [
   {
-    "id": "2026-11-20",
-    "date": "11.20",
-    "day": "FRI",
-    "time": "19:00",
-    "location": "영등포구 양평동 인근 · 카페 전체 대관",
-    "status": "RECRUITING",
-    "targetMen": 8,
-    "targetWomen": 8,
-    "note": "6:6 모이면 진행 · 최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
-    "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
-    "men": [
-      {
-        "occupation": "금융 전문직",
-        "age": 91
-      },
-      {
-        "occupation": "대기업",
-        "age": 89
-      },
-      {
-        "occupation": "회계사",
-        "age": 91
-      },
-      {
-        "occupation": "공기업",
-        "age": 92
-      },
-      {
-        "occupation": "공무원",
-        "age": 89
-      },
-      {
-        "occupation": "금융공기업",
-        "age": 93
-      },
-      {
-        "occupation": "대기업",
-        "age": 91
-      },
-      {
-        "occupation": "삼성전자",
-        "age": 92
-      }
-    ],
-    "women": [
-      {
-        "occupation": "사업",
-        "age": 93
-      },
-      {
-        "occupation": "중견기업",
-        "age": 95
-      },
-      {
-        "occupation": "컨설턴트",
-        "age": 92
-      },
-      {
-        "occupation": "공무원",
-        "age": 94
-      },
-      {
-        "occupation": "약사",
-        "age": 93
-      },
-      {
-        "occupation": "외국계 기업",
-        "age": 94
-      },
-      {
-        "occupation": "중견기업",
-        "age": 95
-      },
-      {
-        "occupation": "중견기업",
-        "age": 92
-      }
-    ]
-  },
-  {
     "id": "2026-11-27",
     "date": "11.27",
     "day": "FRI",
@@ -332,6 +252,86 @@ const SESSION_DATA = [
 
 /* 지난 회차 기록 (화면에는 표시하지 않음)
 [
+  {
+    "id": "2026-11-20",
+    "date": "11.20",
+    "day": "FRI",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "status": "CLOSED",
+    "targetMen": 8,
+    "targetWomen": 8,
+    "note": "6:6 모이면 진행 · 최대 8:8 · 선착순이 아닌 프로필 검토로 구성",
+    "badge": "★ 표시는 연봉·자산 추가 인증을 완료한 분이에요",
+    "men": [
+      {
+        "occupation": "금융 전문직",
+        "age": 91
+      },
+      {
+        "occupation": "대기업",
+        "age": 89
+      },
+      {
+        "occupation": "회계사",
+        "age": 91
+      },
+      {
+        "occupation": "공기업",
+        "age": 92
+      },
+      {
+        "occupation": "공무원",
+        "age": 89
+      },
+      {
+        "occupation": "금융공기업",
+        "age": 93
+      },
+      {
+        "occupation": "대기업",
+        "age": 91
+      },
+      {
+        "occupation": "삼성전자",
+        "age": 92
+      }
+    ],
+    "women": [
+      {
+        "occupation": "사업",
+        "age": 93
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
+      },
+      {
+        "occupation": "컨설턴트",
+        "age": 92
+      },
+      {
+        "occupation": "공무원",
+        "age": 94
+      },
+      {
+        "occupation": "약사",
+        "age": 93
+      },
+      {
+        "occupation": "외국계 기업",
+        "age": 94
+      },
+      {
+        "occupation": "중견기업",
+        "age": 95
+      },
+      {
+        "occupation": "중견기업",
+        "age": 92
+      }
+    ]
+  },
   {
     "id": "2026-11-12",
     "date": "11.12",
