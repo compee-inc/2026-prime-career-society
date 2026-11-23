@@ -97,7 +97,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   const sessions = (CONFIG.stats?.pastSessions || []);
   const total    = sessions.reduce((sum, r) => sum + (r.couples || 0), 0);
 
-  totalEl.innerHTML = `<span class="past__total-num">${total}</span><span class="past__total-label">TOTAL COUPLES</span>`;
+  totalEl.innerHTML = `<span class="past__total-num">${total}</span><span class="past__total-label">TOTAL MATCHES</span>`;
 
   if (sessions.length === 0) {
     listEl.innerHTML = '<p class="past__empty">아직 진행된 세션이 없습니다.</p>';
@@ -109,7 +109,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
       <span class="past__row-no">${String(i + 1).padStart(2, '0')}</span>
       <span class="past__row-date">${r.date}</span>
       <span class="past__row-day">${r.day}</span>
-      <span class="past__row-couples">${r.couples == null ? '커플 집계 대기 중' : `&#9829; ${r.couples} COUPLE${r.couples !== 1 ? 'S' : ''}`}</span>
+      <span class="past__row-couples">${r.couples == null ? '매칭 집계 대기 중' : `&#9829; ${r.couples} MATCH${r.couples !== 1 ? 'ES' : ''}`}</span>
     </div>`
   ).join('');
 })();
