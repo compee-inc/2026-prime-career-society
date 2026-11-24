@@ -141,7 +141,7 @@ const SESSION_DATA = [
     "date": "11.27",
     "day": "FRI",
     "time": "19:00",
-    "location": "영등포구 양평동 인근 · 카페 전체 대관",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관<br>남녀 5:5 이상 모이면 진행 확정",
     "status": "RECRUITING",
     "targetMen": 10,
     "targetWomen": 10,
