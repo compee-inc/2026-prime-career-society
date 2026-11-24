@@ -5,3 +5,5 @@
 /blind     /   200
 /threads   /   200
 /insta     /   200
+/ad/       /ad         301
+/ad        /   200
