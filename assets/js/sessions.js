@@ -205,8 +205,8 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 10,
     "targetWomen": 10,
-    "note": "PRIME 20s Edition · 남녀 10:10 모이면 진행 확정 · 프로필 검토로 구성",
-    "badge": "PRIME 20s Edition (20대 특집)<br>2:2 테이블(4인) 다인원 로테이션<br>남 93년생 이하 · 여 95년생 이하<br>이번 주(11/29)까지 입금 29,000원 · 이후 35,000원",
+    "note": "PRIME 2030 Edition · 남녀 10:10 모이면 진행 확정 · 프로필 검토로 구성",
+    "badge": "PRIME 2030 Edition (2030 특집)<br>2:2 테이블(4인) 다인원 로테이션<br>남 93년생 이하 · 여 95년생 이하<br>이번 주(11/29)까지 입금 29,000원 · 이후 35,000원",
     "men": [],
     "women": []
   },
