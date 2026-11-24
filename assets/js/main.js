@@ -25,7 +25,9 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   const btn  = $('#hamburger');
   const menu = $('#mobile-menu');
   if (!btn || !menu) return;
+  const nav = $('.nav');
   const close = () => {
+    nav && nav.classList.remove('nav--menu-open');
     btn.classList.remove('is-open');
     menu.classList.remove('is-open');
     btn.setAttribute('aria-expanded', 'false');
@@ -35,6 +37,7 @@ const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
   btn.addEventListener('click', () => {
     const open = btn.classList.toggle('is-open');
     menu.classList.toggle('is-open', open);
+    nav && nav.classList.toggle('nav--menu-open', open);
     btn.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-hidden', String(!open));
     document.body.style.overflow = open ? 'hidden' : '';
