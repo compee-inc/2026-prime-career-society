@@ -205,8 +205,8 @@ const SESSION_DATA = [
     "status": "RECRUITING",
     "targetMen": 10,
     "targetWomen": 10,
-    "note": "6:6 모이면 진행 · 최대 10:10 · 프로필 검토로 구성",
-    "badge": "주 연령대 남 88년생~ · 여 91년생~<br>참가비 50,000원<br>얼리버드 할인 기간 종료",
+    "note": "PRIME 20s Edition · 남녀 10:10 모이면 진행 확정 · 프로필 검토로 구성",
+    "badge": "PRIME 20s Edition (20대 특집)<br>남 93년생 이하 · 여 95년생 이하<br>이번 주(11/29)까지 입금 29,000원 · 이후 35,000원",
     "men": [],
     "women": []
   },
