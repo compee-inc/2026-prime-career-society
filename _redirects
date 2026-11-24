@@ -1,0 +1,7 @@
+# 유입 경로 추적용 주소 (Cloudflare Web Analytics의 Path에 그대로 찍힘)
+/blind/    /blind      301
+/threads/  /threads    301
+/insta/    /insta      301
+/blind     /   200
+/threads   /   200
+/insta     /   200
