@@ -144,8 +144,8 @@ const SESSION_DATA = [
     "location": "영등포구 양평동 인근 · 카페 전체 대관<br>남녀 5:5 이상 모이면 진행 확정",
     "status": "RECRUITING",
     "targetMen": 6,
-    "targetWomen": 6,
-    "note": "Prime Marriage Edition · 별도 지원 · 여성 모집 마감 · 남성 정원 마감 시까지 접수 · 6:6",
+    "targetWomen": 5,
+    "note": "Prime Marriage Edition · 별도 지원 · 여성 모집 마감 · 남성 정원 마감 시까지 접수",
     "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 83~90년생 · 여 86~92년생 · 59,000원<br>11/23 개별 발표 후 승인된 분만 11/24(화)까지 입금",
     "men": [
       {
@@ -185,10 +185,6 @@ const SESSION_DATA = [
       {
         "occupation": "공무원",
         "age": 89
-      },
-      {
-        "occupation": "교사",
-        "age": 92
       }
     ]
   },
