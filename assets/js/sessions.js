@@ -179,16 +179,16 @@ const SESSION_DATA = [
         "age": 87
       },
       {
-        "occupation": "공공기관",
-        "age": 86
-      },
-      {
         "occupation": "대기업 연구원",
         "age": 89
       },
       {
         "occupation": "공무원",
         "age": 89
+      },
+      {
+        "occupation": "확인중",
+        "age": ""
       }
     ]
   },
