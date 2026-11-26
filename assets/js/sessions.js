@@ -195,8 +195,8 @@ const SESSION_DATA = [
         "age": 87
       },
       {
-        "occupation": "확인중",
-        "age": ""
+        "occupation": "교사",
+        "age": 92
       }
     ]
   },
