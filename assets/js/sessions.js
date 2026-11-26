@@ -165,8 +165,8 @@ const SESSION_DATA = [
         "age": 88
       },
       {
-        "occupation": "확인중",
-        "age": ""
+        "occupation": "파일럿",
+        "age": 90
       }
     ],
     "women": [
