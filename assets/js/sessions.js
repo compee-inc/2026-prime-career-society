@@ -137,66 +137,6 @@ const SESSION_DATA = [
 */
 const SESSION_DATA = [
   {
-    "id": "2026-11-27",
-    "date": "11.27",
-    "day": "FRI",
-    "time": "19:00",
-    "location": "영등포구 양평동 인근 · 카페 전체 대관<br>남녀 5:5 이상 모이면 진행 확정",
-    "status": "CLOSED",
-    "targetMen": 5,
-    "targetWomen": 6,
-    "note": "Prime Marriage Edition · 모임 종료 · 매칭 결과 집계 중",
-    "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 83~90년생 · 여 86~92년생 · 59,000원<br>11/23 개별 발표 후 승인된 분만 11/24(화)까지 입금",
-    "men": [
-      {
-        "occupation": "대기업",
-        "age": 85
-      },
-      {
-        "occupation": "사업",
-        "age": 83
-      },
-      {
-        "occupation": "뷰티 사업",
-        "age": 90
-      },
-      {
-        "occupation": "바이오 기업",
-        "age": 88
-      },
-      {
-        "occupation": "파일럿",
-        "age": 90
-      }
-    ],
-    "women": [
-      {
-        "occupation": "대기업",
-        "age": 92
-      },
-      {
-        "occupation": "미국회계사",
-        "age": 87
-      },
-      {
-        "occupation": "대기업 연구원",
-        "age": 89
-      },
-      {
-        "occupation": "공무원",
-        "age": 89
-      },
-      {
-        "occupation": "간호사",
-        "age": 87
-      },
-      {
-        "occupation": "교사",
-        "age": 92
-      }
-    ]
-  },
-  {
     "id": "2026-12-03",
     "date": "12.03",
     "day": "THU",
@@ -307,6 +247,66 @@ const SESSION_DATA = [
 
 /* 지난 회차 기록 (화면에는 표시하지 않음)
 [
+  {
+    "id": "2026-11-27",
+    "date": "11.27",
+    "day": "FRI",
+    "time": "19:00",
+    "location": "영등포구 양평동 인근 · 카페 전체 대관<br>남녀 5:5 이상 모이면 진행 확정",
+    "status": "CLOSED",
+    "targetMen": 5,
+    "targetWomen": 6,
+    "note": "Prime Marriage Edition · 모임 종료 · 매칭 결과 집계 중",
+    "badge": "Prime Marriage Edition (5기 특집)<br>결혼을 진지하게 생각하는 분들만 · 미혼 증빙 필수<br>남 83~90년생 · 여 86~92년생 · 59,000원<br>11/23 개별 발표 후 승인된 분만 11/24(화)까지 입금",
+    "men": [
+      {
+        "occupation": "대기업",
+        "age": 85
+      },
+      {
+        "occupation": "사업",
+        "age": 83
+      },
+      {
+        "occupation": "뷰티 사업",
+        "age": 90
+      },
+      {
+        "occupation": "바이오 기업",
+        "age": 88
+      },
+      {
+        "occupation": "파일럿",
+        "age": 90
+      }
+    ],
+    "women": [
+      {
+        "occupation": "대기업",
+        "age": 92
+      },
+      {
+        "occupation": "미국회계사",
+        "age": 87
+      },
+      {
+        "occupation": "대기업 연구원",
+        "age": 89
+      },
+      {
+        "occupation": "공무원",
+        "age": 89
+      },
+      {
+        "occupation": "간호사",
+        "age": 87
+      },
+      {
+        "occupation": "교사",
+        "age": 92
+      }
+    ]
+  },
   {
     "id": "2026-11-20",
     "date": "11.20",
