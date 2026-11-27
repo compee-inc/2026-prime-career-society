@@ -30,6 +30,11 @@ const CONFIG = {
             "date": "11.20",
             "day": "FRI",
             "couples": 5
+        },
+        {
+            "date": "11.27",
+            "day": "FRI",
+            "couples": null
         }
     ],
     soonDates:    [],
